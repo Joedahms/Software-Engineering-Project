@@ -1,3 +1,3 @@
 # Software-Engineering-Project CSCI4500 + ECE46100
 
-## Project team memebers
+## Project team members
