@@ -2,5 +2,4 @@
 
 ## Project team members
 
-Joe Dahms,
-Derek Petersen
+Joe Dahms
