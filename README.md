@@ -3,3 +3,4 @@
 ## Project team members
 
 Joe Dahms
+Logan Pelkey
