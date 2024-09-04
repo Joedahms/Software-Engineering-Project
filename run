@@ -1,0 +1,18 @@
+#!/bin/bash
+# Need to print out whether a helpful error if something fails
+
+if [ $# == 1 ]; then           # One command line argument
+  if [ $1 == "install" ]; then # Install
+    echo "Installing required packages..."
+    npm install
+    echo "Installed required packages"
+  elif [ $1 == "test" ]; then # Test
+    echo "You chose test"
+    # Call the test suite here
+  else
+    echo "You passed URL_FILE" # URL_FILE
+    # Call metric calculation here
+  fi
+else # Not one command line argument
+  echo "Invalid number of command line arguments"
+fi
