@@ -2,9 +2,9 @@
 
 ## Project team members
 
-Joe Dahms
-Geromy Cunningham
-Logan Pelkey
-Djamel Almabouada
-Juan Cortes-Vicens
-Jonah Salyers
+Joe Dahms<br>
+Geromy Cunningham<br> 
+Logan Pelkey<br>
+Djamel Almabouada<br>
+Juan Cortes-Vicens<br>
+Jonah Salyers<br>
