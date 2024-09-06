@@ -6,7 +6,7 @@
 if [ $# == 1 ]; then # One command line argument
   if [ $1 == "install" ]; then
     echo "Installing required packages..."
-    npm install --prefix ./config/ # Install packages in userland
+    npm install # Install packages in userland
     echo "Installed required packages"
   elif [ $1 == "test" ]; then # Test
     echo "You chose test"
