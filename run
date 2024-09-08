@@ -2,7 +2,7 @@
 # Need to print out whether a helpful error if something fails
 
 # rm *.js # Remove all JavaScript files
-
+export LOG_LEVEL=0   # Default log level is 0
 if [ $# == 1 ]; then # One command line argument
   if [ $1 == "install" ]; then
     echo "Installing required packages..."
