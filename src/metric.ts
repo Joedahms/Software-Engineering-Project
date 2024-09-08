@@ -1,21 +1,21 @@
-import axios from 'axios'; //run: npm install axios, for http requests
+import axios from 'axios';  //run: npm install axios, for http requests
 
 const repoOwner = 'cloudinary';
 const repoName = 'cloudinary_npm';
-const token = ''; // Replace with your actual GitHub token
+const token = process.env.GITHUB_TOKEN;
 
 interface Commit {
   sha: string;
   commit: {
     author: {
-      date: string; // Date string in ISO format
+      date: string;         // Date string in ISO format
     };
   };
 }
 interface Issue {
   id: number;
   state: string;
-  pull_request?: object; // Field that indicates if it's a pull request
+  pull_request?: object;    // Field that indicates if it's a pull request
 }
 
 // Function to get total number of commits with pagination
@@ -35,6 +35,7 @@ async function getTotalCommits(): Promise<number> {
       hasMore = response.data.length === 100;
       page++;
     }
+
 
     return totalCommits;
   } catch (error) {
