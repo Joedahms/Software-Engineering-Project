@@ -1,8 +1,12 @@
 import axios from 'axios';  //run: npm install axios, for http requests
+import {Logger} from './logger.js';
 
 const repoOwner = 'cloudinary';
 const repoName = 'cloudinary_npm';
 const token = process.env.GITHUB_TOKEN;
+
+const testLogger = new Logger();
+testLogger.add(0, "test");
 
 interface Commit {
   sha: string;
