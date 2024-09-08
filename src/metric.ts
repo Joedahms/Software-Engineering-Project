@@ -7,6 +7,7 @@ const token = process.env.GITHUB_TOKEN;
 
 const testLogger = new Logger();
 testLogger.add(0, "test");
+testLogger.clear();
 
 interface Commit {
   sha: string;
