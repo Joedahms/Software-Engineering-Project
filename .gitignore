@@ -1,1 +1,5 @@
+# Ignore modules
 /node_modules/
+
+# Ignore JavaScript files
+src/*.js
