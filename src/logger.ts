@@ -16,7 +16,7 @@ export class Logger {
     const currentLogLevel: number = Number(currentLogLevelString);  // So can compare with passed level
     if (currentLogLevel === level) {
       try {
-        filesystem.writeFileSync(this.fileName, message);
+        filesystem.writeFileSync(this.fileName, message + '\n', { flag: "a+" });
       } catch (err) {
         console.error(err);
       }

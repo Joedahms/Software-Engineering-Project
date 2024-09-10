@@ -1,7 +1,33 @@
-<h1>SRC</h1>
+# SRC
 
-<h2>This folder contains all the code we have written</h2>
+## This folder contains all the source code we have written
 
-<p>output.ts: Contains a function that can be used to output to stdout</p>
-<p>metric.ts: Formerly named "test.ts". Contains the initial code for the metric calculations</p>
-<p>logger.ts: Contains the logger class. Used for modifying the log file.</p>
+### output.ts
+
+Contains one function
+
+- function writeOutput(string): write a string to standard out
+
+### metric.ts
+
+Contains the bulk of the code for metric calculations (formerly named test.ts)
+
+- insert brief description of components here
+
+### logger.ts
+
+Contains the logger class
+
+- class Logger(): Used to clear and add to the log file
+
+### urlFileParser.ts
+
+Contains functionality pertaining to parsing through the URLs passed though either     
+a URL_FILE command line argument or the test suite     
+
+- Interface Repository: Data structure for storing Repo owners and names
+- Class urlFileParser: Used to parse the given URL file and give back owners     
+and names of the repositories in the URL file.
+
+
+
