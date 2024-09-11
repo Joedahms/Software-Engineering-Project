@@ -8,8 +8,9 @@ const token = process.env.GITHUB_TOKEN; // Use export GITHUB_TOKEN=<valid github
 
 var testRepo: Repository[];
 const urlFileParser = new UrlFileParser();
-testRepo = urlFileParser.githubRepos();
-console.log(testRepo);
+urlFileParser.npmRepos();
+//testRepo = urlFileParser.githubRepos();
+//console.log(testRepo);
 
 interface Commit {
   sha: string;
