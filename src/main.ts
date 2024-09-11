@@ -1,13 +1,22 @@
-
+import {Repository, UrlFileParser} from './urlFileParser.js'
 export class Main {
-
+    
+    readonly urlFileParser: UrlFileParser;
 
 constructor(){
-    console.log("Hello");
+    this.urlFileParser = new UrlFileParser();
+    var testRepo: Repository[];
+    testRepo = this.urlFileParser.githubRepos();
+    console.log(testRepo);
 }
 
 
 
+
 }
 
-new Main();
+function main(): void{
+    new Main();
+}
+
+main();
