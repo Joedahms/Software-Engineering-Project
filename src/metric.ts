@@ -166,4 +166,19 @@ async function displayRepoStats() {
   }
 }
 
+// Check the API rate limit
+const checkRateLimit = async () => {
+    const headers = {
+        Authorization: token ? `token ${token}` : undefined,
+    };
+
+    const rateLimitUrl = 'https://api.github.com/rate_limit';
+    const response = await axios.get(rateLimitUrl, { headers });
+    console.log(response.data);
+};
+
+checkRateLimit().catch(error => {
+    console.log(error);
+})
+
 displayRepoStats();
