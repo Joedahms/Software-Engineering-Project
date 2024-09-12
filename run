@@ -2,18 +2,21 @@
 # Need to print out whether a helpful error if something fails
 
 # rm *.js # Remove all JavaScript files
-
+export LOG_LEVEL=0   # Default log level is 0
+export LOG_LEVEL=2   # here for testing
 if [ $# == 1 ]; then # One command line argument
   if [ $1 == "install" ]; then
     echo "Installing required packages..."
-    npm install --prefix ./config/ # Install packages in userland
+    npm install # Install packages in userland
     echo "Installed required packages"
   elif [ $1 == "test" ]; then # Test
+    echo "Current log level is $LOG_LEVEL"
     echo "You chose test"
     # Call the test suite here
   else
+    echo "Current log level is $LOG_LEVEL"
     echo "You passed URL_FILE" # URL_FILE
-    # Call metric calculation here
+    node src/metric.js $1
   fi
 else # Not one command line argument
   echo "Invalid number of command line arguments"

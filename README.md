@@ -8,3 +8,7 @@ Logan Pelkey<br>
 Djamel Almabouada<br>
 Juan Cortes-Vicens<br>
 Jonah Salyers<br>
+
+<p>To run the app properly, add your GitHub token to the $GITHUB_TOKEN environmental variable</p>
+
+

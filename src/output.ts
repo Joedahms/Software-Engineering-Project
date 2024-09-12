@@ -1,7 +1,7 @@
 // Function for outputting to stdout. Pass the string you want to the function and
 // it will print it to stdout
 
-const readline = require('node:readline');
+import * as readline from 'node:readline'
 
 export function writeOutput(input: string) {
   const readlineInterface = readline.createInterface({
@@ -9,7 +9,7 @@ export function writeOutput(input: string) {
     output: process.stdout,
   });
 
-  readlineInterface.write(input);
+  readlineInterface.write(input + '\n');
 }
 
 
