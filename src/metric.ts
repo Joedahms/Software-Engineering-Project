@@ -1,17 +1,20 @@
 import axios from 'axios';  //run: npm install axios, for http requests
-import {Logger} from './logger.js';
-import {Repository, UrlFileParser} from './urlFileParser.js'
+import { Logger } from './logger.js';
+import { Repository, UrlFileParser } from './urlFileParser.js'
+import { writeOutput } from './output.js'
 
 const repoOwner = 'cloudinary';
 const repoName = 'cloudinary_npm';
 const token = process.env.GITHUB_TOKEN; // Use export GITHUB_TOKEN=<valid github token>
 
+/*
 var testRepo: Repository[] = [];
 const urlFileParser = new UrlFileParser();
 testRepo = await urlFileParser.npmRepos();
 console.log(testRepo);
 testRepo = urlFileParser.githubRepos();
 console.log(testRepo);
+*/
 
 interface Commit {
   sha: string;
@@ -166,4 +169,41 @@ async function displayRepoStats() {
   }
 }
 
-displayRepoStats();
+const arrObj = [
+  {
+  URL: 1,
+  //NetScore_Latency: 1,
+  RampUp: 1,
+  //RampUp_Latency: 1,
+  Correctness: 1,
+  //Correctness_Latency: 1,
+  BusFactor: 1,
+  //BusFactor_Latency: 1,
+  ResponsiveMaintainer: 1,
+  //ResponsiveMaintainer_Latency: 1,
+  License: 1,
+  //License_Latency: 1,
+  },
+  {
+  URL: 2,
+  //NetScore_Latency: 1,
+  RampUp: 1,
+  //RampUp_Latency: 1,
+  Correctness: 1,
+  //Correctness_Latency: 1,
+  BusFactor: 1,
+  //BusFactor_Latency: 1,
+  ResponsiveMaintainer: 1,
+  //ResponsiveMaintainer_Latency: 1,
+  License: 1,
+  //License_Latency: 1,
+  }
+
+];
+const ndJson = arrObj.map(item => JSON.stringify(item)).join('\n');
+//console.log(ndJson);
+writeOutput(ndJson);
+process.exit(0);
+
+
+//displayRepoStats();
