@@ -1,184 +1,142 @@
-import axios from 'axios';  //run: npm install axios, for http requests
-import {Logger} from './logger.js';
-import {Repository, UrlFileParser} from './urlFileParser.js'
+import { Octokit } from "@octokit/rest";
+import * as dotenv from "dotenv";
 
-const repoOwner = 'cloudinary';
-const repoName = 'cloudinary_npm';
-const token = process.env.GITHUB_TOKEN; // Use export GITHUB_TOKEN=<valid github token>
+dotenv.config();
 
-var testRepo: Repository[] = [];
-const urlFileParser = new UrlFileParser();
-testRepo = await urlFileParser.npmRepos();
-console.log(testRepo);
-testRepo = urlFileParser.githubRepos();
-console.log(testRepo);
+const token = process.env.GITHUB_TOKEN; 
 
-interface Commit {
-  sha: string;
-  commit: {
-    author: {
-      date: string;         // Date string in ISO format
-    };
-  };
-}
-interface Issue {
-  id: number;
-  state: string;
-  pull_request?: object;    // Field that indicates if it's a pull request
+const octokit = new Octokit({
+  auth: token,
+});
+
+// Function to fetch all pages using Octokit pagination
+async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]> {
+  return octokit.paginate(endpoint, params);
 }
 
-// Function to get total number of commits with pagination
-async function getTotalCommits(): Promise<number> {
+// Function to fetch the number of commits in a repository
+async function fetchCommits(owner: string, repo: string): Promise<number> {
   try {
-    let page = 1;
-    let totalCommits = 0;
-    let hasMore = true;
-
-    while (hasMore) {
-      const response = await axios.get<Commit[]>(`https://api.github.com/repos/${repoOwner}/${repoName}/commits`, {
-        headers: { Authorization: `token ${token}` },
-        params: { per_page: 100, page },
-      });
-
-      totalCommits += response.data.length;
-      hasMore = response.data.length === 100;
-      page++;
-    }
-
-
-    return totalCommits;
-  } catch (error) {
-    console.error('Failed to fetch commits:', error);
-    return 0;
-  }
-}
-
-// Function to get the last commit date (most recent commit)
-async function getLastCommitDate(): Promise<string | null> {
-  try {
-    const response = await axios.get<Commit[]>(`https://api.github.com/repos/${repoOwner}/${repoName}/commits`, {
-      headers: { Authorization: `token ${token}` },
-      params: { per_page: 1, page: 1 },
+    const commits = await octokit.paginate(octokit.repos.listCommits, {
+      owner,
+      repo,
+      per_page: 100,
     });
-
-    if (response.data.length > 0) {
-      return response.data[0].commit.author.date;
-    }
-    return null;
+    return commits.length;
   } catch (error) {
-    console.error('Failed to fetch last commit:', error);
-    return null;
+    handleError(error);
+    return 0; // Return 0 in case of error
   }
 }
 
-// Function to get the first commit date (oldest commit)
-async function getFirstCommitDate(): Promise<string | null> {
+// Function to fetch repository statistics
+async function fetchRepoStats(owner: string, repo: string) {
   try {
-    // Get the total number of commits
-    const totalCommits = await getTotalCommits();
-    if (totalCommits === 0) return null;
-
-    // Fetch the first commit by retrieving the last page of commits
-    const response = await axios.get<Commit[]>(`https://api.github.com/repos/${repoOwner}/${repoName}/commits`, {
-      headers: { Authorization: `token ${token}` },
-      params: { per_page: 1, page: totalCommits }, // Last page
+    // Fetch issues
+    const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+      owner,
+      repo,
+      state: 'open',
+      per_page: 100
     });
+    const closedIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+      owner,
+      repo,
+      state: 'closed',
+      per_page: 100
+    });
+    const totalOpenIssues = openIssues.filter((issue: any) => !issue.pull_request).length;
+    const totalClosedIssues = closedIssues.filter((issue: any) => !issue.pull_request).length;
+    const issueRatio = totalOpenIssues > 0 ? (totalClosedIssues / totalOpenIssues).toFixed(2) : 'N/A';
 
-    if (response.data.length > 0) {
-      return response.data[0].commit.author.date;
-    }
-    return null;
+    // Fetch pull requests
+    const openPullRequests = await fetchAllPages('GET /repos/{owner}/{repo}/pulls', {
+      owner,
+      repo,
+      state: 'open',
+      per_page: 100
+    });
+    const closedPullRequests = await fetchAllPages('GET /repos/{owner}/{repo}/pulls', {
+      owner,
+      repo,
+      state: 'closed',
+      per_page: 100
+    });
+    const totalMergedPullRequests = closedPullRequests.filter((pr: any) => pr.merged_at).length;
+    const totalOpenPullRequests = openPullRequests.length;
+    const totalClosedPullRequests = closedPullRequests.length;
+    const pullRequestRatio = totalOpenPullRequests > 0 ? (totalClosedPullRequests / totalOpenPullRequests).toFixed(2) : 'N/A';
+
+    // Fetch repository metadata (includes forks, comments, etc.)
+    const { data: repoData } = await octokit.repos.get({
+      owner,
+      repo
+    });
+    const totalForks = repoData.forks_count;
+
+    // Fetch comments
+    const issueComments = await fetchAllPages('GET /repos/{owner}/{repo}/issues/comments', {
+      owner,
+      repo,
+      per_page: 100
+    });
+    const pullRequestComments = await fetchAllPages('GET /repos/{owner}/{repo}/pulls/comments', {
+      owner,
+      repo,
+      per_page: 100
+    });
+    const totalComments = issueComments.length + pullRequestComments.length;
+
+    // Calculate comment frequency
+    const totalCommits = await fetchCommits(owner, repo); // Fetch total commits
+    const commentFrequency = (totalCommits + totalOpenIssues + totalClosedIssues) > 0
+      ? (totalComments / (totalCommits + totalOpenIssues + totalClosedIssues)).toFixed(2)
+      : 'N/A';
+
+    // Output the results
+    console.log('Total Commits:', totalCommits);
+    console.log(`Total Open Issues: ${totalOpenIssues}`);
+    console.log(`Total Closed Issues: ${totalClosedIssues}`);
+    console.log(`Ratio of Closed/Open Issues: ${issueRatio}`);
+    console.log(`Total Open Pull Requests: ${totalOpenPullRequests}`);
+    console.log(`Total Closed Pull Requests: ${totalClosedPullRequests}`);
+    console.log(`Total Merged Pull Requests: ${totalMergedPullRequests}`);
+    console.log(`Ratio of Closed/Open Pull Requests: ${pullRequestRatio}`);
+    console.log(`Total Forks: ${totalForks}`);
+    console.log(`Total Comments: ${totalComments}`);
+    console.log(`Comment Frequency: ${commentFrequency}`);
+    
   } catch (error) {
-    console.error('Failed to fetch first commit:', error);
-    return null;
+    handleError(error);
   }
 }
 
-// Function to calculate the difference between two dates in days
-function calculateDaysDifference(startDate: string, endDate: string): number {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const diffTime = Math.abs(end.getTime() - start.getTime());
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert to days
-}
-
-// Function to get open and closed issues and the ratio, excluding pull requests
-async function getIssueStats(): Promise<{ openIssues: number; closedIssues: number; openClosedRatio: number }> {
-  try {
-    let page = 1;
-    let openIssues = 0;
-    let closedIssues = 0;
-    let hasMore = true;
-
-    while (hasMore) {
-      const response = await axios.get<Issue[]>(`https://api.github.com/repos/${repoOwner}/${repoName}/issues`, {
-        headers: { Authorization: `token ${token}` },
-        params: { state: 'all', per_page: 100, page },
-      });
-
-      response.data.forEach(issue => {
-        // Exclude pull requests from the count
-        if (!issue.pull_request) {
-          if (issue.state === 'open') {
-            openIssues++;
-          } else if (issue.state === 'closed') {
-            closedIssues++;
-          }
-        }
-      });
-
-      hasMore = response.data.length === 100;
-      page++;
-    }
-
-    const openClosedRatio = closedIssues > 0 ? closedIssues / openIssues : openIssues;
-
-    return { openIssues, closedIssues, openClosedRatio };
-  } catch (error) {
-    console.error('Failed to fetch issues:', error);
-    return { openIssues: 0, closedIssues: 0, openClosedRatio: 0 };
-  }
-}
-
-// Execute the functions and log the results
-async function displayRepoStats() {
-  const firstCommitDate = await getFirstCommitDate();
-  const lastCommitDate = await getLastCommitDate();
-  const totalCommits = await getTotalCommits();
-  const { openIssues, closedIssues, openClosedRatio } = await getIssueStats();
-  const totalIssues = openIssues + closedIssues // Calculate total issues excluding pull requests
-  const percentOpen = openIssues / totalIssues
-  const percentClosed = closedIssues / totalIssues
-
-  console.log(`Total Commits: ${totalCommits}`);
-  console.log(`Total Issues (excluding PRs): ${totalIssues}`);
-  console.log(`Percentage of open issues: ${(percentOpen * 100).toFixed(2)}%`);
-  console.log(`Percentage of closed issues: ${(percentClosed * 100).toFixed(2)}%`);
-  console.log(`Closed/Open Issue Ratio: ${openClosedRatio.toFixed(2)}`);
-
-  if (firstCommitDate && lastCommitDate) {
-    const lifetimeInDays = calculateDaysDifference(firstCommitDate, lastCommitDate);
-    console.log(`Repository Lifetime: ${lifetimeInDays} days`);
-    console.log(`First Commit Date: ${new Date(firstCommitDate).toUTCString()}`);
-    console.log(`Last Commit Date: ${new Date(lastCommitDate).toUTCString()}`);
+// Helper function to handle errors
+function handleError(error: any): void {
+  if (error.status === 403 && error.response?.headers['x-ratelimit-remaining'] === '0') {
+    const retryAfter = error.response?.headers['retry-after'] ? parseInt(error.response.headers['retry-after']) * 1000 : 60000;
+    console.error('Rate limit exceeded. Waiting before retrying.');
+    console.error(`Rate limit reset time: ${new Date(Date.now() + retryAfter)}`);
+    setTimeout(() => {
+      console.log('Retrying...');
+    }, retryAfter);
   } else {
-    console.log('Could not determine the repository lifetime.');
+    console.error("An error occurred:", error);
   }
 }
 
-// Check the API rate limit
-const checkRateLimit = async () => {
-    const headers = {
-        Authorization: token ? `token ${token}` : undefined,
-    };
 
-    const rateLimitUrl = 'https://api.github.com/rate_limit';
-    const response = await axios.get(rateLimitUrl, { headers });
-    console.log(response.data);
-};
+// Function to check the rate limit
+async function checkRateLimit(): Promise<void> {
+  try {
+    const { data } = await octokit.rateLimit.get();
+    console.log(`Remaining requests: ${data.rate.remaining}`);
+    console.log(`Rate limit reset time: ${new Date(data.rate.reset * 1000)}`);
+  } catch (error) {
+    handleError(error);
+  }
+}
 
-checkRateLimit().catch(error => {
-    console.log(error);
-})
 
-displayRepoStats();
+checkRateLimit();
+fetchRepoStats('Joedahms', 'Software-Engineering-Project');
