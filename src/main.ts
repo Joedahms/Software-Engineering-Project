@@ -1,22 +1,25 @@
-import {Repository, UrlFileParser} from './urlFileParser.js'
-export class Main {
-    
-    readonly urlFileParser: UrlFileParser;
+import { Repository, UrlFileParser } from './urlFileParser.js';
 
-constructor(){
+export class Main {
+  readonly urlFileParser: UrlFileParser;
+
+  constructor() {
     this.urlFileParser = new UrlFileParser();
-    var testRepo: Repository[];
+    this.GrabRepoNames(); // Call the async init method
+  }
+
+  async GrabRepoNames() {
+    // Async function to handle async calls
+    var testRepo: Repository[] = [];
+    testRepo = await this.urlFileParser.npmRepos();
+    console.log(testRepo);
     testRepo = this.urlFileParser.githubRepos();
     console.log(testRepo);
+  }
 }
 
-
-
-
-}
-
-function main(): void{
-    new Main();
+function main(): void {
+  new Main();
 }
 
 main();
