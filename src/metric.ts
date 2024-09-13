@@ -1,9 +1,16 @@
 import axios from 'axios';  //run: npm install axios, for http requests
+import { Repository, UrlFileParser } from './urlFileParser';
 
 const repoOwner = 'cloudinary';
 const repoName = 'cloudinary_npm';
 const token = process.env.GITHUB_TOKEN; // Use export GITHUB_TOKEN=<valid github token>
 
+var testRepo: Repository[] = [];
+const urlFileParser = new UrlFileParser();
+testRepo = await urlFileParser.npmRepos();
+console.log(testRepo);
+testRepo = urlFileParser.githubRepos();
+console.log(testRepo);
 interface Commit {
   sha: string;
   commit: {

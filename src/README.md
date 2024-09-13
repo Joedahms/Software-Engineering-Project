@@ -28,6 +28,12 @@ a URL_FILE command line argument or the test suite
 - Interface Repository: Data structure for storing Repo owners and names
 - Class urlFileParser: Used to parse the given URL file and give back owners     
 and names of the repositories in the URL file.
+- npmRepos(): Method of urlFileParser to extract the repo owner and name from the NPM     
+links in the URL_FILE
+- githubRepos(): Method of urlFileParser to extract the repo owner and name from the      
+GitHub links in the URL_FILE
+
+Both npmRepos() and githubRepos() return the owners and names as an array of Repository interfaces
 
 
 

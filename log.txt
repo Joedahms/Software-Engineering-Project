@@ -1,0 +1,6 @@
+2 NPM URLs found
+npmUrlArray contents: 
+https://www.npmjs.com/package/express,https://www.npmjs.com/package/browserify
+3 GitHub URLs found
+githubUrlArray contents: 
+https://github.com/cloudinary/cloudinary_npm,https://github.com/nullivex/nodist,https://github.com/lodash/lodash
