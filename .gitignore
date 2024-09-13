@@ -3,3 +3,6 @@
 
 # Ignore JavaScript files
 src/*.js
+
+# Ignore log.txt file
+log.txt
