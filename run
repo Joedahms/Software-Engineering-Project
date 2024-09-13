@@ -17,7 +17,7 @@ if [ $# == 1 ]; then # One command line argument
     echo "Current log level is $LOG_LEVEL"
     echo "You passed $1" # URL_FILE
     echo "Compiling TypeScript files..."
-    npx tsc
+    tsc
     if [ $? -ne 0 ]; then
       echo "TypeScript compilation failed. Exiting..."
       exit 1

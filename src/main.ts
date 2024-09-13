@@ -1,4 +1,5 @@
 import { Repository, UrlFileParser } from './urlFileParser.js';
+import { ndjsonTest } from './metric.js'
 
 export class Main {
   readonly urlFileParser: UrlFileParser;
@@ -20,6 +21,7 @@ export class Main {
 
 function main(): void {
   new Main();
+  ndjsonTest();
 }
 
 main();
