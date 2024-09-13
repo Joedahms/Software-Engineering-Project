@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/rest";
 import * as dotenv from "dotenv";
 
+
 dotenv.config();
 
 const token = process.env.GITHUB_TOKEN; 
@@ -10,8 +11,20 @@ const octokit = new Octokit({
 });
 
 // Function to fetch all pages using Octokit pagination
-async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]> {
+async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]>{
   return octokit.paginate(endpoint, params);
+interface Commit {
+  sha: string;
+  commit: {
+    author: {
+      date: string;         // Date string in ISO format
+    };
+  };
+}
+interface Issue {
+  id: number;
+  state: string;
+  pull_request?: object;    // Field that indicates if it's a pull request
 }
 
 // Function to fetch the number of commits in a repository
