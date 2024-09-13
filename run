@@ -15,8 +15,15 @@ if [ $# == 1 ]; then # One command line argument
     # Call the test suite here
   else
     echo "Current log level is $LOG_LEVEL"
-    echo "You passed URL_FILE" # URL_FILE
-    node src/metric.js $1
+    echo "You passed $1" # URL_FILE
+    echo "Compiling TypeScript files..."
+    npx tsc
+    if [ $? -ne 0 ]; then
+      echo "TypeScript compilation failed. Exiting..."
+      exit 1
+    fi
+    echo "Running JaveScript file..."
+    node src/main.js $1
   fi
 else # Not one command line argument
   echo "Invalid number of command line arguments"
