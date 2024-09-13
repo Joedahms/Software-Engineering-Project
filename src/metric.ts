@@ -30,7 +30,7 @@ async function fetchCommits(owner: string, repo: string): Promise<number> {
 }
 
 // Function to fetch repository statistics
-async function fetchRepoStats(owner: string, repo: string) {
+export async function fetchRepoStats(owner: string, repo: string) {
   try {
     // Fetch issues
     const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {

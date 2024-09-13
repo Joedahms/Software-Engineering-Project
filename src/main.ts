@@ -1,11 +1,16 @@
 import { Repository, UrlFileParser } from './urlFileParser.js';
+import { fetchRepoStats } from './metric.js';
+ 
 
 export class Main {
   readonly urlFileParser: UrlFileParser;
+  readonly GITHUB_TOKEN: any;
 
   constructor() {
     this.urlFileParser = new UrlFileParser();
     this.GrabRepoNames(); // Call the async init method
+    
+    this.GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
   }
 
   async GrabRepoNames() {
@@ -23,3 +28,4 @@ function main(): void {
 }
 
 main();
+fetchRepoStats('Joedahms', 'Software-Engineering-Project');
