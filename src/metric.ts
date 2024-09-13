@@ -1,11 +1,135 @@
 import axios from 'axios';  //run: npm install axios, for http requests
 import { Logger } from './logger.js';
-import { Repository, UrlFileParser } from './urlFileParser.js'
+import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
 
 const repoOwner = 'cloudinary';
 const repoName = 'cloudinary_npm';
 const token = process.env.GITHUB_TOKEN; // Use export GITHUB_TOKEN=<valid github token>
+
+abstract class Metric {
+  name: string;
+  value: number | string;
+
+  constructor() {
+    this.name = "name not assigned"
+    this.value = 0;
+  }
+
+  abstract calculateValue(): number | string;
+}
+
+export class Url extends Metric {
+  name: string;
+  value: string;
+
+  constructor() {
+    super();
+    this.name = "URL";
+    this.value = "testtest";
+  }
+
+  calculateValue(): string {
+    console.log("test");
+    return "s";
+  }
+}
+
+export class NetScore extends Metric {
+  name: string;
+  value: number;
+
+  constructor() {
+    super();
+    this.name = "NetScore";
+    this.value = 0;
+  }
+
+  calculateValue(): number {
+    console.log("test");
+    return 0;
+  }
+}
+
+export class RampUp extends Metric {
+  name: string;
+  value: number;
+
+  constructor() {
+    super();
+    this.name = "RampUp";
+    this.value = 0;
+  }
+
+  calculateValue(): number {
+    console.log("test");
+    return 0;
+  }
+}
+
+export class Correctness extends Metric {
+  name: string;
+  value: number;
+
+  constructor() {
+    super();
+    this.name = "Correctness";
+    this.value = 0;
+  }
+
+  calculateValue(): number {
+    console.log("test");
+    return 0;
+  }
+}
+
+export class BusFactor extends Metric {
+  name: string;
+  value: number;
+
+  constructor() {
+    super();
+    this.name = "BusFactor";
+    this.value = 0;
+  }
+
+  calculateValue(): number {
+    console.log("test");
+    return 0;
+  }
+}
+
+export class ResponsiveMaintainer extends Metric {
+  name: string;
+  value: number;
+
+  constructor() {
+    super();
+    this.name = "ResponsiveMaintainer";
+    this.value = 0;
+  }
+
+  calculateValue(): number {
+    console.log("test");
+    return 0;
+  }
+}
+
+export class License extends Metric {
+  name: string;
+  value: number;
+
+  constructor() {
+    super();
+    this.name = "License";
+    this.value = 0;
+  }
+
+  calculateValue(): number {
+    console.log("test");
+    return 0;
+  }
+}
 
 interface Commit {
   sha: string;

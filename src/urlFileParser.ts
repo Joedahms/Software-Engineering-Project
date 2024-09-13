@@ -5,7 +5,8 @@ import { Logger } from './logger.js'      // Logger interface
 import { writeOutput } from './output.js' // writeOutput function
 
 // Two most important pieces about a repo at this point are the owner and name
-export interface Repository {
+export interface RepositoryUrlData {
+  url: string;
   owner: string;
   name: string;
 }
@@ -44,34 +45,35 @@ export class UrlFileParser {
     return this.urlFileContents;
   }
 
-  #ownerAndNameFromUrl(urlArray: Array<string>): Repository[] {
-    var repoArray: Array<Repository> = [];  // Array of Repository interfaces that will be returned
+  #ownerAndNameFromUrl(originalUrlArray: Array<string>, githubUrlArray: Array<string>): RepositoryUrlData[] {
+    var repoArray: Array<RepositoryUrlData> = [];  // Array of RepositoryUrlData interfaces that will be returned
 
     // Loop through all URLs
     var urlIndex: number = 0;
-    for (urlIndex = 0; urlIndex < urlArray.length; urlIndex++) {
-      const ownerAndName = urlArray[urlIndex].match(this.ownerAndNameRegex);  // Match the owner and repo section of the URL
+    for (urlIndex = 0; urlIndex < githubUrlArray.length; urlIndex++) {
+      const ownerAndName = githubUrlArray[urlIndex].match(this.ownerAndNameRegex);  // Match the owner and repo section of the URL
 
       if (ownerAndName !== null) {  // If regex was successful
         const ownerMatch = ownerAndName[0].match(this.ownerRegex); // Match the repo owner
         const nameMatch = ownerAndName[0].match(this.nameRegex);   // Match the repo name
 
         if (ownerMatch !== null && nameMatch !== null) {          // If both regexs successful
-          var newRepositoryOwner = ownerMatch[0];
-          var newRepositoryName = nameMatch[0];
-          const newRepository: Repository = {
-            owner: newRepositoryOwner,
-            name: newRepositoryName,
+          var newRepositoryUrlDataOwner = ownerMatch[0];
+          var newRepositoryUrlDataName = nameMatch[0];
+          const newRepositoryUrlData: RepositoryUrlData = {
+            url: originalUrlArray[urlIndex],
+            owner: newRepositoryUrlDataOwner,
+            name: newRepositoryUrlDataName,
           }
 
-          repoArray.push(newRepository);
+          repoArray.push(newRepositoryUrlData);
         }
         else {
           this.logger.add(2, "Error: Regex failed on " + ownerAndName[0]);
         }
       }
       else {
-        this.logger.add(2, "Error: ownerAndName regex failed on " + urlArray[urlIndex]);
+        this.logger.add(2, "Error: ownerAndName regex failed on " + githubUrlArray[urlIndex]);
       }
     }
     return repoArray;
@@ -84,9 +86,9 @@ export class UrlFileParser {
     return npmUrlText;
   }
 
-  async npmRepos(): Promise<Repository[]> {
+  async npmRepos(): Promise<RepositoryUrlData[]> {
     const npmUrlArray = this.urlFileContents.match(this.npmRegex);  // Get the NPM URLs from the passed URL_FILE
-    var repoArray: Array<Repository> = [];  // Array of repo owner and names to return
+    var repoArray: Array<RepositoryUrlData> = [];  // Array of repo owner and names to return
 
     if (npmUrlArray !== null) { // If there are some NPM URLs in the URL_FILE
       const totalNpmUrls = npmUrlArray.length;  
@@ -115,7 +117,7 @@ export class UrlFileParser {
           throw(error);
         }
       }
-      repoArray = this.#ownerAndNameFromUrl(githubUrlArray);
+      repoArray = this.#ownerAndNameFromUrl(npmUrlArray, githubUrlArray);
       return Promise.resolve(repoArray);
     }
     else {  // No NPM URLs in the URL_FILE
@@ -124,9 +126,9 @@ export class UrlFileParser {
     }
   }
 
-  githubRepos(): Repository[] {
+  githubRepos(): RepositoryUrlData[] {
     const githubUrlArray = this.urlFileContents.match(this.githubRegex);  // Match all the github URLs in the url file
-    var githubRepoArray: Array<Repository> = [];  // Array of Repository interfaces that will be returned
+    var githubRepoArray: Array<RepositoryUrlData> = [];  // Array of RepositoryUrlData interfaces that will be returned
 
     if (githubUrlArray !== null) {  // Check if any GitHub urls are in the URL_FILE
       const totalGithubUrls = githubUrlArray.length;
@@ -136,7 +138,7 @@ export class UrlFileParser {
       this.logger.add(2, "githubUrlArray contents: ")
       this.logger.add(2, String(githubUrlArray));
 
-      githubRepoArray = this.#ownerAndNameFromUrl(githubUrlArray);
+      githubRepoArray = this.#ownerAndNameFromUrl(githubUrlArray, githubUrlArray);
     }
     else {
       this.logger.add(2, "No GitHub URLs in passed URL_FILE");
