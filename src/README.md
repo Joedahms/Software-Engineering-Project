@@ -6,12 +6,24 @@
 
 Contains one function
 
-- function writeOutput(string): write a string to standard out
+- function writeOutput(string): write a string to standard out (may not need this??)
 
 ### metric.ts
 
 Contains the bulk of the code for metric calculations (formerly named test.ts)
 
+- abstract class Metric: Defines what each metric class looks like and what it should have
+  
+- class NetScore: Represents an overall score for the package based on all the other metrics  
+Calculated based on: ...
+  
+- class RampUp: How easily it would be for developers to get acquainted with the package having  
+never worked with it before   
+Calculated based on: ...
+  
+- class Correctness: ?  
+Calculated based on: ...
+  
 - insert brief description of components here
 
 ### logger.ts
