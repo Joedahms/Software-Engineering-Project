@@ -13,7 +13,7 @@ Contains one function
 Contains the bulk of the code for metric calculations (formerly named test.ts)
 
 - abstract class Metric: Defines what each metric class looks like and what it should have
-  
+
 - class NetScore: Represents an overall score for the package based on all the other metrics  
 Calculated based on: ...
   
