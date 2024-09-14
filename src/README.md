@@ -13,18 +13,19 @@ Contains one function
 Contains the bulk of the code for metric calculations (formerly named test.ts)
 
 - abstract class Metric: Defines what each metric class looks like and what it should have
-
 - class NetScore: Represents an overall score for the package based on all the other metrics  
 Calculated based on: ...
-  
 - class RampUp: How easily it would be for developers to get acquainted with the package having  
 never worked with it before   
 Calculated based on: ...
-  
 - class Correctness: ?  
 Calculated based on: ...
-  
-- insert brief description of components here
+- class BusFactor: How well distributed the knowledge about the package's development insert  
+Calculated based on: ...
+- class ResponsiveMaintainer: How active the maintainers of the package are  
+Calculated based on: ...
+- class License: Whether or not the package complies with the LGPL v2.1 License
+Calculated based on: ...
 
 ### logger.ts
 
