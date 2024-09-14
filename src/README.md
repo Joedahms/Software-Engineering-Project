@@ -2,8 +2,16 @@
 
 ## This folder contains all the source code we have written
 
-### output.ts
+### logger.ts
 
+Contains the logger class
+
+- class Logger(): Used to clear and add to the log file
+
+### main.ts
+
+
+### output.ts
 Contains one function
 
 - function writeOutput(string): write a string to standard out (may not need this??)
@@ -26,12 +34,6 @@ Calculated based on: ...
 Calculated based on: ...
 - class License: Whether or not the package complies with the LGPL v2.1 License
 Calculated based on: ...
-
-### logger.ts
-
-Contains the logger class
-
-- class Logger(): Used to clear and add to the log file
 
 ### urlFileParser.ts
 
