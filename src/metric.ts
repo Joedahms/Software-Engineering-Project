@@ -3,6 +3,8 @@ import { Logger } from './logger.js';
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
 
+const repoOwner = 'cloudinary';
+const repoName = 'cloudinary_npm';
 const token = process.env.GITHUB_TOKEN; // Use export GITHUB_TOKEN=<valid github token>
 
 // Abstract metric class
