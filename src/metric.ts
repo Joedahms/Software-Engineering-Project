@@ -3,22 +3,23 @@ import { Logger } from './logger.js';
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
 
-const repoOwner = 'cloudinary';
-const repoName = 'cloudinary_npm';
 const token = process.env.GITHUB_TOKEN; // Use export GITHUB_TOKEN=<valid github token>
 
+// Abstract metric class
 abstract class Metric {
-  name: string;
-  value: number | string;
+  name: string;           // Name of the metric. Required to match syntax checker
+  value: number | string; // URL name or metric score
 
   constructor() {
     this.name = "name not assigned"
     this.value = 0;
   }
 
+  // Calculate the value of the metric 
   abstract calculateValue(): number | string;
 }
 
+// URL metric
 export class Url extends Metric {
   name: string;
   value: string;
@@ -35,6 +36,7 @@ export class Url extends Metric {
   }
 }
 
+// NetScore metric
 export class NetScore extends Metric {
   name: string;
   value: number;
@@ -51,6 +53,7 @@ export class NetScore extends Metric {
   }
 }
 
+// RampUp metric
 export class RampUp extends Metric {
   name: string;
   value: number;
@@ -67,6 +70,7 @@ export class RampUp extends Metric {
   }
 }
 
+// Correctness metric
 export class Correctness extends Metric {
   name: string;
   value: number;
@@ -83,6 +87,7 @@ export class Correctness extends Metric {
   }
 }
 
+// BusFactor metric
 export class BusFactor extends Metric {
   name: string;
   value: number;
@@ -99,12 +104,14 @@ export class BusFactor extends Metric {
   }
 }
 
+// ResponsiveMaintainer metric
 export class ResponsiveMaintainer extends Metric {
   name: string;
   value: number;
 
   constructor() {
     super();
+    //this.name = "RESPONSIVE_MAINTAINER_SCORE";
     this.name = "ResponsiveMaintainer";
     this.value = 0;
   }
@@ -115,12 +122,14 @@ export class ResponsiveMaintainer extends Metric {
   }
 }
 
+// License metric
 export class License extends Metric {
   name: string;
   value: number;
 
   constructor() {
     super();
+    //this.name = "LICENSE_SCORE";
     this.name = "License";
     this.value = 0;
   }
@@ -130,6 +139,13 @@ export class License extends Metric {
     return 0;
   }
 }
+
+
+
+
+
+
+
 
 interface Commit {
   sha: string;
@@ -283,43 +299,3 @@ async function displayRepoStats() {
     console.log('Could not determine the repository lifetime.');
   }
 }
-
-export function ndjsonTest() {
-  const arrObj = [
-    {
-    URL: 1,
-    //NetScore_Latency: 1,
-    RampUp: 1,
-    //RampUp_Latency: 1,
-    Correctness: 1,
-    //Correctness_Latency: 1,
-    BusFactor: 1,
-    //BusFactor_Latency: 1,
-    ResponsiveMaintainer: 1,
-    //ResponsiveMaintainer_Latency: 1,
-    License: 1,
-    //License_Latency: 1,
-    },
-    {
-    URL: 2,
-    //NetScore_Latency: 1,
-    RampUp: 1,
-    //RampUp_Latency: 1,
-    Correctness: 1,
-    //Correctness_Latency: 1,
-    BusFactor: 1,
-    //BusFactor_Latency: 1,
-    ResponsiveMaintainer: 1,
-    //ResponsiveMaintainer_Latency: 1,
-    License: 1,
-    //License_Latency: 1,
-    }
-
-  ];
-  const ndJson = arrObj.map(item => JSON.stringify(item)).join('\n');
-  //console.log(ndJson);
-  writeOutput(ndJson);
-  process.exit(0);
-}
-
-//displayRepoStats();

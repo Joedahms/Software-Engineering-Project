@@ -2,9 +2,10 @@ import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, Li
 import { writeOutput } from './output.js'
 
 export class Repository {
-  owner: string;
-  name: string;
+  owner: string;  // GitHub username of repository owner
+  name: string;   // Name of the repository
 
+  // Metrics
   url: Url;
   netScore: NetScore;
   rampUp: RampUp;
@@ -13,6 +14,7 @@ export class Repository {
   responsiveMaintainer: ResponsiveMaintainer
   license: License;
 
+  // Must pass url, owner, and name
   constructor(url: string, owner: string, name: string) {
     this.owner = owner;
     this.name = name;
@@ -27,21 +29,23 @@ export class Repository {
     this.license = new License();
   }
 
+  // This could be cleaned up but it works for now
   jsonMetrics(): string {
     var str: string = String(
       "{" + 
       "\"" + this.url.name + "\"" + ": " + "\"" + this.url.value + "\"" + ", " +
-      //NetScore_Latency: 1,
       "\"" + this.netScore.name + "\"" + ": " + this.netScore.value + ", " +
-      //RampUp_Latency: 1,
+      "\"" + this.rampUp.name + "\"" + ": " + this.rampUp.value + ", " +
       "\"" + this.correctness.name + "\"" + ": " + this.correctness.value + ", " +
-      //Correctness_Latency: 1,
       "\"" + this.busFactor.name + "\"" + ": " + this.busFactor.value + ", " +
-      //BusFactor_Latency: 1,
       "\"" + this.responsiveMaintainer.name + "\"" + ": " + this.responsiveMaintainer.value + ", " +
-      //ResponsiveMaintainer_Latency: 1,
-      "\"" + this.license.name + "\"" + ": " + this.license.value +
-      //License_Latency: 1,
+      "\"" + this.license.name + "\"" + ": " + this.license.value + ", " +
+      "\"" + "netscore_latency" + "\"" + ": " + "0" + ", " +
+      "\"" + "rampup_latency" + "\"" + ": " + "0" + ", " +
+      "\"" + "correctness_latency" + "\"" + ": " + "0" + ", " +
+      "\"" + "busfactor_latency" + "\"" + ": " + "0" + ", " +
+      "\"" + "responsiveMaintainer_latency" + "\"" + ": " + "0" + ", " +
+      "\"" + "license_latency" + "\"" + ": " + "0" +
       "}" + '\n'
     );
     return str;
