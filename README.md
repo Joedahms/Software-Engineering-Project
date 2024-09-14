@@ -10,7 +10,7 @@ Juan Cortes-Vicens
 Jonah Salyers  
 
 To run the app properly, add your GitHub token to the $GITHUB_TOKEN environmental variable  
-In a CLI this can be done with $ export GITHUB_TOKEN=<Your Github Token>
+In a CLI this can be done with $ export GITHUB_TOKEN=\<Your Github Token\>
 
 ## Usage
 
