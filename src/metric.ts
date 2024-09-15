@@ -1,12 +1,12 @@
 import { Octokit } from "@octokit/rest";
 import * as dotenv from "dotenv";
 
-dotenv.config();
 
-const token = process.env.GITHUB_TOKEN; 
+
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
 
 const octokit = new Octokit({
-  auth: token,
+  auth: GITHUB_TOKEN,
 });
 
 // Function to fetch all pages using Octokit pagination
@@ -138,5 +138,5 @@ async function checkRateLimit(): Promise<void> {
 }
 
 
-checkRateLimit();
-fetchRepoStats('Joedahms', 'Software-Engineering-Project');
+//checkRateLimit();
+//fetchRepoStats('Joedahms', 'Software-Engineering-Project');
