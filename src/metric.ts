@@ -93,6 +93,36 @@ export async function fetchRepoStats(owner: string, repo: string) {
       ? (totalComments / (totalCommits + totalOpenIssues + totalClosedIssues)).toFixed(2)
       : 'N/A';
 
+    // fetch the number of contributors
+    const contributors = await fetchAllPages('GET /repos/{owner}/{repo}/contributors', {
+      owner,
+      repo,
+      per_page: 100
+    });
+    const totalContributors = contributors.length;
+
+    // fetch the availability of licenses
+    const license = await octokit.repos.get({ owner, repo });
+    const licenseName = license.data.license ? license.data.license.name : 'N/A';
+
+    // fetch the README file length in characters
+    const readme = await octokit.repos.getReadme({ owner, repo });
+    const readmeLength = Buffer.from(readme.data.content, 'base64').toString('utf-8').length;
+
+
+    // fetch the working life of the repository in days
+    const created = new Date(repoData.created_at);
+    const updated = new Date(repoData.updated_at);
+    const daysActive = Math.ceil((updated.getTime() - created.getTime()) / (1000 * 3600 * 24));
+
+    
+    // fetch the date of the first commit
+    const firstCommit = await octokit.repos.listCommits({ owner, repo, per_page: 100 });
+    const firstCommitDate = firstCommit.data[0]?.commit?.author?.date ? new Date(firstCommit.data[0].commit.author.date) : new Date();
+    // fetch the date of the last commit
+    const lastCommit = await octokit.repos.listCommits({ owner, repo, per_page: 100 });
+    const lastCommitDate = lastCommit.data[0]?.commit?.author?.date ? new Date(lastCommit.data[0].commit.author.date) : new Date();
+
     // Output the results
     console.log('Total Commits:', totalCommits);
     console.log(`Total Open Issues: ${totalOpenIssues}`);
@@ -105,6 +135,13 @@ export async function fetchRepoStats(owner: string, repo: string) {
     console.log(`Total Forks: ${totalForks}`);
     console.log(`Total Comments: ${totalComments}`);
     console.log(`Comment Frequency: ${commentFrequency}`);
+    console.log(`Total Contributors: ${totalContributors}`);
+    console.log(`License: ${licenseName}`); 
+    console.log(`README Length: ${readmeLength} characters`);
+    console.log(`Days Active: ${daysActive}`);
+    console.log(`First Commit Date: ${firstCommitDate}`);
+    console.log(`Last Commit Date: ${lastCommitDate}`);
+    
     
   } catch (error) {
     handleError(error);
