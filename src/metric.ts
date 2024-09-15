@@ -3,6 +3,8 @@ import * as dotenv from "dotenv";
 
 
 
+const repoOwner = 'cloudinary';
+const repoName = 'cloudinary_npm';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
 
 const octokit = new Octokit({
