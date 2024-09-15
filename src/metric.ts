@@ -1,16 +1,21 @@
 import { Octokit } from "@octokit/rest";
 import * as dotenv from "dotenv";
-
+import {Logger} from "./logger.js";
+import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
+import { writeOutput } from './output.js'
 
 
 const repoOwner = 'cloudinary';
 const repoName = 'cloudinary_npm';
+//const token = process.env.GITHUB_TOKEN; // for GitHub token: export GITHUB_TOKEN="your_token_here"
+
+
+
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
 
 const octokit = new Octokit({
   auth: GITHUB_TOKEN,
 });
-
 
 
 // Abstract metric class
@@ -147,8 +152,6 @@ export class License extends Metric {
     return 0;
   }
 }
-
-
 
 
 // Function to fetch all pages using Octokit pagination
@@ -304,7 +307,6 @@ function handleError(error: any): void {
   }
 }
 
-
 // Function to check the rate limit
 async function checkRateLimit(): Promise<void> {
   try {
@@ -317,5 +319,6 @@ async function checkRateLimit(): Promise<void> {
 }
 
 
-//checkRateLimit();
-//fetchRepoStats('Joedahms', 'Software-Engineering-Project');
+fetchRepoStats('cloudinary', 'cloudinary_npm');
+checkRateLimit();
+
