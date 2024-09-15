@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-import { Repository, UrlFileParser } from './urlFileParser.js';
-import { fetchRepoStats } from './metric.js';
-
-
-=======
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'; // interface, class
 import { Repository } from './repository.js'  // class
 import { writeOutput } from './output.js'     // function
->>>>>>> origin/main
 
 export class Main {
   readonly urlFileParser: UrlFileParser;
@@ -15,11 +8,6 @@ export class Main {
 
   constructor() {
     this.urlFileParser = new UrlFileParser();
-<<<<<<< HEAD
-    this.GrabRepoNames(); // Call the async init method
-    this.GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-=======
->>>>>>> origin/main
   }
 
   // Get all the repo's owners and names from the url file
@@ -53,10 +41,6 @@ for (urlDataIndex = 0; urlDataIndex < urlData.length; urlDataIndex++) {
   repositories.push(newRepository);
 }
 
-<<<<<<< HEAD
-main();
-await fetchRepoStats('Joedahms', 'Software-Engineering-Project');
-=======
 // Print out metric calculation results in NDJSON
 // As of now, there aren't any calculations being done, defaults are printed
 var repositoryIndex: number;
@@ -69,5 +53,4 @@ for (repositoryIndex = 0; repositoryIndex < repositories.length; repositoryIndex
 console.log(output);
 
 // Exit 
->>>>>>> origin/main
 process.exit(0);
