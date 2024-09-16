@@ -4,6 +4,7 @@ import { writeOutput } from './output.js'     // function
 
 export class Main {
   readonly urlFileParser: UrlFileParser;
+  readonly GITHUB_TOKEN: any;
 
   constructor() {
     this.urlFileParser = new UrlFileParser();
