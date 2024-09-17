@@ -1,3 +1,6 @@
+import { Octokit, App } from "octokit";
+
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // for GitHub token: export GITHUB_TOKEN="your_token_here"
 
 const octokit = new Octokit({
   auth: GITHUB_TOKEN,

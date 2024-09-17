@@ -1,10 +1,7 @@
-import { Octokit, App } from "octokit";
 import * as dotenv from "dotenv";
 import { Logger } from "./logger.js";
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
-
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // for GitHub token: export GITHUB_TOKEN="your_token_here"
 
 // Abstract metric class
 abstract class Metric {
@@ -18,6 +15,12 @@ abstract class Metric {
 
   // Calculate the value of the metric 
   abstract calculateValue(): number | string;
+  
+  minMax(inputValue: number, max: number, min: number): number {
+    var scaledInputValue;
+    scaledInputValue = (inputValue - min) / (max - min);
+    return scaledInputValue;
+  }
 }
 
 // URL metric
@@ -32,7 +35,6 @@ export class Url extends Metric {
   }
 
   calculateValue(): string {
-    console.log("test");
     return "s";
   }
 }
@@ -49,7 +51,6 @@ export class NetScore extends Metric {
   }
 
   calculateValue(): number {
-    console.log("test");
     return 0;
   }
 }
@@ -66,7 +67,6 @@ export class RampUp extends Metric {
   }
 
   calculateValue(): number {
-    console.log("test");
     return 0;
   }
 }
@@ -83,7 +83,6 @@ export class Correctness extends Metric {
   }
 
   calculateValue(): number {
-    console.log("test");
     return 0;
   }
 }
@@ -100,7 +99,6 @@ export class BusFactor extends Metric {
   }
 
   calculateValue(): number {
-    console.log("test");
     return 0;
   }
 }
@@ -118,7 +116,6 @@ export class ResponsiveMaintainer extends Metric {
   }
 
   calculateValue(): number {
-    console.log("test");
     return 0;
   }
 }
@@ -136,7 +133,6 @@ export class License extends Metric {
   }
 
   calculateValue(): number {
-    console.log("test");
     return 0;
   }
 }

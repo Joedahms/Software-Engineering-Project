@@ -38,6 +38,7 @@ for (urlDataIndex = 0; urlDataIndex < urlData.length; urlDataIndex++) {
                                       urlData[urlDataIndex].owner, 
                                       urlData[urlDataIndex].name
                                     );
+  newRepository.calculateAllMetrics();
   repositories.push(newRepository);
 }
 

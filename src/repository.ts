@@ -29,6 +29,16 @@ export class Repository {
     this.license = new License();
   }
 
+  calculateAllMetrics() {
+    this.url.calculateValue();
+    this.netScore.calculateValue();
+    this.rampUp.calculateValue();
+    this.correctness.calculateValue();
+    this.busFactor.calculateValue();
+    this.responsiveMaintainer.calculateValue();
+    this.license.calculateValue();
+  }
+
   // This could be cleaned up but it works for now
   jsonMetrics(): string {
     var str: string = String(
