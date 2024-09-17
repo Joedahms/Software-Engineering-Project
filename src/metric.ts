@@ -16,10 +16,16 @@ abstract class Metric {
   // Calculate the value of the metric 
   abstract calculateValue(): number | string;
   
+  // Normalizes a number to a value between 0 and 1 depending on the min and max
   minMax(inputValue: number, max: number, min: number): number {
     var scaledInputValue;
     scaledInputValue = (inputValue - min) / (max - min);
-    return scaledInputValue;
+    if (scaledInputValue < 0) {
+      return 0
+    }
+    else {
+      return scaledInputValue;
+    }
   }
 }
 

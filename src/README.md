@@ -2,6 +2,10 @@
 
 ## This folder contains all the source code we have written
 
+### api_access
+Contains the functions for accessing the GitHub API.
+*** INSERT BRIEF FUNCTION OVERVIEWS HERE ***
+
 ### logger.ts
 Contains the logger class.
 - class Logger(): Used to clear and add to the log file.
@@ -10,13 +14,14 @@ Contains the logger class.
 Where the magic happens. This the entry point into the program. It is called in the run script.  
 when the user enters "./run URL_FILE".
 - class Main: ?
-At the moment all that is being done in main is outputting the NDJSON for all the URLs in the passed URL_FILE.  
-This was for testing purposes.
+At the moment all that is being done in main is calculating all the metrics for each repository then    
+outputting the NDJSON.
 
 ### metric.ts
 Contains the classes for each metric along with some functions that access the GitHub API. These  
 functions could be moved elsewhere.
-- abstract class Metric: Defines what each metric class looks like and what it should have.
+- abstract class Metric: Defines what each metric class looks like and what it should have. 
+Has two methods, calculateValue and minMax.
 - class NetScore: Represents an overall score for the package based on all the other metrics.  
 Calculated based on: ...
 - class RampUp: How easily it would be for developers to get acquainted with the package having  
