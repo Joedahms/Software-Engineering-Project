@@ -19,19 +19,19 @@ export class Repository {
     this.owner = owner;
     this.name = name;
 
-    this.url = new Url();
+    this.url = new Url(owner, name);
     this.url.value = url;
-    this.netScore = new NetScore();
-    this.rampUp = new RampUp();
-    this.correctness = new Correctness();
-    this.busFactor = new BusFactor();
-    this.responsiveMaintainer = new ResponsiveMaintainer();
-    this.license = new License();
+    this.netScore = new NetScore(owner, name);
+    this.rampUp = new RampUp(owner, name);
+    this.correctness = new Correctness(owner, name);
+    this.busFactor = new BusFactor(owner, name);
+    this.responsiveMaintainer = new ResponsiveMaintainer(owner, name);
+    this.license = new License(owner, name);
   }
 
-  calculateAllMetrics() {
+  async calculateAllMetrics() {
     this.url.calculateValue();
-    this.netScore.calculateValue();
+    await this.netScore.calculateValue();
     this.rampUp.calculateValue();
     this.correctness.calculateValue();
     this.busFactor.calculateValue();

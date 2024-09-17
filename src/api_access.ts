@@ -1,4 +1,5 @@
 import { Octokit, App } from "octokit";
+import { Logger } from './logger.js'
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // for GitHub token: export GITHUB_TOKEN="your_token_here"
 
@@ -24,6 +25,35 @@ async function fetchCommits(owner: string, repo: string): Promise<number> {
     handleError(error);
     return 0; // Return 0 in case of error
   }
+}
+
+// Whether or not repo has license
+export async function checkLicense(desiredLicense: string, owner: string, name: string) {
+    // fetch the availability of licenses
+    var logger = new Logger();
+    logger.add(1, "Checking " + name + " for " + desiredLicense);
+    try {
+      const license = await octokit.request('GET /repos/{owner}/{repo}/license', {
+        owner: owner,
+        repo: name,
+      });
+      const licenseName = license.data.license ? license.data.license.name : 'N/A';
+      if (licenseName === desiredLicense) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }
+    catch (error) {
+      if (error.status) {
+        // need more error action here
+        logger.add(1, name + " encountered an Octokit error when checking the license");
+      }
+      else {
+        throw error;
+      }
+    }
 }
 
 // Function to fetch repository statistics
@@ -98,9 +128,8 @@ export async function fetchRepoStats(owner: string, repo: string) {
     });
     const totalContributors = contributors.length;
 
-    // fetch the availability of licenses
-    const license = await octokit.repos.get({ owner, repo });
-    const licenseName = license.data.license ? license.data.license.name : 'N/A';
+    // License
+    const licenseName = await checkLicense("MIT License", owner, repo);
 
     // fetch the README file length in characters
     const readme = await octokit.repos.getReadme({ owner, repo });
