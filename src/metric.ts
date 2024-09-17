@@ -1,4 +1,6 @@
 import * as dotenv from "dotenv";
+import { performance } from "perf_hooks"
+
 import { Logger } from "./logger.js";
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
@@ -11,6 +13,7 @@ abstract class Metric {
 
   name: string;           // Name of the metric. Required to match syntax checker
   value: number | string; // URL name or metric score
+  latencyValue: number    // How long it takes to calculate the metric
 
   constructor(repoOwner: string, repoName: string) {
     this.repoOwner = repoOwner;
@@ -18,6 +21,7 @@ abstract class Metric {
 
     this.name = "name not assigned"
     this.value = 0;
+    this.latencyValue = 0;
   }
 
   // Calculate the value of the metric 
@@ -65,6 +69,11 @@ export class NetScore extends Metric {
   }
 
   async calculateValue(): Promise<number> {
+    const startTime = performance.now();
+    // Put calculation code here
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
+
     return 0;
   }
 }
@@ -81,6 +90,11 @@ export class RampUp extends Metric {
   }
 
   async calculateValue(): Promise<number> {
+    const startTime = performance.now();
+    // Put calculation code here
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
+
     return 0;
   }
 }
@@ -97,6 +111,11 @@ export class Correctness extends Metric {
   }
 
   async calculateValue(): Promise<number> {
+    const startTime = performance.now();
+    // Put calculation code here
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
+
     return 0;
   }
 }
@@ -113,6 +132,10 @@ export class BusFactor extends Metric {
   }
 
   async calculateValue(): Promise<number> {
+    const startTime = performance.now();
+    // Put calculation code here
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
 
     return 0;
   }
@@ -131,6 +154,10 @@ export class ResponsiveMaintainer extends Metric {
   }
 
   async calculateValue(): Promise<number> {
+    const startTime = performance.now();
+    // Put calculation code here
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
     return 0;
   }
 }
@@ -148,6 +175,7 @@ export class License extends Metric {
   }
 
   async calculateValue(): Promise<number> {
+    const startTime = performance.now();
     const license = await checkLicense("MIT License", this.repoOwner, this.repoName);
     switch (license) {
       case 0:
@@ -162,6 +190,8 @@ export class License extends Metric {
       default:
         this.value = 0;
     }
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
     return license;
   }
 }

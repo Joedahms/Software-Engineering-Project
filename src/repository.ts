@@ -50,12 +50,12 @@ export class Repository {
       "\"" + this.busFactor.name + "\"" + ": " + this.busFactor.value + ", " +
       "\"" + this.responsiveMaintainer.name + "\"" + ": " + this.responsiveMaintainer.value + ", " +
       "\"" + this.license.name + "\"" + ": " + this.license.value + ", " +
-      "\"" + "netscore_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "rampup_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "correctness_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "busfactor_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "responsiveMaintainer_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "license_latency" + "\"" + ": " + "0" +
+      "\"" + "netscore_latency" + "\"" + ": " + this.netScore.latencyValue + ", " +
+      "\"" + "rampup_latency" + "\"" + ": " + this.rampUp.latencyValue + ", " +
+      "\"" + "correctness_latency" + "\"" + ": " + this.correctness.latencyValue + ", " +
+      "\"" + "busfactor_latency" + "\"" + ": " + this.busFactor.latencyValue + ", " +
+      "\"" + "responsiveMaintainer_latency" + "\"" + ": " + this.responsiveMaintainer.latencyValue + ", " +
+      "\"" + "license_latency" + "\"" + ": " + this.license.latencyValue +
       "}" + '\n'
     );
     return str;
