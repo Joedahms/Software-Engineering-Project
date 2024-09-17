@@ -30,13 +30,13 @@ export class Repository {
   }
 
   async calculateAllMetrics() {
-    this.url.calculateValue();
+    await this.url.calculateValue();
     await this.netScore.calculateValue();
-    this.rampUp.calculateValue();
-    this.correctness.calculateValue();
-    this.busFactor.calculateValue();
-    this.responsiveMaintainer.calculateValue();
-    this.license.calculateValue();
+    await this.rampUp.calculateValue();
+    await this.correctness.calculateValue();
+    await this.busFactor.calculateValue();
+    await this.responsiveMaintainer.calculateValue();
+    await this.license.calculateValue();
   }
 
   // This could be cleaned up but it works for now

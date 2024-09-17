@@ -28,7 +28,7 @@ async function fetchCommits(owner: string, repo: string): Promise<number> {
 }
 
 // Whether or not repo has license
-export async function checkLicense(desiredLicense: string, owner: string, name: string) {
+export async function checkLicense(desiredLicense: string, owner: string, name: string): Promise<number> {
     // fetch the availability of licenses
     var logger = new Logger();
     logger.add(1, "Checking " + name + " for " + desiredLicense);
@@ -49,9 +49,11 @@ export async function checkLicense(desiredLicense: string, owner: string, name: 
       if (error.status) {
         // need more error action here
         logger.add(1, name + " encountered an Octokit error when checking the license");
+        return 2;
       }
       else {
         throw error;
+        return 2;
       }
     }
 }

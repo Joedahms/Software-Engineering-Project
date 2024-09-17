@@ -49,7 +49,7 @@ export class Url extends Metric {
   }
 
   calculateValue(): string {
-    return "s";
+    return this.name;
   }
 }
 
@@ -65,8 +65,6 @@ export class NetScore extends Metric {
   }
 
   async calculateValue(): Promise<number> {
-    const license = await checkLicense("MIT License", this.repoOwner, this.repoName);
-    //console.log(license);
     return 0;
   }
 }
@@ -82,7 +80,7 @@ export class RampUp extends Metric {
     this.value = 0;
   }
 
-  calculateValue(): number {
+  async calculateValue(): Promise<number> {
     return 0;
   }
 }
@@ -98,7 +96,7 @@ export class Correctness extends Metric {
     this.value = 0;
   }
 
-  calculateValue(): number {
+  async calculateValue(): Promise<number> {
     return 0;
   }
 }
@@ -114,7 +112,7 @@ export class BusFactor extends Metric {
     this.value = 0;
   }
 
-  calculateValue(): number {
+  async calculateValue(): Promise<number> {
 
     return 0;
   }
@@ -132,7 +130,7 @@ export class ResponsiveMaintainer extends Metric {
     this.value = 0;
   }
 
-  calculateValue(): number {
+  async calculateValue(): Promise<number> {
     return 0;
   }
 }
@@ -149,7 +147,21 @@ export class License extends Metric {
     this.value = 0;
   }
 
-  calculateValue(): number {
-    return 0;
+  async calculateValue(): Promise<number> {
+    const license = await checkLicense("MIT License", this.repoOwner, this.repoName);
+    switch (license) {
+      case 0:
+        this.value = 0; 
+        break;
+      case 1:
+        this.value = 1;
+        break;
+      case 2:
+        this.value = 0;
+        break;
+      default:
+        this.value = 0;
+    }
+    return license;
   }
 }
