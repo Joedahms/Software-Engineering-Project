@@ -1,6 +1,6 @@
 import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License} from './metric.js'
 import { writeOutput } from './output.js'
-
+import { RepoStats } from './api_access.js'
 export class Repository {
   owner: string;  // GitHub username of repository owner
   name: string;   // Name of the repository
@@ -29,13 +29,14 @@ export class Repository {
     this.license = new License(owner, name);
   }
 
-  async calculateAllMetrics() {
-    this.url.value = this.url.calculateValue();
-    this.netScore.value = await this.netScore.calculateValue();
+  async calculateAllMetrics(repoInfo: RepoStats) {
+    //Do we need to calculate this again???
+    //this.url.value = this.url.calculateValue(); 
+    //this.netScore.value = await this.netScore.calculateValue();
     this.rampUp.value = this.rampUp.calculateValue();
     this.correctness.value = this.correctness.calculateValue();
     this.busFactor.value = this.busFactor.calculateValue();
-    this.responsiveMaintainer.value = this.responsiveMaintainer.calculateValue();
+    this.responsiveMaintainer.value = this.responsiveMaintainer.CalculateValue(repoInfo.totalCommits, repoInfo.daysActive);
     this.license.value = this.license.calculateValue();
   }
 
