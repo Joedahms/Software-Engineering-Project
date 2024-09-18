@@ -24,8 +24,7 @@ abstract class Metric {
     this.latencyValue = 0;
   }
 
-  // Calculate the value of the metric 
-  abstract calculateValue(): Promise<number> | number | string;
+  // Implement a function for calculating the value of the metric 
   
   // Normalizes a number to a value between 0 and 1 depending on the min and max
   minMax(inputValue: number, max: number, min: number): number {
@@ -71,10 +70,11 @@ export class NetScore extends Metric {
   async calculateValue(): Promise<number> {
     const startTime = performance.now();
     // Put calculation code here
+    // this.value = 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
 
-    return 0;
+    return 0; // this.value
   }
 }
 
@@ -92,10 +92,11 @@ export class RampUp extends Metric {
   async calculateValue(): Promise<number> {
     const startTime = performance.now();
     // Put calculation code here
+    // this.value = 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
 
-    return 0;
+    return 0; // this.value
   }
 }
 
@@ -113,10 +114,11 @@ export class Correctness extends Metric {
   async calculateValue(): Promise<number> {
     const startTime = performance.now();
     // Put calculation code here
+    // this.value = 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
 
-    return 0;
+    return 0; // this.value
   }
 }
 
@@ -134,10 +136,11 @@ export class BusFactor extends Metric {
   async calculateValue(): Promise<number> {
     const startTime = performance.now();
     // Put calculation code here
+    // this.value = 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
-
-    return 0;
+    
+    return 0; // this.value
   }
 }
 
@@ -153,12 +156,15 @@ export class ResponsiveMaintainer extends Metric {
     this.value = 0;
   }
 
-  async calculateValue(): Promise<number> {
+  async calculateValue(daysActive: number, totalCommits: number): Promise<number> {
     const startTime = performance.now();
-    // Put calculation code here
+
+    var months = daysActive / 30;
+    this.value = this.minMax(totalCommits / months, 100, 0); //arbitrary max and min values picked.
+
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
-    return 0;
+    return this.value;
   }
 }
 
@@ -173,25 +179,12 @@ export class License extends Metric {
     this.name = "License";
     this.value = 0;
   }
-
   async calculateValue(): Promise<number> {
     const startTime = performance.now();
-    const license = await checkLicense("MIT License", this.repoOwner, this.repoName);
-    switch (license) {
-      case 0:
-        this.value = 0; 
-        break;
-      case 1:
-        this.value = 1;
-        break;
-      case 2:
-        this.value = 0;
-        break;
-      default:
-        this.value = 0;
-    }
+
+    // calc here
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
-    return license;
+    return 0;
   }
 }
