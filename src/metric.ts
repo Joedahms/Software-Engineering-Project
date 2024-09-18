@@ -156,7 +156,7 @@ export class ResponsiveMaintainer extends Metric {
     this.value = 0;
   }
 
-  async calculateValue(daysActive: number, totalCommits: number): Promise<number> {
+  async calculateValue(daysActive: number, totalCommits: number) {
     const startTime = performance.now();
 
     var months = daysActive / 30;
@@ -164,7 +164,6 @@ export class ResponsiveMaintainer extends Metric {
 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
-    return this.value;
   }
 }
 
@@ -179,12 +178,17 @@ export class License extends Metric {
     this.name = "License";
     this.value = 0;
   }
-  async calculateValue(): Promise<number> {
+  async calculateValue(desiredLicenseName: string, licenseName: string) {
     const startTime = performance.now();
+    
+    if (desiredLicenseName === licenseName) {
+      this.value = 1;
+    } 
+    else {
+      this.value = 0;
+    }
 
-    // calc here
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
-    return 0;
   }
 }
