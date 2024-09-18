@@ -42,6 +42,8 @@ for (urlDataIndex = 0; urlDataIndex < urlData.length; urlDataIndex++) {
   );
   //calculate metrics here
   var repoInfo = new RepoStats(newRepository.owner,newRepository.name);
+  await repoInfo.fetchTotalCommits();
+  await repoInfo.fetchRepoData();
   await newRepository.calculateAllMetrics(repoInfo);
   repositories.push(newRepository);
 }
