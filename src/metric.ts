@@ -136,7 +136,7 @@ export class ResponsiveMaintainer extends Metric {
   }
   CalculateValue(totalCommits:number, daysActive:number): number {
     var months = daysActive/30;
-    return this.minMax(totalCommits/months,50,0); //arbitrary max and min values picked.
+    return this.minMax(totalCommits/months,100,0); //arbitrary max and min values picked.
   }
 }
 
