@@ -15,17 +15,29 @@ async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]
 // Function to fetch the number of commits in a repository
 export async function fetchCommitCount(owner: string, repo: string): Promise<number> {
   try {
-    const commits = await octokit.paginate(octokit.repos.listCommits, {
+    // Fetch the first page with per_page set to 1 to minimize data transferred
+    const response = await octokit.repos.listCommits({
       owner,
       repo,
-      per_page: 100,
+      per_page: 1,
     });
-    return commits.length;
+
+    // Check if there's a link header with 'rel="last"' to find the total number of commits
+    const linkHeader = response.headers.link;
+    if (linkHeader) {
+      const match = linkHeader.match(/&page=(\d+)>; rel="last"/);
+      if (match) {
+        return parseInt(match[1], 10);
+      }
+    }
+    // If no link header, fallback to counting the response length (which means there's only 1 page of commits)
+    return response.data.length;
   } catch (error) {
     handleError(error);
     return 0; // Return 0 in case of error
   }
 }
+
 
 // Whether or not repo has license
 export async function checkLicense(desiredLicense: string, owner: string, name: string) {
