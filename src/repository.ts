@@ -41,7 +41,7 @@ export class Repository {
     await this.repoStats.fetchRepoData();
     await this.repoStats.fetchData();
     await this.netScore.calculateValue();
-    await this.rampUp.calculateValue();
+    await this.rampUp.calculateValue(this.repoStats.readmeLength);
     await this.correctness.calculateValue();
     await this.busFactor.calculateValue();
     await this.responsiveMaintainer.calculateValue(this.repoStats.totalCommits, this.repoStats.daysActive);

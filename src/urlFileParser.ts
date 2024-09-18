@@ -95,8 +95,7 @@ export class UrlFileParser {
      
       // Add info to log file
       this.logger.add(2, totalNpmUrls + " NPM URLs found");
-      this.logger.add(2, "npmUrlArray contents: ")
-      this.logger.add(2, String(npmUrlArray));
+      this.logger.add(2, "NPM URLs: " + String(npmUrlArray));
 
       var githubUrlArray: Array<string> = []; // Array of GitHub URLs extracted from the NPM pages
       var npmUrlIndex: number;
@@ -135,8 +134,7 @@ export class UrlFileParser {
 
       // Add info to log file
       this.logger.add(2, totalGithubUrls + " GitHub URLs found");
-      this.logger.add(2, "githubUrlArray contents: ")
-      this.logger.add(2, String(githubUrlArray));
+      this.logger.add(2, "GitHub URLs: " + String(githubUrlArray));
 
       githubRepoArray = this.#ownerAndNameFromUrl(githubUrlArray, githubUrlArray);
     }

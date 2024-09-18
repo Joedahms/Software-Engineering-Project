@@ -45,13 +45,7 @@ export async function checkLicense(owner: string, name: string): Promise<string>
     var logger = new Logger();
     logger.add(1, "Checking " + name + " for license");
 
-      //const originalConsoleLog = console.log;
-      //const originalConsoleError = console.error;
-
-
     try {
-      //console.log = function(){};
-      //console.error = function(){};
 
       const license = await octokit.request('GET /repos/{owner}/{repo}/license', {
         owner: owner,
@@ -208,10 +202,12 @@ export class RepoStats {
 
       // License name
       const license = await checkLicense(this.owner, this.repo);
-
-      /*
+      this.licenseName = license;
+      
       // Readme
       const readme = await octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
+      this.readmeLength = Buffer.from(readme.data.content, 'base64').toString('utf-8').length;
+      /*
 
       // ???
       const firstCommit = await octokit.repos.listCommits({ owner: this.owner, repo: this.repo, per_page: 100 });
@@ -239,8 +235,6 @@ export class RepoStats {
       this.totalContributors = contributors.length;
   */
   
-      this.licenseName = license;
-  //    this.readmeLength = Buffer.from(readme.data.content, 'base64').toString('utf-8').length;
   
 //      this.firstCommitDate = firstCommit.data[0]?.commit?.author?.date ? new Date(firstCommit.data[0].commit.author.date) : new Date();
  //     this.lastCommitDate = lastCommit.data[0]?.commit?.author?.date ? new Date(lastCommit.data[0].commit.author.date) : new Date();
