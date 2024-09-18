@@ -13,7 +13,7 @@ async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]
 }
 
 // Function to fetch the number of commits in a repository
-export async function fetchCommitCount(owner: string, repo: string): Promise<number> {
+async function fetchCommitCount(owner: string, repo: string): Promise<number> {
   try {
     // Fetch the first page with per_page set to 1 to minimize data transferred
     const response = await octokit.repos.listCommits({
