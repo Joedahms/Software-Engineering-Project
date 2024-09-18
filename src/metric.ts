@@ -131,9 +131,12 @@ export class ResponsiveMaintainer extends Metric {
     this.name = "ResponsiveMaintainer";
     this.value = 0;
   }
-
-  calculateValue(): number {
+  calculateValue():number{
     return 0;
+  }
+  CalculateValue(totalCommits:number, daysActive:number): number {
+    var months = daysActive/30;
+    return totalCommits/months;
   }
 }
 
