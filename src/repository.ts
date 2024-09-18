@@ -14,10 +14,14 @@ export class Repository {
   responsiveMaintainer: ResponsiveMaintainer
   license: License;
 
+  repoStats: RepoStats;
+
   // Must pass url, owner, and name
   constructor(url: string, owner: string, name: string) {
     this.owner = owner;
     this.name = name;
+
+    this.repoStats = new RepoStats(this.owner, this.name);
 
     this.url = new Url(owner, name);
     this.url.value = url;
@@ -29,15 +33,15 @@ export class Repository {
     this.license = new License(owner, name);
   }
 
-  async calculateAllMetrics(repoInfo: RepoStats) {
-    //Do we need to calculate this again???
-    //this.url.value = this.url.calculateValue(); 
-    //this.netScore.value = await this.netScore.calculateValue();
-    this.rampUp.value = this.rampUp.calculateValue();
-    this.correctness.value = this.correctness.calculateValue();
-    this.busFactor.value = this.busFactor.calculateValue();
-    this.responsiveMaintainer.value = this.responsiveMaintainer.CalculateValue(repoInfo.totalCommits, repoInfo.daysActive);
-    this.license.value = this.license.calculateValue();
+  // Call all metric's calculateValue() method to calculate all metrics for a Repository
+  async calculateAllMetrics() {
+    await this.repoStats.fetchRepoData();
+    this.netScore.value = await this.netScore.calculateValue();
+    this.rampUp.value = await this.rampUp.calculateValue();
+    this.correctness.value = await this.correctness.calculateValue();
+    this.busFactor.value = await this.busFactor.calculateValue();
+    this.responsiveMaintainer.value = await this.responsiveMaintainer.calculateValue(this.repoStats.totalCommits, this.repoStats.daysActive);
+    this.license.value;// = await this.license.calculateValue();
   }
 
   // This could be cleaned up but it works for now
@@ -51,12 +55,12 @@ export class Repository {
       "\"" + this.busFactor.name + "\"" + ": " + this.busFactor.value + ", " +
       "\"" + this.responsiveMaintainer.name + "\"" + ": " + this.responsiveMaintainer.value + ", " +
       "\"" + this.license.name + "\"" + ": " + this.license.value + ", " +
-      "\"" + "netscore_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "rampup_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "correctness_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "busfactor_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "responsiveMaintainer_latency" + "\"" + ": " + "0" + ", " +
-      "\"" + "license_latency" + "\"" + ": " + "0" +
+      "\"" + "netscore_latency" + "\"" + ": " + this.netScore.latencyValue + ", " +
+      "\"" + "rampup_latency" + "\"" + ": " + this.rampUp.latencyValue + ", " +
+      "\"" + "correctness_latency" + "\"" + ": " + this.correctness.latencyValue + ", " +
+      "\"" + "busfactor_latency" + "\"" + ": " + this.busFactor.latencyValue + ", " +
+      "\"" + "responsiveMaintainer_latency" + "\"" + ": " + this.responsiveMaintainer.latencyValue + ", " +
+      "\"" + "license_latency" + "\"" + ": " + this.license.latencyValue +
       "}" + '\n'
     );
     return str;

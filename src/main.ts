@@ -40,12 +40,8 @@ for (urlDataIndex = 0; urlDataIndex < urlData.length; urlDataIndex++) {
     urlData[urlDataIndex].owner, 
     urlData[urlDataIndex].name
   );
-  //calculate metrics here
-  var repoInfo = new RepoStats(newRepository.owner,newRepository.name);
-  await repoInfo.fetchTotalCommits();
-  await repoInfo.fetchRepoData();
-  //await repoInfo.fetchData();
-  await newRepository.calculateAllMetrics(repoInfo);
+  // Calculate metrics here
+  await newRepository.calculateAllMetrics();
   repositories.push(newRepository);
 }
 // Print out metric calculation results in NDJSON

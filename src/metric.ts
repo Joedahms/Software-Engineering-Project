@@ -1,4 +1,6 @@
 import * as dotenv from "dotenv";
+import { performance } from "perf_hooks"
+
 import { Logger } from "./logger.js";
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
@@ -11,6 +13,7 @@ abstract class Metric {
 
   name: string;           // Name of the metric. Required to match syntax checker
   value: number | string; // URL name or metric score
+  latencyValue: number    // How long it takes to calculate the metric
 
   constructor(repoOwner: string, repoName: string) {
     this.repoOwner = repoOwner;
@@ -18,10 +21,10 @@ abstract class Metric {
 
     this.name = "name not assigned"
     this.value = 0;
+    this.latencyValue = 0;
   }
 
-  // Calculate the value of the metric 
-  abstract calculateValue(): Promise<number> | number | string;
+  // Implement a function for calculating the value of the metric 
   
   // Normalizes a number to a value between 0 and 1 depending on the min and max
   minMax(inputValue: number, max: number, min: number): number {
@@ -49,7 +52,7 @@ export class Url extends Metric {
   }
 
   calculateValue(): string {
-    return "s";
+    return this.name;
   }
 }
 
@@ -65,9 +68,13 @@ export class NetScore extends Metric {
   }
 
   async calculateValue(): Promise<number> {
-    const license = await checkLicense("MIT License", this.repoOwner, this.repoName);
-    //console.log(license);
-    return 0;
+    const startTime = performance.now();
+    // Put calculation code here
+    // this.value = 
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
+
+    return 0; // this.value
   }
 }
 
@@ -82,8 +89,14 @@ export class RampUp extends Metric {
     this.value = 0;
   }
 
-  calculateValue(): number {
-    return 0;
+  async calculateValue(): Promise<number> {
+    const startTime = performance.now();
+    // Put calculation code here
+    // this.value = 
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
+
+    return 0; // this.value
   }
 }
 
@@ -98,8 +111,14 @@ export class Correctness extends Metric {
     this.value = 0;
   }
 
-  calculateValue(): number {
-    return 0;
+  async calculateValue(): Promise<number> {
+    const startTime = performance.now();
+    // Put calculation code here
+    // this.value = 
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
+
+    return 0; // this.value
   }
 }
 
@@ -114,9 +133,14 @@ export class BusFactor extends Metric {
     this.value = 0;
   }
 
-  calculateValue(): number {
-
-    return 0;
+  async calculateValue(): Promise<number> {
+    const startTime = performance.now();
+    // Put calculation code here
+    // this.value = 
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
+    
+    return 0; // this.value
   }
 }
 
@@ -131,12 +155,16 @@ export class ResponsiveMaintainer extends Metric {
     this.name = "ResponsiveMaintainer";
     this.value = 0;
   }
-  calculateValue():number{
-    return 0;
-  }
-  CalculateValue(totalCommits:number, daysActive:number): number {
-    var months = daysActive/30;
-    return this.minMax(totalCommits/months,100,0); //arbitrary max and min values picked.
+
+  async calculateValue(daysActive: number, totalCommits: number): Promise<number> {
+    const startTime = performance.now();
+
+    var months = daysActive / 30;
+    this.value = this.minMax(totalCommits / months, 100, 0); //arbitrary max and min values picked.
+
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
+    return this.value;
   }
 }
 
@@ -151,8 +179,12 @@ export class License extends Metric {
     this.name = "License";
     this.value = 0;
   }
+  async calculateValue(): Promise<number> {
+    const startTime = performance.now();
 
-  calculateValue(): number {
+    // calc here
+    const endTime = performance.now();
+    this.latencyValue = endTime - startTime;
     return 0;
   }
 }
