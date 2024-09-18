@@ -13,7 +13,7 @@ if [ $# == 1 ]; then           # One command line argument
     echo "You chose test"
     # Call the test suite here
   else                    # URL_FILE
-    tsc                   # Compile TypeScript files to JavaScript
+    npx tsc                   # Compile TypeScript files to JavaScript
     if [ $? -ne 0 ]; then # ?
       echo "TypeScript compilation failed. Exiting..."
       exit 1

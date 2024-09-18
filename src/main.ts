@@ -1,6 +1,7 @@
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'; // interface, class
 import { Repository } from './repository.js'  // class
 import { writeOutput } from './output.js'     // function
+import { RepoStats } from './api_access.js'
 
 export class Main {
   readonly urlFileParser: UrlFileParser;
@@ -34,16 +35,20 @@ var repositories: Repository[] = [];
 // Set the correct url, owner, and name for each repository
 var urlDataIndex: number;
 for (urlDataIndex = 0; urlDataIndex < urlData.length; urlDataIndex++) {
-  var newRepository = new Repository( urlData[urlDataIndex].url, 
-                                      urlData[urlDataIndex].owner, 
-                                      urlData[urlDataIndex].name
-                                    );
-  await newRepository.calculateAllMetrics();
+  var newRepository = new Repository( 
+    urlData[urlDataIndex].url, 
+    urlData[urlDataIndex].owner, 
+    urlData[urlDataIndex].name
+  );
+  //calculate metrics here
+  var repoInfo = new RepoStats(newRepository.owner,newRepository.name);
+  await repoInfo.fetchTotalCommits();
+  await repoInfo.fetchRepoData();
+  //await repoInfo.fetchData();
+  await newRepository.calculateAllMetrics(repoInfo);
   repositories.push(newRepository);
 }
-
 // Print out metric calculation results in NDJSON
-// As of now, there aren't any calculations being done, defaults are printed
 var repositoryIndex: number;
 var output: string = "";
 for (repositoryIndex = 0; repositoryIndex < repositories.length; repositoryIndex++) {
