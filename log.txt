@@ -1,6 +1,44 @@
 2 NPM URLs found
-npmUrlArray contents: 
-https://www.npmjs.com/package/express,https://www.npmjs.com/package/browserify
+NPM URLs: https://www.npmjs.com/package/express,https://www.npmjs.com/package/browserify
 3 GitHub URLs found
-githubUrlArray contents: 
-https://github.com/cloudinary/cloudinary_npm,https://github.com/nullivex/nodist,https://github.com/lodash/lodash
+GitHub URLs: https://github.com/cloudinary/cloudinary_npm,https://github.com/nullivex/nodist,https://github.com/lodash/lodash
+Calculating RampUp for express
+min max input: 9803
+min max result: 0.3153559322033898
+express RampUp: 0.3153559322033898
+Calculating ResponsiveMaintainer for express
+min max input: 27.9177119919719
+min max result: 0.09213766333984125
+express ResponsiveMaintainer: 0.09213766333984125
+Calculating RampUp for browserify
+min max input: 26832
+min max result: 0.8926101694915254
+browserify RampUp: 0.8926101694915254
+Calculating ResponsiveMaintainer for browserify
+min max input: 66.914011348756
+min max result: 0.2208383212830231
+browserify ResponsiveMaintainer: 0.2208383212830231
+Calculating RampUp for cloudinary_npm
+min max input: 4750
+min max result: 0.1440677966101695
+cloudinary_npm RampUp: 0.1440677966101695
+Calculating ResponsiveMaintainer for cloudinary_npm
+min max input: 145.72826086956522
+min max result: 0.48095135600516575
+cloudinary_npm ResponsiveMaintainer: 0.48095135600516575
+Calculating RampUp for nodist
+min max input: 18032
+min max result: 0.5943050847457627
+nodist RampUp: 0.5943050847457627
+Calculating ResponsiveMaintainer for nodist
+min max input: 302.78280542986425
+min max result: 0.9992831862371757
+nodist ResponsiveMaintainer: 0.9992831862371757
+Calculating RampUp for lodash
+min max input: 2807
+min max result: 0.07820338983050848
+lodash RampUp: 0.07820338983050848
+Calculating ResponsiveMaintainer for lodash
+min max input: 17.020958083832337
+min max result: 0.05617477915456217
+lodash ResponsiveMaintainer: 0.05617477915456217
