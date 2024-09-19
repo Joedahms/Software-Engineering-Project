@@ -40,12 +40,12 @@ export class Repository {
   async calculateAllMetrics() {
     await this.repoStats.fetchRepoData();
     await this.repoStats.fetchData();
-    await this.netScore.calculateValue();
     await this.rampUp.calculateValue(this.repoStats.readmeLength);
     await this.correctness.calculateValue();
     await this.busFactor.calculateValue();
     await this.responsiveMaintainer.calculateValue(this.repoStats.totalCommits, this.repoStats.daysActive);
     await this.license.calculateValue(this.desiredLicense, this.repoStats.licenseName);
+    await this.netScore.calculateValue(this.rampUp, /* correctness */ this.busFactor, this.responsiveMaintainer, this.license);
   }
 
   // This could be cleaned up but it works for now

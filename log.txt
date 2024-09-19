@@ -4,41 +4,56 @@ NPM URLs: https://www.npmjs.com/package/express,https://www.npmjs.com/package/br
 GitHub URLs: https://github.com/cloudinary/cloudinary_npm,https://github.com/nullivex/nodist,https://github.com/lodash/lodash
 Calculating RampUp for express
 min max input: 9803
-min max result: 0.3153559322033898
-express RampUp: 0.3153559322033898
+min max result: 0.3510566037735849
+express RampUp: 0.3510566037735849
 Calculating ResponsiveMaintainer for express
-min max input: 27.9177119919719
-min max result: 0.09213766333984125
-express ResponsiveMaintainer: 0.09213766333984125
+min max input: 27.922729553437026
+min max result: 0.09215422294863705
+express ResponsiveMaintainer: 0.09215422294863705
+Calculating NetScore for express
+min max input: 0.44321082672222195
+min max result: 0.11080270668055549
 Calculating RampUp for browserify
 min max input: 26832
-min max result: 0.8926101694915254
-browserify RampUp: 0.8926101694915254
+min max result: 0.9936603773584906
+browserify RampUp: 0.9936603773584906
 Calculating ResponsiveMaintainer for browserify
 min max input: 66.914011348756
 min max result: 0.2208383212830231
 browserify ResponsiveMaintainer: 0.2208383212830231
+Calculating NetScore for browserify
+min max input: 1.2144986986415136
+min max result: 0.3036246746603784
 Calculating RampUp for cloudinary_npm
 min max input: 4750
-min max result: 0.1440677966101695
-cloudinary_npm RampUp: 0.1440677966101695
+min max result: 0.16037735849056603
+cloudinary_npm RampUp: 0.16037735849056603
 Calculating ResponsiveMaintainer for cloudinary_npm
 min max input: 145.72826086956522
 min max result: 0.48095135600516575
 cloudinary_npm ResponsiveMaintainer: 0.48095135600516575
+Calculating NetScore for cloudinary_npm
+min max input: 0.6413287144957318
+min max result: 0.16033217862393295
 Calculating RampUp for nodist
 min max input: 18032
-min max result: 0.5943050847457627
-nodist RampUp: 0.5943050847457627
+min max result: 0.6615849056603773
+nodist RampUp: 0.6615849056603773
 Calculating ResponsiveMaintainer for nodist
 min max input: 302.78280542986425
 min max result: 0.9992831862371757
 nodist ResponsiveMaintainer: 0.9992831862371757
+Calculating NetScore for nodist
+min max input: 1.660868091897553
+min max result: 0.41521702297438823
 Calculating RampUp for lodash
 min max input: 2807
-min max result: 0.07820338983050848
-lodash RampUp: 0.07820338983050848
+min max result: 0.0870566037735849
+lodash RampUp: 0.0870566037735849
 Calculating ResponsiveMaintainer for lodash
-min max input: 17.020958083832337
-min max result: 0.05617477915456217
-lodash ResponsiveMaintainer: 0.05617477915456217
+min max input: 17.024700598802397
+min max result: 0.05618713068911682
+lodash ResponsiveMaintainer: 0.05618713068911682
+Calculating NetScore for lodash
+min max input: 0.14324373446270172
+min max result: 0.03581093361567543
