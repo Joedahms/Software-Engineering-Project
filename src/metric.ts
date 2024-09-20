@@ -8,10 +8,10 @@ import { checkLicense } from './api_access.js'
 
 // Abstract metric class
 abstract class Metric {
-  logger: Logger;
+  readonly logger: Logger;
 
-  repoName: string;       // Name of the repository the metric belongs to
-  repoOwner: string;      // Owner of the repository the metric belongs to
+  readonly repoName: string;       // Name of the repository the metric belongs to
+  readonly repoOwner: string;      // Owner of the repository the metric belongs to
 
   name: string;           // Name of the metric. Required to match syntax checker
   value: number | string; // URL name or metric score
@@ -50,7 +50,6 @@ abstract class Metric {
 
 // URL metric
 export class Url extends Metric {
-  name: string;
   value: string;
 
   constructor(repoOwner: string, repoName: string) {
@@ -67,7 +66,6 @@ export class Url extends Metric {
 
 // NetScore metric
 export class NetScore extends Metric {
-  name: string;
   value: number;
 
   constructor(repoOwner: string, repoName: string) {
@@ -76,20 +74,43 @@ export class NetScore extends Metric {
     this.value = 0;
   }
 
-  async calculateValue(): Promise<number> {
+  async calculateValue(
+  rampUp: RampUp, 
+  /*skipping correctness for now*/
+  busFactor: BusFactor,
+  responsiveMaintainer: ResponsiveMaintainer,
+  license: License) {
+
     const startTime = performance.now();
-    // Put calculation code here
-    // this.value = 
+    this.logger.add(2, "Calculating NetScore for " + this.repoName);
+
+    const rampUpWeight = 1;
+    // const correctnessWeight = 1;
+    const busFactorWeight = 1;
+    const responsiveMaintainerWeight = 1;
+
+    const weightedRampUp = rampUpWeight * rampUp.value;
+    // const weightedCorrectness
+    const weightedBusFactor = busFactorWeight * busFactor.value;
+    const weightedResponsiveMaintainer = responsiveMaintainerWeight * responsiveMaintainer.value;
+
+    const weightedSum = weightedRampUp + /* weightedCorrectness */ + weightedBusFactor + weightedResponsiveMaintainer;    
+    const normalizedWeightedSum = this.minMax(weightedSum, 4, 0);
+    this.value = license.value * normalizedWeightedSum;
+    if (normalizedWeightedSum === 2) {
+      console.error("Maximum too low for NetScore metric");
+      process.exit(1);
+    }
+
+    this.logger.add(1, this.repoName + this.name + "Calculated successfully");
+
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
-
-    return 0; // this.value
   }
 }
 
 // RampUp metric
 export class RampUp extends Metric {
-  name: string;
   value: number;
 
   constructor(repoOwner: string, repoName: string) {
@@ -121,7 +142,6 @@ export class RampUp extends Metric {
 
 // Correctness metric
 export class Correctness extends Metric {
-  name: string;
   value: number;
 
   constructor(repoOwner: string, repoName: string) {
@@ -130,20 +150,17 @@ export class Correctness extends Metric {
     this.value = 0;
   }
 
-  async calculateValue(): Promise<number> {
+  async calculateValue() {
     const startTime = performance.now();
     // Put calculation code here
     // this.value = 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
-
-    return 0; // this.value
   }
 }
 
 // BusFactor metric
 export class BusFactor extends Metric {
-  name: string;
   value: number;
 
   constructor(repoOwner: string, repoName: string) {
@@ -152,25 +169,21 @@ export class BusFactor extends Metric {
     this.value = 0;
   }
 
-  async calculateValue(): Promise<number> {
+  async calculateValue() {
     const startTime = performance.now();
     // Put calculation code here
     // this.value = 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
-    
-    return 0; // this.value
   }
 }
 
 // ResponsiveMaintainer metric
 export class ResponsiveMaintainer extends Metric {
-  name: string;
   value: number;
 
   constructor(repoOwner: string, repoName: string) {
     super(repoOwner, repoName);
-    //this.name = "RESPONSIVE_MAINTAINER_SCORE";
     this.name = "ResponsiveMaintainer";
     this.value = 0;
   }
@@ -197,12 +210,10 @@ export class ResponsiveMaintainer extends Metric {
 
 // License metric
 export class License extends Metric {
-  name: string;
   value: number;
 
   constructor(repoOwner: string, repoName: string) {
     super(repoOwner, repoName);
-    //this.name = "LICENSE_SCORE";
     this.name = "License";
     this.value = 0;
   }
