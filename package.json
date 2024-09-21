@@ -1,4 +1,4 @@
-{
+{ 
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@tsconfig/node20": "^20.1.4",
