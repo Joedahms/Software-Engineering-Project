@@ -7,3 +7,4 @@ src/*.js
 
 # Ignore log.txt file
 log.txt
+test-log.txt
