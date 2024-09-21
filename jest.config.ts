@@ -44,6 +44,24 @@ module.exports = {
     "json-summary"
   ],
 
+  // An array of file extensions your modules use
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+
+  // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
+  //moduleNameMapper: { "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/mocks/fileMock.js", "\\.(css|less)$": "<rootDir>/mocks/fileMock.js"  },
+  
+  // A preset that is used as a base for Jest's configuration
+  preset: "ts-jest",
+  
+  // The test environment that will be used for testing
+  testEnvironment: 'node',
+  // Options that will be passed to the testEnvironment
+  // testEnvironmentOptions: {},
+  transform: {'^.+\\.ts?$': 'ts-jest'},
+  
+  // The regexp pattern or array of patterns that Jest uses to detect test files
+  testRegex: '/test/.*\\.(test|spec)?\\.(ts|tsx)$',
+
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
 
@@ -78,13 +96,6 @@ module.exports = {
   //   "node_modules"
   // ],
 
-  // An array of file extensions your modules use
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-
-
-  // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
-
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
 
@@ -93,9 +104,6 @@ module.exports = {
 
   // An enum that specifies notification mode. Requires { notify: true }
   // notifyMode: "failure-change",
-
-  // A preset that is used as a base for Jest's configuration
-  preset: "ts-jest",
 
   // Run tests from one or more projects
   // projects: undefined,
@@ -138,12 +146,6 @@ module.exports = {
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],
 
-  // The test environment that will be used for testing
-  testEnvironment: 'node',
-  // Options that will be passed to the testEnvironment
-  // testEnvironmentOptions: {},
-  transform: {'^.+\\.ts?$': 'ts-jest'},
-  
   // Adds a location field to test results
   // testLocationInResults: false,
 
@@ -157,9 +159,6 @@ module.exports = {
   // testPathIgnorePatterns: [
   //   "/node_modules/"
   // ],
-
-  // The regexp pattern or array of patterns that Jest uses to detect test files
-  testRegex: '/test/.*\\.(test|spec)?\\.(ts|tsx)$',
 
   // This option allows the use of a custom results processor
   // testResultsProcessor: undefined,

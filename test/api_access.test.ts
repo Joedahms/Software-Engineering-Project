@@ -1,11 +1,10 @@
-import { Octokit } from "@octokit/rest";
+import { Octokit } from '@octokit/rest';
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
-import { fetchCommitCount, checkLicense, RepoStats } from '../src/api_access.ts';
-import { Logger } from '../src/logger.js';
-
+import { fetchCommitCount, checkLicense, RepoStats } from '../src/api_access';
+import { Logger } from '../src/logger';
 
 jest.mock('@octokit/rest');
-jest.mock('./logger.js');
+jest.mock('../src/logger');
 
 const mockedOctokit = Octokit as jest.MockedClass<typeof Octokit>;
 const mockedLogger = Logger as jest.MockedClass<typeof Logger>;
