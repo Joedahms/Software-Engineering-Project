@@ -7,53 +7,65 @@ min max input: 9803
 min max result: 0.3510566037735849
 express RampUp: 0.3510566037735849
 Calculating ResponsiveMaintainer for express
-min max input: 27.922729553437026
-min max result: 0.09215422294863705
-express ResponsiveMaintainer: 0.09215422294863705
+min max input: 27.927747114902157
+min max result: 0.0918675891937571
+express ResponsiveMaintainer: 0.0918675891937571
+Checking express for MIT License license...
+License found at license API endpoint
 Calculating NetScore for express
-min max input: 0.44321082672222195
-min max result: 0.11080270668055549
+min max input: 0.442924192967342
+min max result: 0.1107310482418355
 Calculating RampUp for browserify
 min max input: 26832
 min max result: 0.9936603773584906
 browserify RampUp: 0.9936603773584906
 Calculating ResponsiveMaintainer for browserify
-min max input: 66.914011348756
-min max result: 0.2208383212830231
-browserify ResponsiveMaintainer: 0.2208383212830231
+min max input: 66.95329550414667
+min max result: 0.2202411036320614
+browserify ResponsiveMaintainer: 0.2202411036320614
+Checking browserify for MIT License license...
+License found at license API endpoint
 Calculating NetScore for browserify
-min max input: 1.2144986986415136
-min max result: 0.3036246746603784
+min max input: 1.213901480990552
+min max result: 0.303475370247638
+Error 404 when checking cloudinary_npm for license name, returning README
 Calculating RampUp for cloudinary_npm
 min max input: 4750
 min max result: 0.16037735849056603
 cloudinary_npm RampUp: 0.16037735849056603
 Calculating ResponsiveMaintainer for cloudinary_npm
 min max input: 145.72826086956522
-min max result: 0.48095135600516575
-cloudinary_npm ResponsiveMaintainer: 0.48095135600516575
+min max result: 0.47936927917620137
+cloudinary_npm ResponsiveMaintainer: 0.47936927917620137
+Checking cloudinary_npm for MIT License license...
+License not found at API endpoint, checking README...
+License found in README
 Calculating NetScore for cloudinary_npm
-min max input: 0.6413287144957318
-min max result: 0.16033217862393295
+min max input: 0.6397466376667674
+min max result: 0.15993665941669186
 Calculating RampUp for nodist
 min max input: 18032
 min max result: 0.6615849056603773
 nodist RampUp: 0.6615849056603773
 Calculating ResponsiveMaintainer for nodist
-min max input: 302.78280542986425
-min max result: 0.9992831862371757
-nodist ResponsiveMaintainer: 0.9992831862371757
+min max input: 303.054298642534
+min max result: 0.9968891402714933
+nodist ResponsiveMaintainer: 0.9968891402714933
+Checking nodist for MIT License license...
+License found at license API endpoint
 Calculating NetScore for nodist
-min max input: 1.660868091897553
-min max result: 0.41521702297438823
+min max input: 1.6584740459318708
+min max result: 0.4146185114829677
 Calculating RampUp for lodash
 min max input: 2807
 min max result: 0.0870566037735849
 lodash RampUp: 0.0870566037735849
 Calculating ResponsiveMaintainer for lodash
-min max input: 17.024700598802397
-min max result: 0.05618713068911682
-lodash ResponsiveMaintainer: 0.05618713068911682
+min max input: 17.032185628742514
+min max result: 0.05602692641033722
+lodash ResponsiveMaintainer: 0.05602692641033722
+Checking lodash for MIT License license...
+License not found. Did not scan README for license
 Calculating NetScore for lodash
-min max input: 0.14324373446270172
-min max result: 0.03581093361567543
+min max input: 0.14308353018392211
+min max result: 0.03577088254598053

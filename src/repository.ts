@@ -1,6 +1,7 @@
 import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License} from './metric.js'
 import { writeOutput } from './output.js'
 import { RepoStats } from './api_access.js'
+
 export class Repository {
   owner: string;          // GitHub username of repository owner
   name: string;           // Name of the repository
@@ -38,8 +39,8 @@ export class Repository {
   // Call all metric's calculateValue() method to calculate all metrics for a Repository
   // These methods should set the value within themselves
   async calculateAllMetrics() {
-    await this.repoStats.fetchRepoData();
-    await this.repoStats.fetchData();
+    await this.repoStats.getRepoData();
+    await this.repoStats.getData();
     await this.rampUp.calculateValue(this.repoStats.readmeLength);
     await this.correctness.calculateValue();
     await this.busFactor.calculateValue();
