@@ -26,9 +26,14 @@
 
     /* Modules */
     "module": "NodeNext",                                /* Specify what module code is generated. */
+<<<<<<< HEAD
     "moduleResolution": "NodeNext",                     /* Specify how TypeScript looks up a file from a given module specifier. */
     "outDir": "dist",                                   /* Specify an output folder for all emitted files. */
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */
+=======
+    // "rootDir": "./",                                  /* Specify the root folder within your source files. */
+    "moduleResolution": "NodeNext",                      /* Specify how TypeScript looks up a file from a given module specifier. */
+>>>>>>> a705ac31bf0ae92a61e9c0d994d20d9a5858f380
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
     // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
@@ -58,6 +63,10 @@
     // "sourceMap": true,                                /* Create source map files for emitted JavaScript files. */
     // "inlineSourceMap": true,                          /* Include sourcemap files inside the emitted JavaScript. */
     // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
+<<<<<<< HEAD
+=======
+     "outDir": "dist",                                   /* Specify an output folder for all emitted files. */
+>>>>>>> a705ac31bf0ae92a61e9c0d994d20d9a5858f380
     // "removeComments": true,                           /* Disable emitting comments. */
     // "noEmit": true,                                   /* Disable emitting files from a compilation. */
     // "importHelpers": true,                            /* Allow importing helper functions from tslib once per project, instead of including them per-file. */
@@ -103,8 +112,14 @@
 
     /* Completeness */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
+<<<<<<< HEAD
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     
   },
   "include": ["./src/**/*.tsx", "./src/**/*.ts", "src/jest.config.ts"]
+=======
+
+  },
+  "exclude": ["node_modules", "./*.ts", "__test__"]
+>>>>>>> a705ac31bf0ae92a61e9c0d994d20d9a5858f380
 }
