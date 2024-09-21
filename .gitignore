@@ -2,7 +2,7 @@
 /node_modules/
 
 # Ignore directories
-
+/coverage
 
 # Ignore JavaScript files
 src/*.js
