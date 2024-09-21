@@ -77,7 +77,7 @@ export class RepoStats {
       });
       console.log(license);
       const licenseName = license.data.license ? license.data.license.name : 'N/A';
-      console.clear();  // Repos that don't have a license specified throw a 404 error.
+      //console.clear();  // Repos that don't have a license specified throw a 404 error.
                         // octokit.request automatically writes this to the console before entering the catch clause
                         // Not ideal but this clears this error from the console
       return licenseName;

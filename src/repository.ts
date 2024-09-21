@@ -45,7 +45,7 @@ export class Repository {
     await this.correctness.calculateValue();
     await this.busFactor.calculateValue();
     await this.responsiveMaintainer.calculateValue(this.repoStats.totalCommits, this.repoStats.daysActive);
-    await this.license.calculateValue(this.desiredLicense, this.repoStats.licenseName);
+    await this.license.calculateValue(this.desiredLicense, this.repoStats.licenseName, this.repoStats.readme);
     await this.netScore.calculateValue(this.rampUp, /* correctness */ this.busFactor, this.responsiveMaintainer, this.license);
   }
 

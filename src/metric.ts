@@ -217,21 +217,22 @@ export class License extends Metric {
     this.name = "License";
     this.value = 0;
   }
-  async calculateValue(desiredLicenseName: string, licenseName: string) {
+  async calculateValue(desiredLicenseName: string, licenseName: string, readme: string) {
     const startTime = performance.now();
 
     this.logger.add(2, "Checking " + this.repoName + " for " + desiredLicenseName + " license...");
+    console.log(readme);
     if (desiredLicenseName === licenseName) { // Perfect match
       this.value = 1;
       this.logger.add(1, "License found");
       this.logger.add(2, "License found at license API endpoint");
     } 
-    else if(licenseName.length > 100) {       // 404 error when checking license, readme returned
+    else if(licenseName === readme || licenseName === "Other") {       // 404 error when checking license, readme returned
       this.logger.add(2, "License not found at API endpoint, checking README...");
 
       const licenseNameRegexString = "(" + desiredLicenseName + ")";
       const licenseNameRegex = new RegExp(licenseNameRegexString, "gmi"); // i -> case insensitive
-      const readmeLicenseName = licenseName.match(licenseNameRegex);
+      const readmeLicenseName = readme.match(licenseNameRegex);
 
       if (readmeLicenseName != null) {
         this.value = 1;

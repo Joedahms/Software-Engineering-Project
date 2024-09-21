@@ -65,7 +65,8 @@ min max input: 17.032185628742514
 min max result: 0.05602692641033722
 lodash ResponsiveMaintainer: 0.05602692641033722
 Checking lodash for MIT License license...
-License not found. Did not scan README for license
+License not found at API endpoint, checking README...
+License found in README
 Calculating NetScore for lodash
 min max input: 0.14308353018392211
 min max result: 0.03577088254598053
