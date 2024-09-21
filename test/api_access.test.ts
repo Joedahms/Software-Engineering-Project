@@ -1,5 +1,5 @@
-import { Octokit } from '@octokit/rest';
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
+import { Octokit } from '../node_modules/@octokit/rest';
 import { fetchCommitCount, checkLicense, RepoStats } from '../src/api_access';
 import { Logger } from '../src/logger';
 

@@ -290,4 +290,3 @@ async function checkRateLimit(): Promise<void> {
     handleError(error);
   }
 }
-
