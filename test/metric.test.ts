@@ -2,7 +2,7 @@ import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/g
 import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License } from '../src/metric';
 import { Logger } from '../src/logger';
 
-jest.mock('../src/logger');
+//jest.mock('../src/logger');
 
 describe('Metric subclasses', () => {
   let loggerMock: jest.Mocked<Logger>;

@@ -1,10 +1,10 @@
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
-import { Repository } from '../src/repository.js';
-import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License } from '../src/metric.js';
-import { RepoStats } from '../src/api_access.js';
+import { Repository } from '../src/repository';
+import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License } from '../src/metric';
+import { RepoStats } from '../src/api_access';
 
-jest.mock('../src/metric.js');
-jest.mock('../src/api_access.js');
+//jest.mock('../src/metric');
+//jest.mock('../src/api_access');
 
 describe('Repository', () => {
   let repository: Repository;

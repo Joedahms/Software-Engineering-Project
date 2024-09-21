@@ -2,13 +2,11 @@ import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/g
 import * as filesystem from 'node:fs';
 import * as cheerio from 'cheerio';
 import { UrlFileParser, RepositoryUrlData } from '../src/urlFileParser';
-import { Logger } from '../src/logger.js';
-import { writeOutput } from '../src/output.js';
+import { Logger } from '../src/logger';
+import { writeOutput } from '../src/output';
 
 jest.mock('node:fs');
 jest.mock('cheerio');
-jest.mock('../src/logger.js');
-jest.mock('../src/output.js');
 
 describe('UrlFileParser', () => {
   let urlFileParser: UrlFileParser;

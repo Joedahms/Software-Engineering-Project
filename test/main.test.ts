@@ -1,8 +1,8 @@
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
-import { Main } from '../src/main.js';
-import { UrlFileParser, RepositoryUrlData } from '../src/urlFileParser.js';
+import { Main } from '../src/main';
+import { UrlFileParser, RepositoryUrlData } from '../src/urlFileParser';
 
-jest.mock('../src/urlFileParser.js');
+jest.mock('../src/urlFileParser');
 
 describe('Main', () => {
   let main: Main;
