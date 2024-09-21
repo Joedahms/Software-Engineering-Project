@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1726866591685" clover="3.2.0">
-  <project timestamp="1726866591686" name="All files">
-    <metrics statements="847" coveredstatements="0" conditionals="7" coveredconditionals="0" methods="7" coveredmethods="0" elements="861" coveredelements="0" complexity="0" loc="847" ncloc="847" packages="1" files="7" classes="7"/>
+<coverage generated="1726930585950" clover="3.2.0">
+  <project timestamp="1726930585950" name="All files">
+    <metrics statements="847" coveredstatements="29" conditionals="13" coveredconditionals="5" methods="10" coveredmethods="4" elements="870" coveredelements="38" complexity="0" loc="847" ncloc="847" packages="1" files="7" classes="7"/>
     <file name="api_access.ts" path="C:\Users\Geromy\OneDrive\Documents\VS_Code\ECE461\Software-Engineering-Project\src\api_access.ts">
       <metrics statements="292" coveredstatements="0" conditionals="1" coveredconditionals="0" methods="1" coveredmethods="0"/>
       <line num="1" count="0" type="cond" truecount="0" falsecount="1"/>
@@ -298,40 +298,40 @@
       <line num="292" count="0" type="stmt"/>
     </file>
     <file name="logger.ts" path="C:\Users\Geromy\OneDrive\Documents\VS_Code\ECE461\Software-Engineering-Project\src\logger.ts">
-      <metrics statements="33" coveredstatements="0" conditionals="1" coveredconditionals="0" methods="1" coveredmethods="0"/>
-      <line num="1" count="0" type="cond" truecount="0" falsecount="1"/>
-      <line num="2" count="0" type="stmt"/>
-      <line num="3" count="0" type="stmt"/>
-      <line num="4" count="0" type="stmt"/>
-      <line num="5" count="0" type="stmt"/>
-      <line num="6" count="0" type="stmt"/>
-      <line num="7" count="0" type="stmt"/>
-      <line num="8" count="0" type="stmt"/>
-      <line num="9" count="0" type="stmt"/>
-      <line num="10" count="0" type="stmt"/>
-      <line num="11" count="0" type="stmt"/>
-      <line num="12" count="0" type="stmt"/>
-      <line num="13" count="0" type="stmt"/>
-      <line num="14" count="0" type="stmt"/>
-      <line num="15" count="0" type="stmt"/>
-      <line num="16" count="0" type="stmt"/>
-      <line num="17" count="0" type="stmt"/>
-      <line num="18" count="0" type="stmt"/>
-      <line num="19" count="0" type="stmt"/>
-      <line num="20" count="0" type="stmt"/>
+      <metrics statements="33" coveredstatements="29" conditionals="7" coveredconditionals="5" methods="4" coveredmethods="4"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="2" count="1" type="stmt"/>
+      <line num="3" count="4" type="cond" truecount="1" falsecount="0"/>
+      <line num="4" count="4" type="stmt"/>
+      <line num="5" count="4" type="stmt"/>
+      <line num="6" count="4" type="stmt"/>
+      <line num="7" count="4" type="stmt"/>
+      <line num="8" count="4" type="cond" truecount="1" falsecount="0"/>
+      <line num="9" count="4" type="stmt"/>
+      <line num="10" count="4" type="stmt"/>
+      <line num="11" count="4" type="stmt"/>
+      <line num="12" count="4" type="stmt"/>
+      <line num="13" count="4" type="stmt"/>
+      <line num="14" count="4" type="cond" truecount="1" falsecount="0"/>
+      <line num="15" count="3" type="stmt"/>
+      <line num="16" count="3" type="stmt"/>
+      <line num="17" count="3" type="cond" truecount="1" falsecount="0"/>
+      <line num="18" count="2" type="stmt"/>
+      <line num="19" count="2" type="stmt"/>
+      <line num="20" count="2" type="cond" truecount="0" falsecount="1"/>
       <line num="21" count="0" type="stmt"/>
       <line num="22" count="0" type="stmt"/>
-      <line num="23" count="0" type="stmt"/>
-      <line num="24" count="0" type="stmt"/>
-      <line num="25" count="0" type="stmt"/>
-      <line num="26" count="0" type="stmt"/>
-      <line num="27" count="0" type="stmt"/>
-      <line num="28" count="0" type="stmt"/>
-      <line num="29" count="0" type="stmt"/>
+      <line num="23" count="2" type="stmt"/>
+      <line num="24" count="3" type="stmt"/>
+      <line num="25" count="4" type="stmt"/>
+      <line num="26" count="4" type="cond" truecount="1" falsecount="0"/>
+      <line num="27" count="9" type="stmt"/>
+      <line num="28" count="9" type="stmt"/>
+      <line num="29" count="9" type="cond" truecount="0" falsecount="1"/>
       <line num="30" count="0" type="stmt"/>
       <line num="31" count="0" type="stmt"/>
-      <line num="32" count="0" type="stmt"/>
-      <line num="33" count="0" type="stmt"/>
+      <line num="32" count="9" type="stmt"/>
+      <line num="33" count="4" type="stmt"/>
     </file>
     <file name="main.ts" path="C:\Users\Geromy\OneDrive\Documents\VS_Code\ECE461\Software-Engineering-Project\src\main.ts">
       <metrics statements="58" coveredstatements="0" conditionals="1" coveredconditionals="0" methods="1" coveredmethods="0"/>
