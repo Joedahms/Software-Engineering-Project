@@ -206,7 +206,7 @@ export class RampUp extends Metric {
       console.error("Maximum too low for RampUp metric");
       process.exit(1);
     }
-    //this.value = normalizedMetric; // 
+    this.value = normalizedMetric; 
 
     this.logger.add(1, this.repoName + this.name + "Calculated successfully");
 

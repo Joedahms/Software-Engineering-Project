@@ -11,8 +11,8 @@ min max input: 27.937782237832412
 min max result: 0.09220390177502447
 express ResponsiveMaintainer: 0.09220390177502447
 Calculating NetScore for express
-min max input: 0.09220390177502447
-min max result: 0.023050975443756117
+min max input: 0.44326050554860935
+min max result: 0.11081512638715234
 Calculating RampUp for browserify
 min max input: 26832
 min max result: 0.9936603773584906
@@ -22,8 +22,8 @@ min max input: 66.97948494107378
 min max result: 0.2210544057461181
 browserify ResponsiveMaintainer: 0.2210544057461181
 Calculating NetScore for browserify
-min max input: 0.2210544057461181
-min max result: 0.05526360143652952
+min max input: 1.2147147831046086
+min max result: 0.30367869577615214
 Calculating RampUp for cloudinary_npm
 min max input: 4750
 min max result: 0.16037735849056603
@@ -33,8 +33,8 @@ min max input: 145.72826086956522
 min max result: 0.48095135600516575
 cloudinary_npm ResponsiveMaintainer: 0.48095135600516575
 Calculating NetScore for cloudinary_npm
-min max input: 0.48095135600516575
-min max result: 0.12023783900129144
+min max input: 0.6413287144957318
+min max result: 0.16033217862393295
 Calculating RampUp for nodist
 min max input: 18032
 min max result: 0.6615849056603773
