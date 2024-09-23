@@ -3,8 +3,8 @@ import { Repository } from '../src/repository';
 import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License } from '../src/metric';
 import { RepoStats } from '../src/api_access';
 
-//jest.mock('../src/metric');
-//jest.mock('../src/api_access');
+jest.mock('../src/metric');
+jest.mock('../src/api_access');
 
 describe('Repository', () => {
   let repository: Repository;

@@ -1,60 +1,128 @@
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
 import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License } from '../src/metric';
-import { Logger } from '../src/logger';
+import { Logger } from '../src/logger.js';
 
-//jest.mock('../src/logger');
+jest.mock('./logger.js');
 
-describe('Metric subclasses', () => {
-  let loggerMock: jest.Mocked<Logger>;
+const mockLogger = Logger as jest.MockedClass<typeof Logger>;
+
+describe('Metrics', () => {
+  let loggerInstance: jest.Mocked<Logger>;
 
   beforeEach(() => {
-    loggerMock = new Logger() as jest.Mocked<Logger>;
+    loggerInstance = new mockLogger();
+    loggerInstance.add = jest.fn();
+    loggerInstance.clear = jest.fn();
   });
 
-  test('Url metric should have correct initial values', () => {
-    const urlMetric = new Url('owner', 'repo');
-    expect(urlMetric.name).toBe('URL');
-    expect(urlMetric.value).toBe('testtest');
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  test('NetScore metric should calculate value correctly', async () => {
-    const netScore = new NetScore('owner', 'repo');
-    const rampUp = { value: 1 };
-    const busFactor = { value: 1 };
-    const responsiveMaintainer = { value: 1 };
-    const license = { value: 1 };
+  describe('Url', () => {
+    it('should initialize with correct values', () => {
+      const url = new Url('owner', 'repo');
+      expect(url.name).toBe('URL');
+      expect(url.value).toBe('testtest');
+    });
 
-    await netScore.calculateValue(rampUp, busFactor, responsiveMaintainer, license);
-    expect(netScore.value).toBe(1);
+    it('should calculate value correctly', () => {
+      const url = new Url('owner', 'repo');
+      expect(url.calculateValue()).toBe('URL');
+    });
   });
 
-  test('RampUp metric should calculate value correctly', async () => {
-    const rampUp = new RampUp('owner', 'repo');
-    await rampUp.calculateValue(1000);
-    expect(rampUp.value).toBeGreaterThan(0);
+  describe('NetScore', () => {
+    it('should initialize with correct values', () => {
+      const netScore = new NetScore('owner', 'repo');
+      expect(netScore.name).toBe('NetScore');
+      expect(netScore.value).toBe(0);
+    });
+
+    it('should calculate value correctly', async () => {
+      const netScore = new NetScore('owner', 'repo');
+      const rampUp = new RampUp('owner', 'repo');
+      const busFactor = new BusFactor('owner', 'repo');
+      const responsiveMaintainer = new ResponsiveMaintainer('owner', 'repo');
+      const license = new License('owner', 'repo');
+
+      rampUp.value = 1;
+      busFactor.value = 1;
+      responsiveMaintainer.value = 1;
+      license.value = 1;
+
+      await netScore.calculateValue(rampUp, busFactor, responsiveMaintainer, license);
+      expect(netScore.value).toBe(1);
+    });
   });
 
-  test('Correctness metric should calculate value correctly', async () => {
-    const correctness = new Correctness('owner', 'repo');
-    await correctness.calculateValue();
-    expect(correctness.value).toBe(0); // Assuming no calculation logic is provided
+  describe('RampUp', () => {
+    it('should initialize with correct values', () => {
+      const rampUp = new RampUp('owner', 'repo');
+      expect(rampUp.name).toBe('RampUp');
+      expect(rampUp.value).toBe(0);
+    });
+
+    it('should calculate value correctly', async () => {
+      const rampUp = new RampUp('owner', 'repo');
+      await rampUp.calculateValue(1000);
+      expect(rampUp.value).toBeGreaterThan(0);
+    });
   });
 
-  test('BusFactor metric should calculate value correctly', async () => {
-    const busFactor = new BusFactor('owner', 'repo');
-    await busFactor.calculateValue();
-    expect(busFactor.value).toBe(0); // Assuming no calculation logic is provided
+  describe('Correctness', () => {
+    it('should initialize with correct values', () => {
+      const correctness = new Correctness('owner', 'repo');
+      expect(correctness.name).toBe('Correctness');
+      expect(correctness.value).toBe(0);
+    });
+
+    it('should calculate value correctly', async () => {
+      const correctness = new Correctness('owner', 'repo');
+      await correctness.calculateValue();
+      expect(correctness.latencyValue).toBeGreaterThan(0);
+    });
   });
 
-  test('ResponsiveMaintainer metric should calculate value correctly', async () => {
-    const responsiveMaintainer = new ResponsiveMaintainer('owner', 'repo');
-    await responsiveMaintainer.calculateValue(90, 100);
-    expect(responsiveMaintainer.value).toBeGreaterThan(0);
+  describe('BusFactor', () => {
+    it('should initialize with correct values', () => {
+      const busFactor = new BusFactor('owner', 'repo');
+      expect(busFactor.name).toBe('BusFactor');
+      expect(busFactor.value).toBe(0);
+    });
+
+    it('should calculate value correctly', async () => {
+      const busFactor = new BusFactor('owner', 'repo');
+      await busFactor.calculateValue();
+      expect(busFactor.latencyValue).toBeGreaterThan(0);
+    });
   });
 
-  test('License metric should calculate value correctly', async () => {
-    const license = new License('owner', 'repo');
-    await license.calculateValue('MIT', 'MIT');
-    expect(license.value).toBe(1);
+  describe('ResponsiveMaintainer', () => {
+    it('should initialize with correct values', () => {
+      const responsiveMaintainer = new ResponsiveMaintainer('owner', 'repo');
+      expect(responsiveMaintainer.name).toBe('ResponsiveMaintainer');
+      expect(responsiveMaintainer.value).toBe(0);
+    });
+
+    it('should calculate value correctly', async () => {
+      const responsiveMaintainer = new ResponsiveMaintainer('owner', 'repo');
+      await responsiveMaintainer.calculateValue(30, 100);
+      expect(responsiveMaintainer.value).toBeGreaterThan(0);
+    });
+  });
+
+  describe('License', () => {
+    it('should initialize with correct values', () => {
+      const license = new License('owner', 'repo');
+      expect(license.name).toBe('License');
+      expect(license.value).toBe(0);
+    });
+
+    it('should calculate value correctly', async () => {
+      const license = new License('owner', 'repo');
+      await license.calculateValue('MIT', 'MIT');
+      expect(license.value).toBe(1);
+    });
   });
 });

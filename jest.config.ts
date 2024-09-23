@@ -58,6 +58,12 @@ module.exports = {
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
   transform: {'^.+\\.ts?$': 'ts-jest'},
+  //extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  //globals: {
+  //  'ts-jest':{
+  //    usESM: true,
+  //  },
+  //},
   
   // The regexp pattern or array of patterns that Jest uses to detect test files
   testRegex: '/test/.*\\.(test|spec)?\\.(ts|tsx)$',
