@@ -12,63 +12,6 @@ async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]
   return octokit.paginate(endpoint, params);
 }
 
-// Function to fetch the number of commits in a repository
-export async function fetchCommitCount(owner: string, repo: string): Promise<number> {
-  try {
-    // Fetch the first page with per_page set to 1 to minimize data transferred
-    const response = await octokit.repos.listCommits({
-      owner,
-      repo,
-      per_page: 1,
-    });
-
-    // Check if there's a link header with 'rel="last"' to find the total number of commits
-    const linkHeader = response.headers.link;
-    if (linkHeader) {
-      const match = linkHeader.match(/&page=(\d+)>; rel="last"/);
-      if (match) {
-        return parseInt(match[1], 10);
-      }
-    }
-    // If no link header, fallback to counting the response length (which means there's only 1 page of commits)
-    return response.data.length;
-  } catch (error) {
-    handleError(error);
-    return 0; // Return 0 in case of error
-  }
-}
-
-
-// Whether or not repo has license
-export async function checkLicense(owner: string, name: string): Promise<string> {
-    // fetch the availability of licenses
-    var logger = new Logger();
-    logger.add(1, "Checking " + name + " for license");
-
-    try {
-
-      const license = await octokit.request('GET /repos/{owner}/{repo}/license', {
-        owner: owner,
-        repo: name,
-      });
-      const licenseName = license.data.license ? license.data.license.name : 'N/A';
-      console.clear();  // Repos that don't have a license specifiec throw a 404 error.
-                        // octokit.request automatically writes this to the console before entering the catch clause
-                        // Not ideal but this clears this error from the console
-      return licenseName;
-    } 
-    catch (error) {
-      if (error.status === 404) {
-        // need more error action here
-        return " ";
-      }
-      else {
-        // and here
-        return " ";
-      }
-    }
-}
-
 // Function to fetch repository statistics
 export class RepoStats {
   logger: Logger;
@@ -87,6 +30,7 @@ export class RepoStats {
   commentFrequency: string;
   totalContributors: number;
   licenseName: string;
+  readme: string;
   readmeLength: number;
   daysActive: number;
   firstCommitDate: Date;
@@ -112,13 +56,71 @@ export class RepoStats {
     this.commentFrequency = 'N/A';
     this.totalContributors = 0;
     this.licenseName = "N/A";
+    this.readme = "N/A";
     this.readmeLength = 0;
     this.daysActive = 0;
     this.firstCommitDate = new Date();
     this.lastCommitDate = new Date();
     this.totalCommits = 0;
   }
-  async fetchRepoData(){
+
+  // Get the name of the license
+  async #getLicenseName(owner: string, name: string): Promise<string> {
+    var logger = new Logger();
+    logger.add(1, "Checking " + name + " for license");
+
+    try {
+
+      const license = await octokit.request('GET /repos/{owner}/{repo}/license', {
+        owner: owner,
+        repo: name,
+      });
+      console.log(license);
+      const licenseName = license.data.license ? license.data.license.name : 'N/A';
+      //console.clear();  // Repos that don't have a license specified throw a 404 error.
+                        // octokit.request automatically writes this to the console before entering the catch clause
+                        // Not ideal but this clears this error from the console
+      return licenseName;
+    } 
+    catch (error) {
+      if (error.status === 404) {
+        logger.add(2, "Error 404 when checking " + name + " for license name, returning README");
+        return this.readme;
+      }
+      else {
+        logger.add(2, "Error when checking " + name + " for license name: " + error);
+        return " ";
+      }
+    }
+  }
+
+  // Function to fetch the number of commits in a repository
+  async #getCommitCount(owner: string, repo: string): Promise<number> {
+    try {
+      // Fetch the first page with per_page set to 1 to minimize data transferred
+      const response = await octokit.repos.listCommits({
+        owner,
+        repo,
+        per_page: 1,
+      });
+
+      // Check if there's a link header with 'rel="last"' to find the total number of commits
+      const linkHeader = response.headers.link;
+      if (linkHeader) {
+        const match = linkHeader.match(/&page=(\d+)>; rel="last"/);
+        if (match) {
+          return parseInt(match[1], 10);
+        }
+      }
+      // If no link header, fallback to counting the response length (which means there's only 1 page of commits)
+      return response.data.length;
+    } catch (error) {
+      handleError(error);
+      return 0; // Return 0 in case of error
+    }
+  }
+
+  async getRepoData(){
     const { data: repoData } = await octokit.repos.get({
       owner: this.owner,
       repo: this.repo
@@ -129,11 +131,7 @@ export class RepoStats {
     this.daysActive = Math.ceil((updated.getTime() - created.getTime()) / (1000 * 3600 * 24));
   }
 
-  async fetchTotalCommits(){
-    this.totalCommits = await fetchCommitCount(this.owner, this.repo); // Fetch total commits
-  }
-
-  async fetchData() {
+  async getData() {
     try {
       // Open issues
       /*
@@ -197,18 +195,17 @@ export class RepoStats {
         repo: this.repo,
         per_page: 100,
       });
-
-*/
-
-      // License name
-      const license = await checkLicense(this.owner, this.repo);
-      this.licenseName = license;
-      
+      */
+ 
       // Readme
       const readme = await octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
-      this.readmeLength = Buffer.from(readme.data.content, 'base64').toString('utf-8').length;
-      /*
+      this.readme = Buffer.from(readme.data.content, 'base64').toString('utf-8');
+      this.readmeLength = this.readme.length;
 
+      // License name
+      this.licenseName = await this.#getLicenseName(this.owner, this.repo);
+     
+      /*
       // ???
       const firstCommit = await octokit.repos.listCommits({ owner: this.owner, repo: this.repo, per_page: 100 });
 
@@ -226,7 +223,7 @@ export class RepoStats {
   
       this.totalComments = issueComments.length + pullRequestComments.length;
 */
-      this.totalCommits = await fetchCommitCount(this.owner, this.repo);
+      this.totalCommits = await this.#getCommitCount(this.owner, this.repo);
       /*
       this.commentFrequency = (this.totalCommits + this.totalOpenIssues + this.totalClosedIssues) > 0
         ? (this.totalComments / (this.totalCommits + this.totalOpenIssues + this.totalClosedIssues)).toFixed(2)

@@ -4,7 +4,7 @@ import { performance } from "perf_hooks"
 import { Logger } from "./logger.js";
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
-import { checkLicense } from './api_access.js'
+// Shouldn't make any API calls here, do in Repository class
 
 // Abstract metric class
 abstract class Metric {
@@ -193,7 +193,7 @@ export class ResponsiveMaintainer extends Metric {
 
     this.logger.add(2, "Calculating ResponsiveMaintainer for " + this.repoName);
     var months = daysActive / 30;
-    var normalizedMetric = this.minMax(totalCommits / months, 303, 0); //arbitrary max and min values picked.
+    var normalizedMetric = this.minMax(totalCommits / months, 304, 0); //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
     if (normalizedMetric === 2) {
       console.error("Maximum too low for ResponsiveMaintainer metric");
@@ -217,13 +217,36 @@ export class License extends Metric {
     this.name = "License";
     this.value = 0;
   }
-  async calculateValue(desiredLicenseName: string, licenseName: string) {
+  async calculateValue(desiredLicenseName: string, licenseName: string, readme: string) {
     const startTime = performance.now();
-    
-    if (desiredLicenseName === licenseName) {
+
+    this.logger.add(2, "Checking " + this.repoName + " for " + desiredLicenseName + " license...");
+    console.log(readme);
+    if (desiredLicenseName === licenseName) { // Perfect match
       this.value = 1;
+      this.logger.add(1, "License found");
+      this.logger.add(2, "License found at license API endpoint");
     } 
+    else if(licenseName === readme || licenseName === "Other") {       // 404 error when checking license, readme returned
+      this.logger.add(2, "License not found at API endpoint, checking README...");
+
+      const licenseNameRegexString = "(" + desiredLicenseName + ")";
+      const licenseNameRegex = new RegExp(licenseNameRegexString, "gmi"); // i -> case insensitive
+      const readmeLicenseName = readme.match(licenseNameRegex);
+
+      if (readmeLicenseName != null) {
+        this.value = 1;
+        this.logger.add(1, "License found");
+        this.logger.add(2, "License found in README");
+      }
+      else {
+        this.logger.add(1, "License not found");
+        this.logger.add(2, "License not found in README");
+      }
+    }
     else {
+      this.logger.add(1, "License not found");
+      this.logger.add(2, "License not found. Did not scan README for license");
       this.value = 0;
     }
 

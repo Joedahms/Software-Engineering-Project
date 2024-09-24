@@ -3,8 +3,13 @@
 ## This folder contains all the source code we have written
 
 ### api_access
-Contains the functions for accessing the GitHub API.
-*** INSERT BRIEF FUNCTION OVERVIEWS HERE ***
+Contains functionality for getting stats about a repo from the GitHub API
+- function fetchAllPages: ?
+- class RepoStats: Contains all the useful bits of info about a repo: prs, commits, etc...   
+Also contains methods for getting the info from the API. GetData() is for calling all these   
+methods from one spot. displayStats outputs them to stdout, useful for debugging.
+- function handleError: ?
+- function checkRateLimit: ?
 
 ### logger.ts
 Contains the logger class.
@@ -12,29 +17,38 @@ Contains the logger class.
 
 ### main.ts
 Where the magic happens. This the entry point into the program. It is called in the run script.  
-when the user enters "./run URL_FILE".
+when the user enters "./run URL_FILE". The first thing that happens here is the url file that   
+was passed is parsed, and the repo's URLs are pulled from it. Then for each URL found, the program   
+calculates its metrics. Within this calculateAllMetrics() call, info needed from the GitHub API   
+is grabbed. Once all metrics have been calculated, the output is formatted as NDJSON and is send   
+to stdout.
 - class Main: ?
-At the moment all that is being done in main is calculating all the metrics for each repository then    
-outputting the NDJSON.
+
 
 ### metric.ts
 Contains the classes for each metric along with some functions that access the GitHub API. These  
 functions could be moved elsewhere.
 - abstract class Metric: Defines what each metric class looks like and what it should have. 
 Has two methods, calculateValue and minMax.
+- function minMax: Method of Metric. Allows for Min Max normalization of metrics to get them into   
+the range of 0 to 1.
 - class NetScore: Represents an overall score for the package based on all the other metrics.  
-Calculated based on: ...
+Calculated based on: License * (1 * RampUp + 1 * BusFactor + 1 * ResponsiveMaintainer)
 - class RampUp: How easily it would be for developers to get acquainted with the package having  
 never worked with it before.  
-Calculated based on: ...
+Calculated based on: Min Max normalized README length. Max = 27000. Min = 500.
 - class Correctness: ?  
-Calculated based on: ...
+Calculated based on: NEED TO DO
 - class BusFactor: How well distributed the knowledge about the package's development is.  
-Calculated based on: ...
+Calculated based on: NEED TO DO
 - class ResponsiveMaintainer: How active the maintainers of the package are.  
-Calculated based on: ...
+Calculated based on:   
+months = days repo has been active / 30
+Min Max normalized total commits / months
+Essentially a normalized value of commits / month
 - class License: Whether or not the package complies with the LGPL v2.1 License.  
-Calculated based on: ...
+Calculated based on: whether or not the license can be fetched with the API or   
+found in the README.
 
 ### output.ts
 Contains one function.
@@ -44,6 +58,8 @@ Contains one function.
 Contains the Repository class.
 - class Repository: Each URL in a URL_FILE will correspond to one Repository object. Each repository  
 has an instance of each metric.  
+- calculateAllMetrics(): Method in Repository that grabs necessary info with the GitHub API   
+and calculates all the metrics.
 - jsonMetrics(): Method on Repository that returns the metrics of the repo in NDJSON.
 
 ### urlFileParser.ts
