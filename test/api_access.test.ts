@@ -1,114 +1,94 @@
-import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
-import { fetchCommitCount, checkLicense, RepoStats } from '../src/api_access';
-import { Logger } from '../src/logger.js';
-//import mockOctokit from '@octokit/rest';
-//import { Octokit } from "@octokit/rest";
+import { RepoStats } from '../src/api_access'; // Replace with your actual file path
+import { Octokit } from '@octokit/rest';
+import mockOctokit from '@octokit/rest';
 
-jest.mock('@octokit/rest');
-jest.mock('./logger.js');
+jest.mock('@octokit/rest', () => ({
+  default: {
+    get: jest.fn().mockResolvedValue({})
+  }
+}));
 
-mockOctokit.get.mockResolvedValue(() => Promise.resolve())
-//const mockOctokit = Octokit as jest.MockedClass<typeof Octokit>;
-const mockLogger = Logger as jest.MockedClass<typeof Logger>;
+// Mock Logger to avoid actual logging in tests
+jest.mock('./logger.js', () => {
+  return {
+    Logger: jest.fn().mockImplementation(() => {
+      return {
+        add: jest.fn(),
+      };
+    }),
+  };
+});
 
-describe('GitHub API Functions', () => {
-  let octokitInstance: jest.Mocked<Octokit>;
-  let loggerInstance: jest.Mocked<Logger>;
+describe('GitHub API functions', () => {
+  let mockOctokit;
+  const owner = 'octocat';
+  const repo = 'Hello-World';
 
   beforeEach(() => {
-    octokitInstance = new mockOctokit();
-    loggerInstance = new mockLogger();
-
-    // Mock the methods of Logger
-    loggerInstance.add = jest.fn();
-    loggerInstance.clear = jest.fn();
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  describe('fetchCommitCount', () => {
-    it('should return the number of commits', async () => {
-      const owner = 'owner';
-      const repo = 'repo';
-      const mockResponse = {
-        headers: {
-          link: '<https://api.github.com/repositories/123456789/commits?page=2>; rel="next", <https://api.github.com/repositories/123456789/commits?page=10>; rel="last"'
-        },
-        data: [{}, {}]
-      };
-      octokitInstance.repos.listCommits.mockResolvedValue(mockResponse);
-
-      const result = await fetchCommitCount(owner, repo);
-      expect(result).toBe(10);
-    });
-
-    it('should return 0 if an error occurs', async () => {
-      const owner = 'owner';
-      const repo = 'repo';
-      octokitInstance.repos.listCommits.mockRejectedValue(new Error('Error'));
-
-      const result = await fetchCommitCount(owner, repo);
-      expect(result).toBe(0);
-    });
-  });
-
-  describe('checkLicense', () => {
-    it('should return the license name', async () => {
-      const owner = 'owner';
-      const repo = 'repo';
-      const mockResponse = {
-        data: {
-          license: {
-            name: 'MIT'
-          }
-        }
-      };
-      octokitInstance.request.mockResolvedValue(mockResponse);
-
-      const result = await checkLicense(owner, repo);
-      expect(result).toBe('MIT');
-    });
-
-    it('should return " " if the repository has no license', async () => {
-      const owner = 'owner';
-      const repo = 'repo';
-      octokitInstance.request.mockRejectedValue({ status: 404 });
-
-      const result = await checkLicense(owner, repo);
-      expect(result).toBe(' ');
-    });
+    // Use octomock to create a mock instance of Octokit
+    mockOctokit = new Octomock();
   });
 
   describe('RepoStats', () => {
-    it('should fetch and set repository data', async () => {
-      const owner = 'owner';
-      const repo = 'repo';
+    it('should fetch repo data and set the correct days active', async () => {
+      // Mock the response for repo data
+      mockOctokit.repos.get({
+        owner,
+        repo,
+      }).reply(200, {
+        created_at: '2020-01-01T00:00:00Z',
+        updated_at: '2020-01-11T00:00:00Z',
+      });
+
       const repoStats = new RepoStats(owner, repo);
-
-      const mockRepoData = {
-        data: {
-          created_at: '2020-01-01T00:00:00Z',
-          updated_at: '2020-01-10T00:00:00Z',
-          forks_count: 5
-        }
-      };
-      octokitInstance.repos.get.mockResolvedValue(mockRepoData);
-
       await repoStats.fetchRepoData();
-      expect(repoStats.daysActive).toBe(9);
+
+      expect(repoStats.daysActive).toBe(10
+      );
     });
 
-    it('should fetch and set total commits', async () => {
-      const owner = 'owner';
-      const repo = 'repo';
+    it('should fetch commit count and update the totalCommits property', async () => {
+      // Mock the response for fetchCommitCount
+      mockOctokit.repos.listCommits({
+        owner,
+        repo,
+        per_page: 1,
+      }).reply(200, [{ sha: 'abc123' }]);
+
       const repoStats = new RepoStats(owner, repo);
-
-      jest.spyOn(repoStats, 'fetchTotalCommits').mockResolvedValue(10);
-
       await repoStats.fetchTotalCommits();
-      expect(repoStats.totalCommits).toBe(10);
+
+      expect(repoStats.totalCommits).toBe(1);
+    });
+
+    it('should fetch and set the license name', async () => {
+      // Mock the license response
+      mockOctokit.request('GET /repos/{owner}/{repo}/license', {
+        owner,
+        repo,
+      }).reply(200, {
+        license: { name: 'MIT License' },
+      });
+
+      const repoStats = new RepoStats(owner, repo);
+      await repoStats.fetchData();
+
+      expect(repoStats.licenseName).toBe('MIT License');
+    });
+
+    it('should fetch and set the readme length', async () => {
+      // Mock the readme response with base64-encoded content
+      mockOctokit.repos.getReadme({
+        owner,
+        repo,
+      }).reply(200, {
+        content: Buffer.from('This is the README file.').toString('base64'),
+      });
+
+      const repoStats = new RepoStats(owner, repo);
+      await repoStats.fetchData();
+
+      expect(repoStats.readmeLength).toBe(23); // "This is the README file." has 23 characters
     });
   });
 });
