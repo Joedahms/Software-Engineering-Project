@@ -1,12 +1,14 @@
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
-import { Octokit } from "@octokit/rest";
 import { fetchCommitCount, checkLicense, RepoStats } from '../src/api_access';
 import { Logger } from '../src/logger.js';
+import mockOctokit from '@octokit/rest';
+//import { Octokit } from "@octokit/rest";
 
 jest.mock('@octokit/rest');
 jest.mock('./logger.js');
 
-const mockOctokit = Octokit as jest.MockedClass<typeof Octokit>;
+mockOctokit.get.mockResolvedValue(() => Promise.resolve())
+//const mockOctokit = Octokit as jest.MockedClass<typeof Octokit>;
 const mockLogger = Logger as jest.MockedClass<typeof Logger>;
 
 describe('GitHub API Functions', () => {

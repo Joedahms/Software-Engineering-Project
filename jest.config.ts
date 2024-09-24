@@ -27,11 +27,6 @@ module.exports = {
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
 
-  // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
-
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: "v8",
 
@@ -55,8 +50,10 @@ module.exports = {
   
   // The test environment that will be used for testing
   testEnvironment: 'node',
-  // Options that will be passed to the testEnvironment
-  // testEnvironmentOptions: {},
+  
+  // This option allows use of a custom test runner
+  testRunner: "jest-circus/runner",
+
   transform: {'^.+\\.ts?$': 'ts-jest'},
   //extensionsToTreatAsEsm: ['.ts', '.tsx'],
   //globals: {
@@ -68,6 +65,11 @@ module.exports = {
   // The regexp pattern or array of patterns that Jest uses to detect test files
   testRegex: '/test/.*\\.(test|spec)?\\.(ts|tsx)$',
 
+  // An array of regexp pattern strings used to skip coverage collection
+  // coveragePathIgnorePatterns: [
+  //   "/node_modules/"
+  // ],
+  
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
 
@@ -152,6 +154,9 @@ module.exports = {
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],
 
+  // Options that will be passed to the testEnvironment
+  // testEnvironmentOptions: {},
+  
   // Adds a location field to test results
   // testLocationInResults: false,
 
@@ -168,9 +173,6 @@ module.exports = {
 
   // This option allows the use of a custom results processor
   // testResultsProcessor: undefined,
-
-  // This option allows use of a custom test runner
-  // testRunner: "jest-circus/runner",
 
   // A map from regular expressions to paths to transformers
   // transform: undefined,
