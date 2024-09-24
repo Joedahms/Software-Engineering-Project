@@ -32,17 +32,20 @@ abstract class Metric {
   
   // Normalizes a number to a value between 0 and 1 depending on the min and max
   minMax(inputValue: number, max: number, min: number): number {
+    this.logger.add(2, "Running min max normalization on " + inputValue + " max/min = " + max + "/" + min);
     var normalizedInputValue;
-    this.logger.add(2, "min max input: " + String(inputValue));
     normalizedInputValue = (inputValue - min) / (max - min);
     this.logger.add(2, "min max result: " + String(normalizedInputValue));
     if (normalizedInputValue < 0) {       // Less than or equal to minimum
+      this.logger.add(2, "Normalized value less than 0, returning 0");
       return 0
     }
     else if (normalizedInputValue > 1) {  // Maximum value isn't large enough
+      this.logger.add(2, "Normalized value greater than 1, returning 2");
       return 2;
     }
     else {                                // All is well
+      this.logger.add(2, "min max normalization successful, returning normalized value");
       return normalizedInputValue;
     }
   }
@@ -221,7 +224,6 @@ export class License extends Metric {
     const startTime = performance.now();
 
     this.logger.add(2, "Checking " + this.repoName + " for " + desiredLicenseName + " license...");
-    console.log(readme);
     if (desiredLicenseName === licenseName) { // Perfect match
       this.value = 1;
       this.logger.add(1, "License found");
