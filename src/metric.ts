@@ -6,8 +6,6 @@ import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
 import { checkLicense } from './api_access.js'
 
-import { Octokit } from "octokit";
-
 
 // Abstract metric class
 abstract class Metric {
@@ -113,52 +111,6 @@ export class NetScore extends Metric {
 }
 
 
-// Readme Length metric
-export class ReadmeLength extends Metric {
-  value: number;
-  private octokit: Octokit; // Octokit object for API access
-
-  constructor(repoOwner: string, repoName: string) {
-    super(repoOwner, repoName);
-    this.name = "Readme Length";
-    this.value = 0;
-
-    this.octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-  }
-
-  async calculateValue(): Promise<void> {
-    const startTime = performance.now();
-    this.logger.add(2, "Calculating Readme Length for " + this.repoName);
-
-    try {
-      const response = await this.octokit.request('GET /repos/{owner}/{repo}', {
-        owner: this.repoOwner,
-        repo: this.repoName
-      });
-
-      const readmeContent = await this.octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-        owner: this.repoOwner,
-        repo: this.repoName,
-        path: 'README.md'
-      });
-
-      const readmeBuffer = Buffer.from(readmeContent.data.content, 'base64');
-      const readmeContentString = readmeBuffer.toString('utf-8');
-
-      const wordCount = readmeContentString.split(/\s+/).filter(word => word.length > 0).length;
-      this.logger.add(2, "Word count: " + wordCount);
-      this.value = wordCount;
-      this.logger.add(1, this.repoName + this.name + " calculated successfully");
-      const endTime = performance.now();
-      this.latencyValue = endTime - startTime;
-
-    } catch (error) {
-      this.logger.add(2, "Error fetching readme: " + error);
-    }
-  }
-}
-
-
 // RampUp metric
 export class RampUp extends Metric {
   value: number;
@@ -169,36 +121,13 @@ export class RampUp extends Metric {
     this.name = "RampUp";
     this.value = 0;
 
-    //this.octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
   }
-
-  // Fetch the README file length from the repository
-  // async fetchReadmelength(): Promise<number> {
-  //   try {
-  //     const response = await this.octokit.request('GET /repos/{owner}/{repo}/readme', {
-  //       owner: this.repoOwner,
-  //       repo: this.repoName
-  //     });
-
-  //     const readmeContent = Buffer.from(response.data.content, 'base64').toString('utf-8');
-
-  //     const wordCount = readmeContent.split(/\s+/).filter(word => word.length > 0).length;
-  //     this.logger.add(2, "Word count: " + wordCount);
-  //     return wordCount;
-  //   } catch (error) {
-  //     this.logger.add(2, "Error fetching README: " + error);
-  //     return 0;
-
-  //     //return readmeContent.length;
-  //   }
-  // }
 
   // Calculate RampUp Based on Readme length
   async calculateValue(readmeLength: number) {
     const startTime = performance.now();
 
     // fetch readme length from github in words
-    //readmeLength = await this.fetchReadmelength();
     this.logger.add(2, "Calculating RampUp for " + this.repoName);
     const normalizedMetric = this.minMax(readmeLength, 27000, 500);
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric))
@@ -268,7 +197,7 @@ export class ResponsiveMaintainer extends Metric {
 
     this.logger.add(2, "Calculating ResponsiveMaintainer for " + this.repoName);
     var months = daysActive / 30;
-    var normalizedMetric = this.minMax(totalCommits / months, 303, 0); //arbitrary max and min values picked.
+    var normalizedMetric = this.minMax(totalCommits / months, 304, 0); //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
     if (normalizedMetric === 2) {
       console.error("Maximum too low for ResponsiveMaintainer metric");
