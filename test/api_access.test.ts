@@ -1,7 +1,7 @@
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
 import { fetchCommitCount, checkLicense, RepoStats } from '../src/api_access';
 import { Logger } from '../src/logger.js';
-import mockOctokit from '@octokit/rest';
+//import mockOctokit from '@octokit/rest';
 //import { Octokit } from "@octokit/rest";
 
 jest.mock('@octokit/rest');

@@ -4,15 +4,6 @@
  */
 
 module.exports = {
-  // All imported modules in your tests should be mocked automatically
-  // automock: false,
-
-  // Stop running tests after `n` failures
-  // bail: 0,
-
-  // The directory where Jest should store its cached dependency information
-  // cacheDirectory: "/private/var/folders/y2/55p3rv3945d36y48yf8glbdh0000gn/T/jest_dx",
-
   // Automatically clear mock calls, instances, contexts and results before every test
   clearMocks: true,
 
@@ -20,9 +11,7 @@ module.exports = {
   collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  collectCoverageFrom: [
-    '**/src/*.ts'
-  ],
+  collectCoverageFrom: [ '**/src/*.ts' ],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
@@ -42,12 +31,12 @@ module.exports = {
   // An array of file extensions your modules use
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 
-  // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  //moduleNameMapper: { "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/mocks/fileMock.js", "\\.(css|less)$": "<rootDir>/mocks/fileMock.js"  },
-  
   // A preset that is used as a base for Jest's configuration
   preset: "ts-jest",
   
+  // A list of paths to modules that run some code to configure or set up the testing framework before each test
+  setupFilesAfterEnv: [ './setupJest.ts' ],
+
   // The test environment that will be used for testing
   testEnvironment: 'node',
   
@@ -55,16 +44,25 @@ module.exports = {
   testRunner: "jest-circus/runner",
 
   transform: {'^.+\\.ts?$': 'ts-jest'},
-  //extensionsToTreatAsEsm: ['.ts', '.tsx'],
-  //globals: {
-  //  'ts-jest':{
-  //    usESM: true,
-  //  },
-  //},
   
   // The regexp pattern or array of patterns that Jest uses to detect test files
   testRegex: '/test/.*\\.(test|spec)?\\.(ts|tsx)$',
 
+  // Indicates whether each individual test should be reported during the run
+  verbose: true,
+
+  // All imported modules in your tests should be mocked automatically
+  // automock: false,
+
+  // Stop running tests after `n` failures
+  // bail: 0,
+
+  // The directory where Jest should store its cached dependency information
+  // cacheDirectory: "/private/var/folders/y2/55p3rv3945d36y48yf8glbdh0000gn/T/jest_dx",
+
+  // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
+  //moduleNameMapper: { "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/mocks/fileMock.js", "\\.(css|less)$": "<rootDir>/mocks/fileMock.js"  },
+  
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
   //   "/node_modules/"
@@ -75,7 +73,14 @@ module.exports = {
 
   // A path to a custom dependency extractor
   // dependencyExtractor: undefined,
-
+  
+  //extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  //globals: {
+  //  'ts-jest':{
+  //    usESM: true,
+  //  },
+  //},
+  
   // Make calling deprecated APIs throw helpful error messages
   // errorOnDeprecated: false,
 
@@ -145,9 +150,6 @@ module.exports = {
   // The paths to modules that run some code to configure or set up the testing environment before each test
   // setupFiles: ['./test/setup.js'],
 
-  // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
-
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
 
@@ -185,7 +187,4 @@ module.exports = {
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
-
-  // Indicates whether each individual test should be reported during the run
-  // verbose: undefined,
 };
