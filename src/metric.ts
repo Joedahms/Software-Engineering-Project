@@ -150,10 +150,13 @@ export class Correctness extends Metric {
     this.value = 0;
   }
 
-  async calculateValue() {
+  async calculateValue(openIssues: number, totalIssues: number) {
     const startTime = performance.now();
-    // Put calculation code here
-    // this.value = 
+    /*this.logger.add(2, "Calculating Correctness for " + this.repoName);
+  
+    var normalizedMetric = (1-(openIssues/totalIssues)); //arbitrary max and min values picked.
+    this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
+    this.value = normalizedMetric;*/
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
   }
@@ -193,7 +196,7 @@ export class ResponsiveMaintainer extends Metric {
 
     this.logger.add(2, "Calculating ResponsiveMaintainer for " + this.repoName);
     var months = daysActive / 30;
-    var normalizedMetric = this.minMax(totalCommits / months, 303, 0); //arbitrary max and min values picked.
+    var normalizedMetric = this.minMax(totalCommits / months, 330, 0); //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
     if (normalizedMetric === 2) {
       console.error("Maximum too low for ResponsiveMaintainer metric");

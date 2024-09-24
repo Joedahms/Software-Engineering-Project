@@ -77,6 +77,7 @@ export class RepoStats {
   repo: string;
   totalOpenIssues: number;
   totalClosedIssues: number;
+  totalIssues: number;
   issueRatio: string;
   totalMergedPullRequests: number;
   totalOpenPullRequests: number;
@@ -102,6 +103,7 @@ export class RepoStats {
     // Initialize properties with default values
     this.totalOpenIssues = 0;
     this.totalClosedIssues = 0;
+    this.totalIssues = 0;
     this.issueRatio = 'N/A';
     this.totalMergedPullRequests = 0;
     this.totalOpenPullRequests = 0;
@@ -136,7 +138,7 @@ export class RepoStats {
   async fetchData() {
     try {
       // Open issues
-      /*
+      
       const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
         owner: this.owner,
         repo: this.repo,
@@ -145,6 +147,16 @@ export class RepoStats {
       });
       this.totalOpenIssues = openIssues.filter((issue: any) => !issue.pull_request).length;
 
+          // Fetch total issues (excluding pull requests)
+    const allIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+      owner: this.owner,
+      repo: this.repo,
+      state: 'all',
+      per_page: 100,
+    });
+    this.totalIssues = allIssues.filter((issue: any) => !issue.pull_request).length;
+
+/*
       // Closed issues
       const closedIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
         owner: this.owner,
