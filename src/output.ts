@@ -11,7 +11,3 @@ export function writeOutput(input: string) {
 
   readlineInterface.write(input + '\n');
 }
-
-
-
-

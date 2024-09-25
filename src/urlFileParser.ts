@@ -147,6 +147,3 @@ export class UrlFileParser {
     return githubRepoArray;
   }
 }
-
-
-

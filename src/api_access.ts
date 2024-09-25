@@ -8,7 +8,7 @@ const octokit = new Octokit({
 });
 
 // Function to fetch all pages using Octokit pagination
-async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]> {
+export async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]> {
   return octokit.paginate(endpoint, params);
 }
 
@@ -307,4 +307,3 @@ async function checkRateLimit(): Promise<void> {
     handleError(error);
   }
 }
-
