@@ -1,4 +1,5 @@
-import { RepoStats } from '../src/api_access';
+import { afterEach, beforeEach, describe, expect, it, jest, test } from "@jest/globals";
+import { fetchAllPages, RepoStats } from '../src/api_access';
 import { Logger } from '../src/logger.js';
 import { Octokit } from '@octokit/rest';
 
@@ -13,23 +14,24 @@ jest.mock('./logger.js', () => {
   };
 });
 
-describe("API functions", () => {
-  it("Calls getContents once", async () => {
-    const result = await RepoStats
-    expect(octomock.mockFunctions.repos.getContents).toHaveBeenCalledTimes(1);
-    })
-  })
-
-describe('GitHub API functions', () => {
-  let mockOctokit;
-  const owner = 'octocat';
-  const repo = 'Hello-World';
-
+describe('createPullRequest', () => {
   beforeEach(() => {
-    // Create a mock Octokit instance
-    mockOctokit = new Octomock();
+    fetchAllPages.mockImplementationOnce(() => ({
+      owner: 'my',
+      name: 'repo',
+      repo: 'my/repo',
+      branch: 'master',
+      url: 'https://github.com/my/repo',
+    }))
   });
 
+  describe("API functions", () => {
+    it("Calls getContents once", async () => {
+      const result = await RepoStats
+      expect(Octokit.mockFunctions.repos.getContents).toHaveBeenCalledTimes(1);
+      })
+    })
+  
   describe('RepoStats class', () => {
     it('should fetch license name correctly', async () => {
       // Mocking the response for license request
