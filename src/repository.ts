@@ -1,8 +1,11 @@
 import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License} from './metric.js'
 import { writeOutput } from './output.js'
 import { RepoStats } from './api_access.js'
+import { Logger } from './logger.js'
 
 export class Repository {
+  logger: Logger;
+
   owner: string;          // GitHub username of repository owner
   name: string;           // Name of the repository
   desiredLicense: string; // License the repos should have
@@ -20,6 +23,8 @@ export class Repository {
 
   // Must pass url, owner, and name
   constructor(url: string, owner: string, name: string) {
+    this.logger = new Logger();
+
     this.owner = owner;
     this.name = name;
     this.desiredLicense = "MIT License";  // Requirements say LGPLv2.1 but all the examples have MIT
@@ -39,6 +44,7 @@ export class Repository {
   // Call all metric's calculateValue() method to calculate all metrics for a Repository
   // These methods should set the value within themselves
   async calculateAllMetrics() {
+    this.logger.add(2, "Calculating all metrics for " + this.name);
     await this.repoStats.getRepoData();
     await this.repoStats.getData();
     await this.rampUp.calculateValue(this.repoStats.readmeLength);
@@ -47,10 +53,12 @@ export class Repository {
     await this.responsiveMaintainer.calculateValue(this.repoStats.totalCommits, this.repoStats.daysActive);
     await this.license.calculateValue(this.desiredLicense, this.repoStats.licenseName, this.repoStats.readme);
     await this.netScore.calculateValue(this.rampUp, /* correctness */ this.busFactor, this.responsiveMaintainer, this.license);
+    this.logger.add(2, "All metrics calculated for " + this.name);
   }
 
   // This could be cleaned up but it works for now
   jsonMetrics(): string {
+    this.logger.add(2, "Constructing NDJSON string of metrics for " + this.name);
     var str: string = String(
       "{" + 
       "\"" + this.url.name + "\"" + ": " + "\"" + this.url.value + "\"" + ", " +
@@ -68,6 +76,7 @@ export class Repository {
       "\"" + "license_latency" + "\"" + ": " + this.license.latencyValue +
       "}" + '\n'
     );
+    this.logger.add(2, "NDJSON string of metrics for constructed successfully for " + this.name + ", returning said string");
     return str;
   }
 }

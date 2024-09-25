@@ -66,29 +66,30 @@ export class RepoStats {
 
   // Get the name of the license
   async #getLicenseName(owner: string, name: string): Promise<string> {
-    var logger = new Logger();
-    logger.add(1, "Checking " + name + " for license");
+    this.logger.add(1, "Checking " + name + " for license...");
+    this.logger.add(2, "Checking " + name + " for license...");
 
     try {
-
       const license = await octokit.request('GET /repos/{owner}/{repo}/license', {
         owner: owner,
         repo: name,
       });
-      console.log(license);
       const licenseName = license.data.license ? license.data.license.name : 'N/A';
-      //console.clear();  // Repos that don't have a license specified throw a 404 error.
+      console.clear();  // Repos that don't have a license specified throw a 404 error.
                         // octokit.request automatically writes this to the console before entering the catch clause
                         // Not ideal but this clears this error from the console
+      this.logger.add(1, "License found successfully for " + name);
+      this.logger.add(2, "License found successfully for " + name);
       return licenseName;
     } 
     catch (error) {
+      this.logger.add(1, "Getting license for " + name + " was unsuccessful");
       if (error.status === 404) {
-        logger.add(2, "Error 404 when checking " + name + " for license name, returning README");
+        this.logger.add(2, "Error 404 when checking " + name + " for license name, returning README");
         return this.readme;
       }
       else {
-        logger.add(2, "Error when checking " + name + " for license name: " + error);
+        this.logger.add(2, "Error when checking " + name + " for license name: " + error);
         return " ";
       }
     }
@@ -96,6 +97,8 @@ export class RepoStats {
 
   // Function to fetch the number of commits in a repository
   async #getCommitCount(owner: string, repo: string): Promise<number> {
+    this.logger.add(1, "Getting " + repo + " commit count...");
+    this.logger.add(2, "Getting " + repo + " commit count...");
     try {
       // Fetch the first page with per_page set to 1 to minimize data transferred
       const response = await octokit.repos.listCommits({
@@ -109,14 +112,21 @@ export class RepoStats {
       if (linkHeader) {
         const match = linkHeader.match(/&page=(\d+)>; rel="last"/);
         if (match) {
-          return parseInt(match[1], 10);
+          this.logger.add(1, "Getting commit count for " + repo + " successful");
+          this.logger.add(2, "Getting commit count for " + repo + " successful");
+          return Promise.resolve(parseInt(match[1], 10));
         }
       }
       // If no link header, fallback to counting the response length (which means there's only 1 page of commits)
+      this.logger.add(1, "Getting commit count for " + repo + " successful");
+      this.logger.add(2, "Getting commit count for " + repo + " successful");
+
       return response.data.length;
     } catch (error) {
       handleError(error);
-      return 0; // Return 0 in case of error
+      this.logger.add(1, repo + " commit count error");
+      this.logger.add(2, repo + " commit count error");
+      return Promise.resolve(0); // Return 0 in case of error
     }
   }
 
@@ -242,6 +252,7 @@ export class RepoStats {
   }  
 
   displayStats() {
+    this.logger.add(2, "Displaying all repository stats...");
     console.log('Total Commits:', this.totalCommits);
     console.log(`Total Open Issues: ${this.totalOpenIssues}`);
     console.log(`Total Closed Issues: ${this.totalClosedIssues}`);
@@ -259,12 +270,15 @@ export class RepoStats {
     console.log(`Days Active: ${this.daysActive}`);
     console.log(`First Commit Date: ${this.firstCommitDate}`);
     console.log(`Last Commit Date: ${this.lastCommitDate}`);
+    this.logger.add(2, "All repository stats displayed");
   }
 }
 
 
 // Helper function to handle errors
 function handleError(error: any): void {
+  const logger = new Logger();
+  logger.add(2, "Handling error: " + error + " ...");
   if (error.status === 403 && error.response?.headers['x-ratelimit-remaining'] === '0') {
     const retryAfter = error.response?.headers['retry-after'] ? parseInt(error.response.headers['retry-after']) * 1000 : 60000;
     console.error('Rate limit exceeded. Waiting before retrying.');
@@ -274,16 +288,22 @@ function handleError(error: any): void {
     }, retryAfter);
   } else {
     console.error("An error occurred:", error);
+    process.exit(1);
   }
+  logger.add(2, "Error handled");
 }
 
 // Function to check the rate limit
 async function checkRateLimit(): Promise<void> {
+  const logger = new Logger();
+  logger.add(2, "Checking rate limit...");
   try {
     const { data } = await octokit.rateLimit.get();
     console.log(`Remaining requests: ${data.rate.remaining}`);
     console.log(`Rate limit reset time: ${new Date(data.rate.reset * 1000)}`);
+    logger.add(2, "Successfully checked rate limit");
   } catch (error) {
+    logger.add(2, "Error when checking rate limit: " + error);
     handleError(error);
   }
 }
