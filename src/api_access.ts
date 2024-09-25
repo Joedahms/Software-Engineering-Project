@@ -180,7 +180,7 @@ export class RepoStats {
     console.log(`Comment Frequency: ${this.commentFrequency}`);
     console.log(`Total Contributors: ${this.totalContributors}`);
     console.log(`License: ${this.licenseName}`);
-    console.log(`README Length: ${this.readmeLength} words`); // updated to shows the length of the readme in words instead of characters.
+    console.log(`README Length: ${this.readmeLength} wordCount`); // updated to shows the length of the readme in words instead of characters.
     console.log(`Days Active: ${this.daysActive}`);
     console.log(`First Commit Date: ${this.firstCommitDate}`);
     console.log(`Last Commit Date: ${this.lastCommitDate}`);
