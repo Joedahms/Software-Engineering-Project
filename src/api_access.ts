@@ -18,6 +18,7 @@ export class RepoStats {
 
   owner: string;
   repo: string;
+
   totalOpenIssues: number;
   totalClosedIssues: number;
   totalIssues: number;
@@ -38,13 +39,15 @@ export class RepoStats {
   lastCommitDate: Date;
   totalCommits: number;
 
+  remainingRequests: number;
+  rateLimitReset: Date;
+
   constructor(owner: string, repo: string) {
     this.logger = new Logger();
 
     this.owner = owner;
     this.repo = repo;
     
-    // Initialize properties with default values
     this.totalOpenIssues = 0;
     this.totalClosedIssues = 0;
     this.totalIssues = 0;
@@ -64,7 +67,11 @@ export class RepoStats {
     this.firstCommitDate = new Date();
     this.lastCommitDate = new Date();
     this.totalCommits = 0;
+
+    this.remainingRequests = 0;
+    this.rateLimitReset = new Date();
   }
+
   async #getLicenseName(owner: string, name: string): Promise<string> {
     this.logger.add(1, "Checking " + name + " for license...");
     this.logger.add(2, "Checking " + name + " for license...");
@@ -141,11 +148,8 @@ export class RepoStats {
     this.daysActive = Math.ceil((updated.getTime() - created.getTime()) / (1000 * 3600 * 24));
   }
 
-  async getTotalCommits() {
-    this.totalCommits = await this.getCommitCount(this.owner, this.repo); // Fetch total commits
-  }
-
-  async getOpenIssues() {
+  // Open issues (excluding pull requests)
+  async #getOpenIssues() {
     const startTimeMilliseconds = performance.now();
     const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
       owner: this.owner,
@@ -154,17 +158,37 @@ export class RepoStats {
       per_page: 100,
     });
     this.totalOpenIssues = openIssues.filter((issue: any) => !issue.pull_request).length;
-    var endTimeMilliseconds: number = performance.now();
+    const endTimeMilliseconds = performance.now();
 
     var totalTimeSeconds = (endTimeMilliseconds - startTimeMilliseconds) / 1000;
     this.logger.add(2, "Took " + totalTimeSeconds + " seconds to get all open issues from " + this.repo);
   }
 
-  async checkRateLimit(): number {
+  // Total issues (excluding pull requests)
+  async #getTotalIssues() {
+    const startTimeMilliseconds = performance.now();
+    const allIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+      owner: this.owner,
+      repo: this.repo,
+      state: 'all',
+      per_page: 100,
+    });
+    this.totalIssues = allIssues.filter((issue: any) => !issue.pull_request).length;
+    const endTimeMilliseconds = performance.now();
+
+    const totalTimeSeconds = (endTimeMilliseconds - startTimeMilliseconds) / 1000;
+    this.logger.add(2, "Took " + totalTimeSeconds + " seconds to get all open and closed issues from " + this.repo);
+  }
+
+  async checkRateLimit() {
     try {
       const { data } = await octokit.rateLimit.get();
-      console.log(`Remaining requests: ${data.rate.remaining}`);
-      console.log(`Rate limit reset time: ${new Date(data.rate.reset * 1000)}`);
+       
+      this.remainingRequests = data.rate.remaining;
+      this.rateLimitReset = new Date(data.rate.reset * 1000);
+      
+      this.logger.add(2, "Remaining API requests: " + this.remainingRequests);
+      this.logger.add(2, "API rate limit resets at " + this.rateLimitReset);
     } catch (error) {
       handleError(error);
     }
@@ -172,23 +196,11 @@ export class RepoStats {
 
   async getData() {
     try {
+      await this.#getOpenIssues();
+      this.checkRateLimit();
 
-      await fetch
-
-      // Fetch total issues (excluding pull requests)
-      startTime = performance.now();
-      const allIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
-        owner: this.owner,
-        repo: this.repo,
-        state: 'all',
-        per_page: 100,
-      });
-      this.totalIssues = allIssues.filter((issue: any) => !issue.pull_request).length;
-      endTime = performance.now();
-      
-      totalTime = endTime - startTime;
-      totalTimeSeconds = totalTime / 1000;
-      this.logger.add(2, "Took " + totalTimeSeconds + " seconds to get total issues from " + this.repo);
+      await this.#getTotalIssues();
+      this.checkRateLimit();
       
       /*
       // Closed issues

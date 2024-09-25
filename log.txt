@@ -1,0 +1,171 @@
+Parsing URL_FILE...
+Searching for NPM URLs in URL_FILE
+2 NPM URLs found
+NPM URLs: https://www.npmjs.com/package/express,https://www.npmjs.com/package/browserify
+Searching for GitHub URLs from URL_FILE...
+3 GitHub URLs found
+GitHub URLs: https://github.com/cloudinary/cloudinary_npm,https://github.com/nullivex/nodist,https://github.com/lodash/lodash
+Successfully searched for GitHub URLs in URL_FILE
+URL_FILE successfully parsed
+Calculating all metrics for express
+Took 1.95824222 seconds to get all open issues from express
+Remaining API requests: 4714
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Took 68.158244075 seconds to get all open and closed issues from express
+Remaining API requests: 4659
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Checking express for license...
+License found successfully for express
+Getting express commit count...
+Getting commit count for express successful
+Calculating RampUp for express
+Running min max normalization on 9803 max/min = 27000/500
+min max result: 0.3510566037735849
+min max normalization successful, returning normalized value
+express RampUp: 0.3510566037735849
+Calculating Correctness for express
+express Correctness: 0.9728892331525949
+Calculating ResponsiveMaintainer for express
+Running min max normalization on 27.947817360762667 max/min = 330/0
+min max result: 0.08469035563867475
+min max normalization successful, returning normalized value
+express ResponsiveMaintainer: 0.08469035563867475
+Checking express for MIT License license...
+License found at license API endpoint
+Calculating NetScore for express
+Running min max normalization on 0.4357469594122596 max/min = 4/0
+min max result: 0.1089367398530649
+min max normalization successful, returning normalized value
+All metrics calculated for express
+Calculating all metrics for browserify
+Took 3.6546709090000076 seconds to get all open issues from browserify
+Remaining API requests: 4651
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Took 26.16807364100001 seconds to get all open and closed issues from browserify
+Remaining API requests: 4630
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Checking browserify for license...
+License found successfully for browserify
+Getting browserify commit count...
+Getting commit count for browserify successful
+Calculating RampUp for browserify
+Running min max normalization on 26832 max/min = 27000/500
+min max result: 0.9936603773584906
+min max normalization successful, returning normalized value
+browserify RampUp: 0.9936603773584906
+Calculating Correctness for browserify
+browserify Correctness: 0.7617161716171617
+Calculating ResponsiveMaintainer for browserify
+Running min max normalization on 67.00567437800088 max/min = 330/0
+min max result: 0.20304749811515416
+min max normalization successful, returning normalized value
+browserify ResponsiveMaintainer: 0.20304749811515416
+Checking browserify for MIT License license...
+License found at license API endpoint
+Calculating NetScore for browserify
+Running min max normalization on 1.1967078754736447 max/min = 4/0
+min max result: 0.29917696886841116
+min max normalization successful, returning normalized value
+All metrics calculated for browserify
+Calculating all metrics for cloudinary_npm
+Took 0.5152151950000116 seconds to get all open issues from cloudinary_npm
+Remaining API requests: 4625
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Took 9.500795587 seconds to get all open and closed issues from cloudinary_npm
+Remaining API requests: 4618
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Checking cloudinary_npm for license...
+Error 404 when checking cloudinary_npm for license name, returning README
+Getting cloudinary_npm commit count...
+Getting commit count for cloudinary_npm successful
+Calculating RampUp for cloudinary_npm
+Running min max normalization on 4750 max/min = 27000/500
+min max result: 0.16037735849056603
+min max normalization successful, returning normalized value
+cloudinary_npm RampUp: 0.16037735849056603
+Calculating Correctness for cloudinary_npm
+cloudinary_npm Correctness: 0.9550173010380623
+Calculating ResponsiveMaintainer for cloudinary_npm
+Running min max normalization on 145.72826086956522 max/min = 330/0
+min max result: 0.441600790513834
+min max normalization successful, returning normalized value
+cloudinary_npm ResponsiveMaintainer: 0.441600790513834
+Checking cloudinary_npm for MIT License license...
+License not found at API endpoint, checking README...
+License found in README
+Calculating NetScore for cloudinary_npm
+Running min max normalization on 0.6019781490044 max/min = 4/0
+min max result: 0.1504945372511
+min max normalization successful, returning normalized value
+All metrics calculated for cloudinary_npm
+Calculating all metrics for nodist
+Took 0.5454881460000033 seconds to get all open issues from nodist
+Remaining API requests: 4611
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Took 3.773759926999992 seconds to get all open and closed issues from nodist
+Remaining API requests: 4607
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Checking nodist for license...
+License found successfully for nodist
+Getting nodist commit count...
+Getting commit count for nodist successful
+Calculating RampUp for nodist
+Running min max normalization on 18032 max/min = 27000/500
+min max result: 0.6615849056603773
+min max normalization successful, returning normalized value
+nodist RampUp: 0.6615849056603773
+Calculating Correctness for nodist
+nodist Correctness: 0.8787878787878788
+Calculating ResponsiveMaintainer for nodist
+Running min max normalization on 303.054298642534 max/min = 330/0
+min max result: 0.9183463595228303
+min max normalization successful, returning normalized value
+nodist ResponsiveMaintainer: 0.9183463595228303
+Checking nodist for MIT License license...
+License found at license API endpoint
+Calculating NetScore for nodist
+Running min max normalization on 1.5799312651832076 max/min = 4/0
+min max result: 0.3949828162958019
+min max normalization successful, returning normalized value
+All metrics calculated for nodist
+Calculating all metrics for lodash
+Took 1.6392805789999985 seconds to get all open issues from lodash
+Remaining API requests: 4598
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Took 110.90981316400003 seconds to get all open and closed issues from lodash
+Remaining API requests: 4541
+API rate limit resets at Wed Sep 25 2024 11:46:28 GMT-0400 (Eastern Daylight Time)
+Checking lodash for license...
+License found successfully for lodash
+Getting lodash commit count...
+Getting commit count for lodash successful
+Calculating RampUp for lodash
+Running min max normalization on 2807 max/min = 27000/500
+min max result: 0.0870566037735849
+min max normalization successful, returning normalized value
+lodash RampUp: 0.0870566037735849
+Calculating Correctness for lodash
+lodash Correctness: 0.9850046860356139
+Calculating ResponsiveMaintainer for lodash
+Running min max normalization on 17.047155688622755 max/min = 330/0
+min max result: 0.051658047541281074
+min max normalization successful, returning normalized value
+lodash ResponsiveMaintainer: 0.051658047541281074
+Checking lodash for MIT License license...
+License not found at API endpoint, checking README...
+License found in README
+Calculating NetScore for lodash
+Running min max normalization on 0.138714651314866 max/min = 4/0
+min max result: 0.0346786628287165
+min max normalization successful, returning normalized value
+All metrics calculated for lodash
+Constructing NDJSON string of metrics for express
+NDJSON string of metrics for constructed successfully for express, returning said string
+Constructing NDJSON string of metrics for browserify
+NDJSON string of metrics for constructed successfully for browserify, returning said string
+Constructing NDJSON string of metrics for cloudinary_npm
+NDJSON string of metrics for constructed successfully for cloudinary_npm, returning said string
+Constructing NDJSON string of metrics for nodist
+NDJSON string of metrics for constructed successfully for nodist, returning said string
+Constructing NDJSON string of metrics for lodash
+NDJSON string of metrics for constructed successfully for lodash, returning said string
