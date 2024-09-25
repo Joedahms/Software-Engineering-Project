@@ -63,7 +63,6 @@ export class RepoStats {
     this.firstCommitDate = new Date();
     this.lastCommitDate = new Date();
     this.totalCommits = 0;
-    this.readmeLength = 0;
   }
 
   // Get the name of the license
