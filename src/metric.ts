@@ -4,7 +4,7 @@ import { performance } from "perf_hooks"
 import { Logger } from "./logger.js";
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
-import { checkLicense } from './api_access.js'
+// Shouldn't make any API calls here, do in Repository class
 
 // Abstract metric class
 abstract class Metric {
@@ -32,17 +32,20 @@ abstract class Metric {
   
   // Normalizes a number to a value between 0 and 1 depending on the min and max
   minMax(inputValue: number, max: number, min: number): number {
+    this.logger.add(2, "Running min max normalization on " + inputValue + " max/min = " + max + "/" + min);
     var normalizedInputValue;
-    this.logger.add(2, "min max input: " + String(inputValue));
     normalizedInputValue = (inputValue - min) / (max - min);
     this.logger.add(2, "min max result: " + String(normalizedInputValue));
     if (normalizedInputValue < 0) {       // Less than or equal to minimum
+      this.logger.add(2, "Normalized value less than 0, returning 0");
       return 0
     }
     else if (normalizedInputValue > 1) {  // Maximum value isn't large enough
+      this.logger.add(2, "Normalized value greater than 1, returning 2");
       return 2;
     }
     else {                                // All is well
+      this.logger.add(2, "min max normalization successful, returning normalized value");
       return normalizedInputValue;
     }
   }
@@ -223,13 +226,35 @@ export class License extends Metric {
     this.name = "License";
     this.value = 0;
   }
-  async calculateValue(desiredLicenseName: string, licenseName: string) {
+  async calculateValue(desiredLicenseName: string, licenseName: string, readme: string) {
     const startTime = performance.now();
-    
-    if (desiredLicenseName === licenseName) {
+
+    this.logger.add(2, "Checking " + this.repoName + " for " + desiredLicenseName + " license...");
+    if (desiredLicenseName === licenseName) { // Perfect match
       this.value = 1;
+      this.logger.add(1, "License found");
+      this.logger.add(2, "License found at license API endpoint");
     } 
+    else if(licenseName === readme || licenseName === "Other") {       // 404 error when checking license, readme returned
+      this.logger.add(2, "License not found at API endpoint, checking README...");
+
+      const licenseNameRegexString = "(" + desiredLicenseName + ")";
+      const licenseNameRegex = new RegExp(licenseNameRegexString, "gmi"); // i -> case insensitive
+      const readmeLicenseName = readme.match(licenseNameRegex);
+
+      if (readmeLicenseName != null) {
+        this.value = 1;
+        this.logger.add(1, "License found");
+        this.logger.add(2, "License found in README");
+      }
+      else {
+        this.logger.add(1, "License not found");
+        this.logger.add(2, "License not found in README");
+      }
+    }
     else {
+      this.logger.add(1, "License not found");
+      this.logger.add(2, "License not found. Did not scan README for license");
       this.value = 0;
     }
 

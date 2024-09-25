@@ -87,6 +87,7 @@ export class UrlFileParser {
   }
 
   async npmRepos(): Promise<RepositoryUrlData[]> {
+    this.logger.add(2, "Searching for NPM URLs in URL_FILE");
     const npmUrlArray = this.urlFileContents.match(this.npmRegex);  // Get the NPM URLs from the passed URL_FILE
     var repoArray: Array<RepositoryUrlData> = [];  // Array of repo owner and names to return
 
@@ -126,6 +127,7 @@ export class UrlFileParser {
   }
 
   githubRepos(): RepositoryUrlData[] {
+    this.logger.add(2, "Searching for GitHub URLs from URL_FILE...");
     const githubUrlArray = this.urlFileContents.match(this.githubRegex);  // Match all the github URLs in the url file
     var githubRepoArray: Array<RepositoryUrlData> = [];  // Array of RepositoryUrlData interfaces that will be returned
 
@@ -141,9 +143,7 @@ export class UrlFileParser {
     else {
       this.logger.add(2, "No GitHub URLs in passed URL_FILE");
     }
+    this.logger.add(2, "Successfully searched for GitHub URLs in URL_FILE");
     return githubRepoArray;
   }
 }
-
-
-

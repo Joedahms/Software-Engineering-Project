@@ -2,22 +2,27 @@ import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'; // interf
 import { Repository } from './repository.js'  // class
 import { writeOutput } from './output.js'     // function
 import { RepoStats } from './api_access.js'
+import { Logger } from './logger.js'
 
 export class Main {
   readonly urlFileParser: UrlFileParser;
   readonly GITHUB_TOKEN: any;
+  logger: Logger;
 
   constructor() {
     this.urlFileParser = new UrlFileParser();
+    this.logger = new Logger();
   }
 
   // Get all the repo's owners and names from the url file
   async parseUrlFile(): Promise<RepositoryUrlData[]> {
+    this.logger.add(2, "Parsing URL_FILE...");
     var repositoryUrlData: RepositoryUrlData[] = [];
 
     repositoryUrlData = await this.urlFileParser.npmRepos();
     repositoryUrlData = repositoryUrlData.concat(this.urlFileParser.githubRepos());
 
+    this.logger.add(2, "URL_FILE successfully parsed");
     return Promise.resolve(repositoryUrlData); 
   }
 }
