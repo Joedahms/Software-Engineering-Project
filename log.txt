@@ -1,59 +1,131 @@
+Parsing URL_FILE...
+Searching for NPM URLs in URL_FILE
 2 NPM URLs found
 NPM URLs: https://www.npmjs.com/package/express,https://www.npmjs.com/package/browserify
+Searching for GitHub URLs from URL_FILE...
 3 GitHub URLs found
 GitHub URLs: https://github.com/cloudinary/cloudinary_npm,https://github.com/nullivex/nodist,https://github.com/lodash/lodash
+Successfully searched for GitHub URLs in URL_FILE
+URL_FILE successfully parsed
+Calculating all metrics for express
+Checking express for license...
+License found successfully for express
+Getting express commit count...
+Getting commit count for express successful
 Calculating RampUp for express
-min max input: 837
-min max result: 0.012716981132075473
-express RampUp: 0.012716981132075473
+Running min max normalization on 9803 max/min = 27000/500
+min max result: 0.3510566037735849
+min max normalization successful, returning normalized value
+express RampUp: 0.3510566037735849
 Calculating ResponsiveMaintainer for express
-min max input: 27.947817360762667
-min max result: 0.09193360973935087
-express ResponsiveMaintainer: 0.09193360973935087
+Running min max normalization on 27.94279979929754 max/min = 304/0
+min max result: 0.09191710460295244
+min max normalization successful, returning normalized value
+express ResponsiveMaintainer: 0.09191710460295244
+Checking express for MIT License license...
+License found at license API endpoint
 Calculating NetScore for express
-min max input: 0.10465059087142635
-min max result: 0.026162647717856587
+Running min max normalization on 0.4429737083765373 max/min = 4/0
+min max result: 0.11074342709413433
+min max normalization successful, returning normalized value
+All metrics calculated for express
+Calculating all metrics for browserify
+Checking browserify for license...
+License found successfully for browserify
+Getting browserify commit count...
+Getting commit count for browserify successful
 Calculating RampUp for browserify
-min max input: 3563
-min max result: 0.11558490566037735
-browserify RampUp: 0.11558490566037735
+Running min max normalization on 26832 max/min = 27000/500
+min max result: 0.9936603773584906
+min max normalization successful, returning normalized value
+browserify RampUp: 0.9936603773584906
 Calculating ResponsiveMaintainer for browserify
-min max input: 67.00567437800088
-min max result: 0.2204134025592134
-browserify ResponsiveMaintainer: 0.2204134025592134
+Running min max normalization on 66.99257965953733 max/min = 304/0
+min max result: 0.2203703278274254
+min max normalization successful, returning normalized value
+browserify ResponsiveMaintainer: 0.2203703278274254
+Checking browserify for MIT License license...
+License found at license API endpoint
 Calculating NetScore for browserify
-min max input: 0.33599830821959076
-min max result: 0.08399957705489769
+Running min max normalization on 1.214030705185916 max/min = 4/0
+min max result: 0.303507676296479
+min max normalization successful, returning normalized value
+All metrics calculated for browserify
+Calculating all metrics for cloudinary_npm
+Checking cloudinary_npm for license...
+Error 404 when checking cloudinary_npm for license name, returning README
+Getting cloudinary_npm commit count...
+Getting commit count for cloudinary_npm successful
 Calculating RampUp for cloudinary_npm
-min max input: 438
-min max result: -0.002339622641509434
-cloudinary_npm RampUp: 0
+Running min max normalization on 4750 max/min = 27000/500
+min max result: 0.16037735849056603
+min max normalization successful, returning normalized value
+cloudinary_npm RampUp: 0.16037735849056603
 Calculating ResponsiveMaintainer for cloudinary_npm
-min max input: 145.72826086956522
+Running min max normalization on 145.72826086956522 max/min = 304/0
 min max result: 0.47936927917620137
+min max normalization successful, returning normalized value
 cloudinary_npm ResponsiveMaintainer: 0.47936927917620137
+Checking cloudinary_npm for MIT License license...
+License not found at API endpoint, checking README...
+License found in README
 Calculating NetScore for cloudinary_npm
-min max input: 0.47936927917620137
-min max result: 0.11984231979405034
+Running min max normalization on 0.6397466376667674 max/min = 4/0
+min max result: 0.15993665941669186
+min max normalization successful, returning normalized value
+All metrics calculated for cloudinary_npm
+Calculating all metrics for nodist
+Checking nodist for license...
+License found successfully for nodist
+Getting nodist commit count...
+Getting commit count for nodist successful
 Calculating RampUp for nodist
-min max input: 2750
-min max result: 0.08490566037735849
-nodist RampUp: 0.08490566037735849
+Running min max normalization on 18032 max/min = 27000/500
+min max result: 0.6615849056603773
+min max normalization successful, returning normalized value
+nodist RampUp: 0.6615849056603773
 Calculating ResponsiveMaintainer for nodist
-min max input: 303.054298642534
+Running min max normalization on 303.054298642534 max/min = 304/0
 min max result: 0.9968891402714933
+min max normalization successful, returning normalized value
 nodist ResponsiveMaintainer: 0.9968891402714933
+Checking nodist for MIT License license...
+License found at license API endpoint
 Calculating NetScore for nodist
-min max input: 1.0817948006488518
-min max result: 0.27044870016221295
+Running min max normalization on 1.6584740459318708 max/min = 4/0
+min max result: 0.4146185114829677
+min max normalization successful, returning normalized value
+All metrics calculated for nodist
+Calculating all metrics for lodash
+Checking lodash for license...
+License found successfully for lodash
+Getting lodash commit count...
+Getting commit count for lodash successful
 Calculating RampUp for lodash
-min max input: 241
-min max result: -0.009773584905660377
-lodash RampUp: 0
+Running min max normalization on 2807 max/min = 27000/500
+min max result: 0.0870566037735849
+min max normalization successful, returning normalized value
+lodash RampUp: 0.0870566037735849
 Calculating ResponsiveMaintainer for lodash
-min max input: 17.043413173652695
+Running min max normalization on 17.043413173652695 max/min = 304/0
 min max result: 0.05606385912385755
+min max normalization successful, returning normalized value
 lodash ResponsiveMaintainer: 0.05606385912385755
+Checking lodash for MIT License license...
+License not found at API endpoint, checking README...
+License found in README
 Calculating NetScore for lodash
-min max input: 0.05606385912385755
-min max result: 0.014015964780964387
+Running min max normalization on 0.14312046289744246 max/min = 4/0
+min max result: 0.035780115724360614
+min max normalization successful, returning normalized value
+All metrics calculated for lodash
+Constructing NDJSON string of metrics for express
+NDJSON string of metrics for constructed successfully for express, returning said string
+Constructing NDJSON string of metrics for browserify
+NDJSON string of metrics for constructed successfully for browserify, returning said string
+Constructing NDJSON string of metrics for cloudinary_npm
+NDJSON string of metrics for constructed successfully for cloudinary_npm, returning said string
+Constructing NDJSON string of metrics for nodist
+NDJSON string of metrics for constructed successfully for nodist, returning said string
+Constructing NDJSON string of metrics for lodash
+NDJSON string of metrics for constructed successfully for lodash, returning said string
