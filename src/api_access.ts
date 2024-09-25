@@ -120,7 +120,7 @@ export class RepoStats {
     this.lastCommitDate = new Date();
     this.totalCommits = 0;
   }
-  async fetchRepoData(){
+  async fetchRepoData() {
     const { data: repoData } = await octokit.repos.get({
       owner: this.owner,
       repo: this.repo
@@ -131,32 +131,56 @@ export class RepoStats {
     this.daysActive = Math.ceil((updated.getTime() - created.getTime()) / (1000 * 3600 * 24));
   }
 
-  async fetchTotalCommits(){
+  async fetchTotalCommits() {
     this.totalCommits = await fetchCommitCount(this.owner, this.repo); // Fetch total commits
+  }
+
+  async fetchOpenIssues() {
+    const startTimeMilliseconds = performance.now();
+    const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+      owner: this.owner,
+      repo: this.repo,
+      state: 'open',
+      per_page: 100,
+    });
+    this.totalOpenIssues = openIssues.filter((issue: any) => !issue.pull_request).length;
+    var endTimeMilliseconds: number = performance.now();
+
+    var totalTimeSeconds = (endTimeMilliseconds - startTimeMilliseconds) / 1000;
+    this.logger.add(2, "Took " + totalTimeSeconds + " seconds to get all open issues from " + this.repo);
+  }
+
+  async checkRateLimit(): number {
+    try {
+      const { data } = await octokit.rateLimit.get();
+      console.log(`Remaining requests: ${data.rate.remaining}`);
+      console.log(`Rate limit reset time: ${new Date(data.rate.reset * 1000)}`);
+    } catch (error) {
+      handleError(error);
+    }
   }
 
   async fetchData() {
     try {
-      // Open issues
-      
-      const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+
+      await fetch
+
+      // Fetch total issues (excluding pull requests)
+      startTime = performance.now();
+      const allIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
         owner: this.owner,
         repo: this.repo,
-        state: 'open',
+        state: 'all',
         per_page: 100,
       });
-      this.totalOpenIssues = openIssues.filter((issue: any) => !issue.pull_request).length;
-
-          // Fetch total issues (excluding pull requests)
-    const allIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
-      owner: this.owner,
-      repo: this.repo,
-      state: 'all',
-      per_page: 100,
-    });
-    this.totalIssues = allIssues.filter((issue: any) => !issue.pull_request).length;
-
-/*
+      this.totalIssues = allIssues.filter((issue: any) => !issue.pull_request).length;
+      endTime = performance.now();
+      
+      totalTime = endTime - startTime;
+      totalTimeSeconds = totalTime / 1000;
+      this.logger.add(2, "Took " + totalTimeSeconds + " seconds to get total issues from " + this.repo);
+      
+      /*
       // Closed issues
       const closedIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
         owner: this.owner,

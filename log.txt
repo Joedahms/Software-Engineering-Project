@@ -1,0 +1,69 @@
+2 NPM URLs found
+NPM URLs: https://www.npmjs.com/package/express,https://www.npmjs.com/package/browserify
+3 GitHub URLs found
+GitHub URLs: https://github.com/cloudinary/cloudinary_npm,https://github.com/nullivex/nodist,https://github.com/lodash/lodash
+Took 1.543005208 seconds to get all open issues from express
+Took 63.89128766899999 seconds to get total issues from express
+Calculating RampUp for express
+min max input: 9803
+min max result: 0.3510566037735849
+express RampUp: 0.3510566037735849
+Calculating ResponsiveMaintainer for express
+min max input: 27.947817360762667
+min max result: 0.08469035563867475
+express ResponsiveMaintainer: 0.08469035563867475
+Calculating NetScore for express
+min max input: 0.4357469594122596
+min max result: 0.1089367398530649
+Took 3.905149273000003 seconds to get all open issues from browserify
+Took 23.834792982 seconds to get total issues from browserify
+Calculating RampUp for browserify
+min max input: 26832
+min max result: 0.9936603773584906
+browserify RampUp: 0.9936603773584906
+Calculating ResponsiveMaintainer for browserify
+min max input: 67.00567437800088
+min max result: 0.20304749811515416
+browserify ResponsiveMaintainer: 0.20304749811515416
+Calculating NetScore for browserify
+min max input: 1.1967078754736447
+min max result: 0.29917696886841116
+Took 0.4135305609999923 seconds to get all open issues from cloudinary_npm
+Took 8.916586045999997 seconds to get total issues from cloudinary_npm
+Calculating RampUp for cloudinary_npm
+min max input: 4750
+min max result: 0.16037735849056603
+cloudinary_npm RampUp: 0.16037735849056603
+Calculating ResponsiveMaintainer for cloudinary_npm
+min max input: 145.72826086956522
+min max result: 0.441600790513834
+cloudinary_npm ResponsiveMaintainer: 0.441600790513834
+Calculating NetScore for cloudinary_npm
+min max input: 0.6019781490044
+min max result: 0.1504945372511
+Took 0.5552282789999881 seconds to get all open issues from nodist
+Took 3.548118162999992 seconds to get total issues from nodist
+Calculating RampUp for nodist
+min max input: 18032
+min max result: 0.6615849056603773
+nodist RampUp: 0.6615849056603773
+Calculating ResponsiveMaintainer for nodist
+min max input: 303.054298642534
+min max result: 0.9183463595228303
+nodist ResponsiveMaintainer: 0.9183463595228303
+Calculating NetScore for nodist
+min max input: 1.5799312651832076
+min max result: 0.3949828162958019
+Took 1.4182416049999884 seconds to get all open issues from lodash
+Took 115.63882829599999 seconds to get total issues from lodash
+Calculating RampUp for lodash
+min max input: 2807
+min max result: 0.0870566037735849
+lodash RampUp: 0.0870566037735849
+Calculating ResponsiveMaintainer for lodash
+min max input: 17.047155688622755
+min max result: 0.051658047541281074
+lodash ResponsiveMaintainer: 0.051658047541281074
+Calculating NetScore for lodash
+min max input: 0.138714651314866
+min max result: 0.0346786628287165

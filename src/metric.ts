@@ -152,11 +152,14 @@ export class Correctness extends Metric {
 
   async calculateValue(openIssues: number, totalIssues: number) {
     const startTime = performance.now();
-    /*this.logger.add(2, "Calculating Correctness for " + this.repoName);
+
+    this.logger.add(2, "Calculating Correctness for " + this.repoName);
   
     var normalizedMetric = (1-(openIssues/totalIssues)); //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
-    this.value = normalizedMetric;*/
+    this.value = normalizedMetric;
+    this.logger.add(1, this.repoName + this.name + "Calculated successfully");
+
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
   }
