@@ -12,6 +12,7 @@ async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]
   return octokit.paginate(endpoint, params);
 }
 
+
 // Function to fetch the number of commits in a repository
 async function fetchCommitCount(owner: string, repo: string): Promise<number> {
   try {
