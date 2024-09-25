@@ -79,7 +79,7 @@ export class NetScore extends Metric {
 
   async calculateValue(
   rampUp: RampUp, 
-  /*skipping correctness for now*/
+  correctness: Correctness,
   busFactor: BusFactor,
   responsiveMaintainer: ResponsiveMaintainer,
   license: License) {
@@ -88,16 +88,16 @@ export class NetScore extends Metric {
     this.logger.add(2, "Calculating NetScore for " + this.repoName);
 
     const rampUpWeight = 1;
-    // const correctnessWeight = 1;
+    const correctnessWeight = 1;
     const busFactorWeight = 1;
     const responsiveMaintainerWeight = 1;
 
     const weightedRampUp = rampUpWeight * rampUp.value;
-    // const weightedCorrectness
+    const weightedCorrectness = correctnessWeight * correctness.value;
     const weightedBusFactor = busFactorWeight * busFactor.value;
     const weightedResponsiveMaintainer = responsiveMaintainerWeight * responsiveMaintainer.value;
 
-    const weightedSum = weightedRampUp + /* weightedCorrectness */ + weightedBusFactor + weightedResponsiveMaintainer;    
+    const weightedSum = weightedRampUp + weightedCorrectness + weightedBusFactor + weightedResponsiveMaintainer;    
     const normalizedWeightedSum = this.minMax(weightedSum, 4, 0);
     this.value = license.value * normalizedWeightedSum;
     if (normalizedWeightedSum === 2) {
