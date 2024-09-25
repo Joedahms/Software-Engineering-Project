@@ -1,8 +1,12 @@
 # Ignore modules
 /node_modules/
 
+# Ignore directories
+/coverage
+
 # Ignore JavaScript files
 src/*.js
 
 # Ignore log.txt file
 log.txt
+test-log.txt
