@@ -113,17 +113,20 @@ export class RepoStats {
       if (linkHeader) {
         const match = linkHeader.match(/&page=(\d+)>; rel="last"/);
         if (match) {
+          const totalCommits = parseInt(match[1], 10);
           this.logger.add(1, "Getting commit count for " + repo + " successful");
-          this.logger.add(2, "Getting commit count for " + repo + " successful");
-          return Promise.resolve(parseInt(match[1], 10));
+          this.logger.add(2, this.repo + " has " + totalCommits + " total commits");
+          return Promise.resolve(totalCommits);
         }
       }
       // If no link header, fallback to counting the response length (which means there's only 1 page of commits)
+      const totalCommits = response.data.length;
       this.logger.add(1, "Getting commit count for " + repo + " successful");
-      this.logger.add(2, "Getting commit count for " + repo + " successful");
+      this.logger.add(2, this.repo + " has " + totalCommits + " total commits");
 
-      return response.data.length;
-    } catch (error) {
+      return totalCommits;
+    } 
+    catch (error) {
       handleError(error);
       this.logger.add(1, repo + " commit count error");
       this.logger.add(2, repo + " commit count error");
@@ -131,42 +134,52 @@ export class RepoStats {
     }
   }
 
-  async getRepoData(){
-    const { data: repoData } = await octokit.repos.get({
-      owner: this.owner,
-      repo: this.repo
-    });
+  async getRepoCreatedUpdated(){
+    this.logger.add(1, "Getting when " + this.repo + " created and last updated...");
+    this.logger.add(2, "Getting when " + this.repo + " created and last updated...");
+    try {
+      const { data: repoData } = await octokit.repos.get({
+        owner: this.owner,
+        repo: this.repo
+      });
 
-    const created = new Date(repoData.created_at);
-    const updated = new Date(repoData.updated_at);
-    this.daysActive = Math.ceil((updated.getTime() - created.getTime()) / (1000 * 3600 * 24));
+      const created = new Date(repoData.created_at);
+      const updated = new Date(repoData.updated_at);
+      this.daysActive = Math.ceil((updated.getTime() - created.getTime()) / (1000 * 3600 * 24));
+      this.logger.add(1, "Successfully got when " + this.repo + " was created and last updated");
+      this.logger.add(2, this.repo + " created at " + created);
+      this.logger.add(2, this.repo + " last updated at " + updated);
+    }
+    catch (error) {
+      handleError(error); 
+    }
   }
 
-  async getData() {
+  async getRepoStats() {
     try {
-
-      // Readme
+      // Readme content
       const readme = await octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
       this.readme = Buffer.from(readme.data.content, 'base64').toString('utf-8');
-      this.readmeLength = this.readme.length;
       
-      // split the readme into words
+      // Readme length in words
       const readmeContent = Buffer.from(readme.data.content, 'base64').toString('utf-8');
       const wordCount = readmeContent.split(/\s+/).filter(word => word.length > 0).length;
       this.readmeLength = wordCount;
+      
       // License name
       this.licenseName = await this.#getLicenseName(this.owner, this.repo);
     
+      // Total commits
       this.totalCommits = await this.#getCommitCount(this.owner, this.repo);
-     
-  
-    } catch (error) {
+    } 
+    catch (error) {
       handleError(error);
     }
   }  
 
   displayStats() {
     this.logger.add(2, "Displaying all repository stats...");
+
     console.log('Total Commits:', this.totalCommits);
     console.log(`Total Open Issues: ${this.totalOpenIssues}`);
     console.log(`Total Closed Issues: ${this.totalClosedIssues}`);
@@ -185,14 +198,11 @@ export class RepoStats {
     console.log(`First Commit Date: ${this.firstCommitDate}`);
     console.log(`Last Commit Date: ${this.lastCommitDate}`);
 
-
-
     this.logger.add(2, "All repository stats displayed");
-
   }
 }
 
-// Helper function to handle errors
+// Helper function to handle errors, checks rate limit
 function handleError(error: any): void {
   const logger = new Logger();
   logger.add(2, "Handling error: " + error + " ...");
