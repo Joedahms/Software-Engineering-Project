@@ -1,124 +1,152 @@
+Start time: 120.235904 milliseconds
 Parsing URL_FILE...
 Searching for NPM URLs in URL_FILE
 2 NPM URLs found
 NPM URLs: https://www.npmjs.com/package/express,https://www.npmjs.com/package/browserify
+Successfully searched for NPM URLs in URL_FILE
 Searching for GitHub URLs from URL_FILE...
 3 GitHub URLs found
 GitHub URLs: https://github.com/cloudinary/cloudinary_npm,https://github.com/nullivex/nodist,https://github.com/lodash/lodash
 Successfully searched for GitHub URLs in URL_FILE
 URL_FILE successfully parsed
+
 Calculating all metrics for express
+Getting when express created and last updated...
+express created at Fri Jun 26 2009 14:56:01 GMT-0400 (Eastern Daylight Time)
+express last updated at Thu Sep 26 2024 04:52:21 GMT-0400 (Eastern Daylight Time)
 Checking express for license...
 License found successfully for express
 Getting express commit count...
-Getting commit count for express successful
-Calculating RampUp for express
-Running min max normalization on 9803 max/min = 27000/500
-min max result: 0.3510566037735849
+express has 5979 total commits
+Calculating RampUp for express...
+Running min max normalization on 837 max/min = 27000/500
+min max result: 0.012716981132075473
 min max normalization successful, returning normalized value
-express RampUp: 0.3510566037735849
-Calculating ResponsiveMaintainer for express
-Running min max normalization on 27.94279979929754 max/min = 304/0
-min max result: 0.09191710460295244
+express RampUp: 0.012716981132075473
+Calculating ResponsiveMaintainer for express...
+Running min max normalization on 27.952834922227797 max/min = 304/0
+min max result: 0.09195011487574933
 min max normalization successful, returning normalized value
-express ResponsiveMaintainer: 0.09191710460295244
+express ResponsiveMaintainer: 0.09195011487574933
 Checking express for MIT License license...
-License found at license API endpoint
+Correct license found at license API endpoint
 Calculating NetScore for express
-Running min max normalization on 0.4429737083765373 max/min = 4/0
-min max result: 0.11074342709413433
+Running min max normalization on 0.10466709600782481 max/min = 4/0
+min max result: 0.026166774001956203
 min max normalization successful, returning normalized value
+express NetScore: 0.026166774001956203
 All metrics calculated for express
+
 Calculating all metrics for browserify
+Getting when browserify created and last updated...
+browserify created at Wed Sep 22 2010 12:11:32 GMT-0400 (Eastern Daylight Time)
+browserify last updated at Wed Sep 25 2024 13:39:31 GMT-0400 (Eastern Daylight Time)
 Checking browserify for license...
 License found successfully for browserify
 Getting browserify commit count...
-Getting commit count for browserify successful
-Calculating RampUp for browserify
-Running min max normalization on 26832 max/min = 27000/500
-min max result: 0.9936603773584906
+browserify has 2291 total commits
+Calculating RampUp for browserify...
+Running min max normalization on 3563 max/min = 27000/500
+min max result: 0.11558490566037735
 min max normalization successful, returning normalized value
-browserify RampUp: 0.9936603773584906
-Calculating ResponsiveMaintainer for browserify
-Running min max normalization on 66.99257965953733 max/min = 304/0
-min max result: 0.2203703278274254
+browserify RampUp: 0.11558490566037735
+Calculating ResponsiveMaintainer for browserify...
+Running min max normalization on 67.01876909646444 max/min = 304/0
+min max result: 0.22045647729100146
 min max normalization successful, returning normalized value
-browserify ResponsiveMaintainer: 0.2203703278274254
+browserify ResponsiveMaintainer: 0.22045647729100146
 Checking browserify for MIT License license...
-License found at license API endpoint
+Correct license found at license API endpoint
 Calculating NetScore for browserify
-Running min max normalization on 1.214030705185916 max/min = 4/0
-min max result: 0.303507676296479
+Running min max normalization on 0.3360413829513788 max/min = 4/0
+min max result: 0.0840103457378447
 min max normalization successful, returning normalized value
+browserify NetScore: 0.0840103457378447
 All metrics calculated for browserify
+
 Calculating all metrics for cloudinary_npm
+Getting when cloudinary_npm created and last updated...
+cloudinary_npm created at Fri Jun 22 2012 04:20:27 GMT-0400 (Eastern Daylight Time)
+cloudinary_npm last updated at Sun Sep 15 2024 08:12:30 GMT-0400 (Eastern Daylight Time)
 Checking cloudinary_npm for license...
 Error 404 when checking cloudinary_npm for license name, returning README
 Getting cloudinary_npm commit count...
-Getting commit count for cloudinary_npm successful
-Calculating RampUp for cloudinary_npm
-Running min max normalization on 4750 max/min = 27000/500
-min max result: 0.16037735849056603
-min max normalization successful, returning normalized value
-cloudinary_npm RampUp: 0.16037735849056603
-Calculating ResponsiveMaintainer for cloudinary_npm
+cloudinary_npm has 920 total commits
+Calculating RampUp for cloudinary_npm...
+Running min max normalization on 438 max/min = 27000/500
+min max result: -0.002339622641509434
+Normalized value less than 0, returning 0
+cloudinary_npm RampUp: 0
+Calculating ResponsiveMaintainer for cloudinary_npm...
 Running min max normalization on 145.72826086956522 max/min = 304/0
 min max result: 0.47936927917620137
 min max normalization successful, returning normalized value
 cloudinary_npm ResponsiveMaintainer: 0.47936927917620137
 Checking cloudinary_npm for MIT License license...
-License not found at API endpoint, checking README...
-License found in README
+Correct license not found at API endpoint, checking README...
+Correct license found in README
 Calculating NetScore for cloudinary_npm
-Running min max normalization on 0.6397466376667674 max/min = 4/0
-min max result: 0.15993665941669186
+Running min max normalization on 0.47936927917620137 max/min = 4/0
+min max result: 0.11984231979405034
 min max normalization successful, returning normalized value
+cloudinary_npm NetScore: 0.11984231979405034
 All metrics calculated for cloudinary_npm
+
 Calculating all metrics for nodist
+Getting when nodist created and last updated...
+nodist created at Sun Jul 01 2012 09:05:32 GMT-0400 (Eastern Daylight Time)
+nodist last updated at Thu Sep 26 2024 03:28:22 GMT-0400 (Eastern Daylight Time)
 Checking nodist for license...
 License found successfully for nodist
 Getting nodist commit count...
-Getting commit count for nodist successful
-Calculating RampUp for nodist
-Running min max normalization on 18032 max/min = 27000/500
-min max result: 0.6615849056603773
+nodist has 442 total commits
+Calculating RampUp for nodist...
+Running min max normalization on 2750 max/min = 27000/500
+min max result: 0.08490566037735849
 min max normalization successful, returning normalized value
-nodist RampUp: 0.6615849056603773
-Calculating ResponsiveMaintainer for nodist
-Running min max normalization on 303.054298642534 max/min = 304/0
-min max result: 0.9968891402714933
+nodist RampUp: 0.08490566037735849
+Calculating ResponsiveMaintainer for nodist...
+Running min max normalization on 303.39366515837105 max/min = 304/0
+min max result: 0.9980054774946416
 min max normalization successful, returning normalized value
-nodist ResponsiveMaintainer: 0.9968891402714933
+nodist ResponsiveMaintainer: 0.9980054774946416
 Checking nodist for MIT License license...
-License found at license API endpoint
+Correct license found at license API endpoint
 Calculating NetScore for nodist
-Running min max normalization on 1.6584740459318708 max/min = 4/0
-min max result: 0.4146185114829677
+Running min max normalization on 1.0829111378720002 max/min = 4/0
+min max result: 0.27072778446800005
 min max normalization successful, returning normalized value
+nodist NetScore: 0.27072778446800005
 All metrics calculated for nodist
+
 Calculating all metrics for lodash
+Getting when lodash created and last updated...
+lodash created at Sat Apr 07 2012 00:11:46 GMT-0400 (Eastern Daylight Time)
+lodash last updated at Thu Sep 26 2024 02:27:52 GMT-0400 (Eastern Daylight Time)
 Checking lodash for license...
 License found successfully for lodash
 Getting lodash commit count...
-Getting commit count for lodash successful
-Calculating RampUp for lodash
-Running min max normalization on 2807 max/min = 27000/500
-min max result: 0.0870566037735849
+lodash has 8016 total commits
+Calculating RampUp for lodash...
+Running min max normalization on 241 max/min = 27000/500
+min max result: -0.009773584905660377
+Normalized value less than 0, returning 0
+lodash RampUp: 0
+Calculating ResponsiveMaintainer for lodash...
+Running min max normalization on 17.050898203592816 max/min = 304/0
+min max result: 0.0560884809328711
 min max normalization successful, returning normalized value
-lodash RampUp: 0.0870566037735849
-Calculating ResponsiveMaintainer for lodash
-Running min max normalization on 17.043413173652695 max/min = 304/0
-min max result: 0.05606385912385755
-min max normalization successful, returning normalized value
-lodash ResponsiveMaintainer: 0.05606385912385755
+lodash ResponsiveMaintainer: 0.0560884809328711
 Checking lodash for MIT License license...
-License not found at API endpoint, checking README...
-License found in README
+Correct license not found at API endpoint, checking README...
+Correct license found in README
 Calculating NetScore for lodash
-Running min max normalization on 0.14312046289744246 max/min = 4/0
-min max result: 0.035780115724360614
+Running min max normalization on 0.0560884809328711 max/min = 4/0
+min max result: 0.014022120233217776
 min max normalization successful, returning normalized value
+lodash NetScore: 0.014022120233217776
 All metrics calculated for lodash
+
 Constructing NDJSON string of metrics for express
 NDJSON string of metrics for constructed successfully for express, returning said string
 Constructing NDJSON string of metrics for browserify
@@ -129,3 +157,5 @@ Constructing NDJSON string of metrics for nodist
 NDJSON string of metrics for constructed successfully for nodist, returning said string
 Constructing NDJSON string of metrics for lodash
 NDJSON string of metrics for constructed successfully for lodash, returning said string
+End time 4599.246472 milliseconds
+Total program run time: 4.479010568 seconds
