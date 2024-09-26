@@ -276,7 +276,7 @@ export class RepoStats {
 
 
 // Helper function to handle errors
-function handleError(error: any): void {
+export function handleError(error: any): void {
   const logger = new Logger();
   logger.add(2, "Handling error: " + error + " ...");
   if (error.status === 403 && error.response?.headers['x-ratelimit-remaining'] === '0') {
@@ -294,7 +294,7 @@ function handleError(error: any): void {
 }
 
 // Function to check the rate limit
-async function checkRateLimit(): Promise<void> {
+export async function checkRateLimit(): Promise<void> {
   const logger = new Logger();
   logger.add(2, "Checking rate limit...");
   try {

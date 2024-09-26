@@ -9,9 +9,9 @@ export class Main {
   readonly GITHUB_TOKEN: any;
   logger: Logger;
 
-  constructor() {
-    this.urlFileParser = new UrlFileParser();
-    this.logger = new Logger();
+  constructor(urlFileParser: UrlFileParser, logger: Logger) {
+    this.urlFileParser = urlFileParser;
+    this.logger = logger;
   }
 
   // Get all the repo's owners and names from the url file
@@ -28,7 +28,7 @@ export class Main {
 }
 
 // New main object
-var main = new Main();
+var main = new Main(new UrlFileParser(), new Logger());
 
 // Get repo owners and names
 var urlData: RepositoryUrlData[] = [];

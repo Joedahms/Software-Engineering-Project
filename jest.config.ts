@@ -43,7 +43,7 @@ module.exports = {
   // This option allows use of a custom test runner
   testRunner: "jest-circus/runner",
 
-  transform: {'^.+\\.ts?$': 'ts-jest'},
+  transform: {'^.+\\.(ts|tsx)$': 'ts-jest'},
   
   // The regexp pattern or array of patterns that Jest uses to detect test files
   testRegex: '/test/.*\\.(test|spec)?\\.(ts|tsx)$',

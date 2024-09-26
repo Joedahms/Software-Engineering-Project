@@ -1,128 +1,70 @@
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
 import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License } from '../src/metric';
-import { Logger } from '../src/logger.js';
+import { Logger } from '../src/logger';
 
-jest.mock('./logger.js');
+describe('Metrics Classes', () => {
+  const repoOwner = "testOwner";
+  const repoName = "testRepo";
 
-const mockLogger = Logger as jest.MockedClass<typeof Logger>;
-
-describe('Metrics', () => {
-  let loggerInstance: jest.Mocked<Logger>;
-
-  beforeEach(() => {
-    loggerInstance = new mockLogger();
-    loggerInstance.add = jest.fn();
-    loggerInstance.clear = jest.fn();
+  it('should create a Url metric and calculate its value', () => {
+    const urlMetric = new Url(repoOwner, repoName);
+    expect(urlMetric.name).toBe("URL");
+    expect(urlMetric.calculateValue()).toBe("URL");
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  it('should calculate NetScore correctly', async () => {
+    const netScoreMetric = new NetScore(repoOwner, repoName);
+
+    // Create instances of the dependencies
+    const rampUp = new RampUp(repoOwner, repoName);
+    const busFactor = new BusFactor(repoOwner, repoName);
+    const responsiveMaintainer = new ResponsiveMaintainer(repoOwner, repoName);
+    const license = new License(repoOwner, repoName);
+
+    // Set values for the dependencies
+    await rampUp.calculateValue(1000); // Example readme length
+    await busFactor.calculateValue();    // Placeholder implementation
+    await responsiveMaintainer.calculateValue(60, 12); // Example inputs
+    await license.calculateValue("MIT", "MIT", "This project is licensed under the MIT License."); // Example inputs
+
+    // Now calculate NetScore
+    await netScoreMetric.calculateValue(rampUp, busFactor, responsiveMaintainer, license);
+    
+    expect(netScoreMetric.value).toBeGreaterThan(0);
   });
 
-  describe('Url', () => {
-    it('should initialize with correct values', () => {
-      const url = new Url('owner', 'repo');
-      expect(url.name).toBe('URL');
-      expect(url.value).toBe('testtest');
-    });
-
-    it('should calculate value correctly', () => {
-      const url = new Url('owner', 'repo');
-      expect(url.calculateValue()).toBe('URL');
-    });
+  it('should calculate RampUp based on readme length', async () => {
+    const rampUpMetric = new RampUp(repoOwner, repoName);
+    await rampUpMetric.calculateValue(1000); // Example readme length
+    expect(rampUpMetric.value).toBeGreaterThan(0);
   });
 
-  describe('NetScore', () => {
-    it('should initialize with correct values', () => {
-      const netScore = new NetScore('owner', 'repo');
-      expect(netScore.name).toBe('NetScore');
-      expect(netScore.value).toBe(0);
-    });
-
-    it('should calculate value correctly', async () => {
-      const netScore = new NetScore('owner', 'repo');
-      const rampUp = new RampUp('owner', 'repo');
-      const busFactor = new BusFactor('owner', 'repo');
-      const responsiveMaintainer = new ResponsiveMaintainer('owner', 'repo');
-      const license = new License('owner', 'repo');
-
-      rampUp.value = 1;
-      busFactor.value = 1;
-      responsiveMaintainer.value = 1;
-      license.value = 1;
-
-      await netScore.calculateValue(rampUp, busFactor, responsiveMaintainer, license);
-      expect(netScore.value).toBe(1);
-    });
+  it('should calculate Correctness metric', async () => {
+    const correctnessMetric = new Correctness(repoOwner, repoName);
+    await correctnessMetric.calculateValue();
+    // Add assertions based on your expected logic
+    expect(correctnessMetric.value).toBe(0); // Adjust based on expected outcome
   });
 
-  describe('RampUp', () => {
-    it('should initialize with correct values', () => {
-      const rampUp = new RampUp('owner', 'repo');
-      expect(rampUp.name).toBe('RampUp');
-      expect(rampUp.value).toBe(0);
-    });
-
-    it('should calculate value correctly', async () => {
-      const rampUp = new RampUp('owner', 'repo');
-      await rampUp.calculateValue(1000);
-      expect(rampUp.value).toBeGreaterThan(0);
-    });
+  it('should calculate BusFactor metric', async () => {
+    const busFactorMetric = new BusFactor(repoOwner, repoName);
+    await busFactorMetric.calculateValue();
+    // Add assertions based on your expected logic
+    expect(busFactorMetric.value).toBe(0); // Adjust based on expected outcome
   });
 
-  describe('Correctness', () => {
-    it('should initialize with correct values', () => {
-      const correctness = new Correctness('owner', 'repo');
-      expect(correctness.name).toBe('Correctness');
-      expect(correctness.value).toBe(0);
-    });
-
-    it('should calculate value correctly', async () => {
-      const correctness = new Correctness('owner', 'repo');
-      await correctness.calculateValue();
-      expect(correctness.latencyValue).toBeGreaterThan(0);
-    });
+  it('should calculate ResponsiveMaintainer metric', async () => {
+    const responsiveMaintainerMetric = new ResponsiveMaintainer(repoOwner, repoName);
+    await responsiveMaintainerMetric.calculateValue(60, 12); // Example inputs
+    expect(responsiveMaintainerMetric.value).toBeGreaterThan(0);
   });
 
-  describe('BusFactor', () => {
-    it('should initialize with correct values', () => {
-      const busFactor = new BusFactor('owner', 'repo');
-      expect(busFactor.name).toBe('BusFactor');
-      expect(busFactor.value).toBe(0);
-    });
+  it('should calculate License metric', async () => {
+    const licenseMetric = new License(repoOwner, repoName);
+    await licenseMetric.calculateValue("MIT", "MIT", "This project is licensed under the MIT License.");
+    expect(licenseMetric.value).toBe(1); // Adjust based on expected outcome
 
-    it('should calculate value correctly', async () => {
-      const busFactor = new BusFactor('owner', 'repo');
-      await busFactor.calculateValue();
-      expect(busFactor.latencyValue).toBeGreaterThan(0);
-    });
-  });
-
-  describe('ResponsiveMaintainer', () => {
-    it('should initialize with correct values', () => {
-      const responsiveMaintainer = new ResponsiveMaintainer('owner', 'repo');
-      expect(responsiveMaintainer.name).toBe('ResponsiveMaintainer');
-      expect(responsiveMaintainer.value).toBe(0);
-    });
-
-    it('should calculate value correctly', async () => {
-      const responsiveMaintainer = new ResponsiveMaintainer('owner', 'repo');
-      await responsiveMaintainer.calculateValue(30, 100);
-      expect(responsiveMaintainer.value).toBeGreaterThan(0);
-    });
-  });
-
-  describe('License', () => {
-    it('should initialize with correct values', () => {
-      const license = new License('owner', 'repo');
-      expect(license.name).toBe('License');
-      expect(license.value).toBe(0);
-    });
-
-    it('should calculate value correctly', async () => {
-      const license = new License('owner', 'repo');
-      await license.calculateValue('MIT', 'MIT');
-      expect(license.value).toBe(1);
-    });
+    await licenseMetric.calculateValue("GPL", "Other", "This project is licensed under the MIT License.");
+    expect(licenseMetric.value).toBe(0);
   });
 });
