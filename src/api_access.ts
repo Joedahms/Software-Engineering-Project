@@ -13,9 +13,9 @@ export async function fetchAllPages<T>(endpoint: string, params: any = {}): Prom
 }
 
 // Function to fetch repository statistics
+
 export class RepoStats {
   logger: Logger;
-
   owner: string;
   repo: string;
   totalOpenIssues: number;
@@ -36,6 +36,7 @@ export class RepoStats {
   firstCommitDate: Date;
   lastCommitDate: Date;
   totalCommits: number;
+
 
   constructor(owner: string, repo: string) {
     this.logger = new Logger();
@@ -143,108 +144,21 @@ export class RepoStats {
 
   async getData() {
     try {
-      // Open issues
-      /*
-      const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
-        owner: this.owner,
-        repo: this.repo,
-        state: 'open',
-        per_page: 100,
-      });
-      this.totalOpenIssues = openIssues.filter((issue: any) => !issue.pull_request).length;
 
-      // Closed issues
-      const closedIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
-        owner: this.owner,
-        repo: this.repo,
-        state: 'closed',
-        per_page: 100,
-      });
-      this.totalClosedIssues = closedIssues.filter((issue: any) => !issue.pull_request).length;
-      this.issueRatio = this.totalOpenIssues > 0 ? (this.totalClosedIssues / this.totalOpenIssues).toFixed(2) : 'N/A';
-
-      // Open pull requests
-      const openPullRequests = await fetchAllPages('GET /repos/{owner}/{repo}/pulls', {
-        owner: this.owner,
-        repo: this.repo,
-        state: 'open',
-        per_page: 100,
-      });
-
-      // Closed pull requests
-      const closedPullRequests = await fetchAllPages('GET /repos/{owner}/{repo}/pulls', {
-        owner: this.owner,
-        repo: this.repo,
-        state: 'closed',
-        per_page: 100,
-      });
-
-      // ?
-      const repoData = await octokit.repos.get({
-        owner: this.owner,
-        repo: this.repo,
-      });
-
-      // Comments on issues
-      const issueComments = await fetchAllPages('GET /repos/{owner}/{repo}/issues/comments', {
-        owner: this.owner,
-        repo: this.repo,
-        per_page: 100,
-      });
-
-      // Comments on pull requests???
-      const pullRequestComments = await fetchAllPages('GET /repos/{owner}/{repo}/pulls/comments', {
-        owner: this.owner,
-        repo: this.repo,
-        per_page: 100,
-      });
-
-      // Contributors
-      const contributors = await fetchAllPages('GET /repos/{owner}/{repo}/contributors', {
-        owner: this.owner,
-        repo: this.repo,
-        per_page: 100,
-      });
-      */
- 
       // Readme
       const readme = await octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
       this.readme = Buffer.from(readme.data.content, 'base64').toString('utf-8');
       this.readmeLength = this.readme.length;
-
+      
+      // split the readme into words
+      const readmeContent = Buffer.from(readme.data.content, 'base64').toString('utf-8');
+      const wordCount = readmeContent.split(/\s+/).filter(word => word.length > 0).length;
+      this.readmeLength = wordCount;
       // License name
       this.licenseName = await this.#getLicenseName(this.owner, this.repo);
-     
-      /*
-      // ???
-      const firstCommit = await octokit.repos.listCommits({ owner: this.owner, repo: this.repo, per_page: 100 });
-
-      /// ???
-      const lastCommit = await octokit.repos.listCommits({ owner: this.owner, repo: this.repo, per_page: 100 });
-  
-      // Process fetched data
-        
-      this.totalMergedPullRequests = closedPullRequests.filter((pr: any) => pr.merged_at).length;
-      this.totalOpenPullRequests = openPullRequests.length;
-      this.totalClosedPullRequests = closedPullRequests.length;
-      this.pullRequestRatio = this.totalOpenPullRequests > 0 ? (this.totalClosedPullRequests / this.totalOpenPullRequests).toFixed(2) : 'N/A';
-  
-      this.totalForks = repoData.data.forks_count;
-  
-      this.totalComments = issueComments.length + pullRequestComments.length;
-*/
+    
       this.totalCommits = await this.#getCommitCount(this.owner, this.repo);
-      /*
-      this.commentFrequency = (this.totalCommits + this.totalOpenIssues + this.totalClosedIssues) > 0
-        ? (this.totalComments / (this.totalCommits + this.totalOpenIssues + this.totalClosedIssues)).toFixed(2)
-        : 'N/A';
-  
-      this.totalContributors = contributors.length;
-  */
-  
-  
-//      this.firstCommitDate = firstCommit.data[0]?.commit?.author?.date ? new Date(firstCommit.data[0].commit.author.date) : new Date();
- //     this.lastCommitDate = lastCommit.data[0]?.commit?.author?.date ? new Date(lastCommit.data[0].commit.author.date) : new Date();
+     
   
     } catch (error) {
       handleError(error);
@@ -266,14 +180,17 @@ export class RepoStats {
     console.log(`Comment Frequency: ${this.commentFrequency}`);
     console.log(`Total Contributors: ${this.totalContributors}`);
     console.log(`License: ${this.licenseName}`);
-    console.log(`README Length: ${this.readmeLength} characters`);
+    console.log(`README Length: ${this.readmeLength} wordCount`); // updated to shows the length of the readme in words instead of characters.
     console.log(`Days Active: ${this.daysActive}`);
     console.log(`First Commit Date: ${this.firstCommitDate}`);
     console.log(`Last Commit Date: ${this.lastCommitDate}`);
+
+
+
     this.logger.add(2, "All repository stats displayed");
+
   }
 }
-
 
 // Helper function to handle errors
 function handleError(error: any): void {

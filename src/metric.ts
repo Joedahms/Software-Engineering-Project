@@ -6,6 +6,7 @@ import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 import { writeOutput } from './output.js'
 // Shouldn't make any API calls here, do in Repository class
 
+
 // Abstract metric class
 abstract class Metric {
   readonly logger: Logger;
@@ -112,21 +113,24 @@ export class NetScore extends Metric {
   }
 }
 
+
 // RampUp metric
 export class RampUp extends Metric {
   value: number;
+  //private octokit: Octokit; // Octokit object for API access
 
   constructor(repoOwner: string, repoName: string) {
     super(repoOwner, repoName);
     this.name = "RampUp";
     this.value = 0;
+
   }
 
-  // Calculate RampUp
-  // Based on Readme length
+  // Calculate RampUp Based on Readme length
   async calculateValue(readmeLength: number) {
     const startTime = performance.now();
 
+    // fetch readme length from github in words
     this.logger.add(2, "Calculating RampUp for " + this.repoName);
     const normalizedMetric = this.minMax(readmeLength, 27000, 500);
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric))
@@ -134,7 +138,7 @@ export class RampUp extends Metric {
       console.error("Maximum too low for RampUp metric");
       process.exit(1);
     }
-    this.value = normalizedMetric;
+    this.value = normalizedMetric; 
 
     this.logger.add(1, this.repoName + this.name + "Calculated successfully");
 
