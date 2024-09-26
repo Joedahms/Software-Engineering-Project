@@ -29,7 +29,7 @@ export class Main {
 
 // New main object
 var main = new Main();
-
+const startTime = performance.now();
 // Get repo owners and names
 var urlData: RepositoryUrlData[] = [];
 urlData = await main.parseUrlFile();
@@ -59,5 +59,8 @@ for (repositoryIndex = 0; repositoryIndex < repositories.length; repositoryIndex
 //writeOutput(output);  // Cant figure out how to get the terminal caret to go away
 console.log(output);
 
+const endTime = performance.now();
+const runtime = (endTime - startTime)/1000; //in seconds
+console.log(`\n\n Total program run time: ${runtime} seconds`);
 // Exit 
 process.exit(0);
