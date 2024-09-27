@@ -209,7 +209,7 @@ export class ResponsiveMaintainer extends Metric {
     this.logger.add(2, "Calculating ResponsiveMaintainer for " + this.repoName + "...");
 
     var months = daysActive / 30;
-    var normalizedMetric = this.minMax(totalCommits / months, 330, 0); //arbitrary max and min values picked.
+    var normalizedMetric = this.minMax(totalCommits / months, 40, 0); //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
     if (normalizedMetric === 2) {
       console.error("Maximum too low for ResponsiveMaintainer metric");
