@@ -50,7 +50,7 @@ export class Repository {
     await this.rampUp.calculateValue(this.repoStats.readmeLength);
     await this.correctness.calculateValue(this.repoStats.totalOpenIssues, this.repoStats.totalIssues);
     await this.busFactor.calculateValue();
-    await this.responsiveMaintainer.calculateValue(this.repoStats.totalCommits, this.repoStats.daysActive);
+    await this.responsiveMaintainer.calculateValue(this.repoStats.daysActive, this.repoStats.totalCommits);
     await this.license.calculateValue(this.desiredLicense, this.repoStats.licenseName, this.repoStats.readme);
     await this.netScore.calculateValue(this.rampUp, this.correctness, this.busFactor, this.responsiveMaintainer, this.license);
     this.logger.add(1, "All metrics calculated for " + this.name + '\n');
