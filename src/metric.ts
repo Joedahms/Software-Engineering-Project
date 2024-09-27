@@ -3,7 +3,7 @@ import { performance } from "perf_hooks"
 
 import { Logger } from "./logger.js";
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
-import { writeOutput } from './output.js'
+
 // Shouldn't make any API calls here, do in Repository class
 
 // Abstract metric class
@@ -85,6 +85,7 @@ export class NetScore extends Metric {
   license: License) {
 
     const startTime = performance.now();
+    this.logger.add(1, "Calculating NetScore for " + this.repoName);
     this.logger.add(2, "Calculating NetScore for " + this.repoName);
 
     const rampUpWeight = 1;
@@ -105,16 +106,18 @@ export class NetScore extends Metric {
       process.exit(1);
     }
 
-    this.logger.add(1, this.repoName + this.name + "Calculated successfully");
+    this.logger.add(1, this.repoName + " " + this.name + " calculated successfully");
 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
   }
 }
 
+
 // RampUp metric
 export class RampUp extends Metric {
   value: number;
+  //private octokit: Octokit; // Octokit object for API access
 
   constructor(repoOwner: string, repoName: string) {
     super(repoOwner, repoName);
@@ -122,21 +125,23 @@ export class RampUp extends Metric {
     this.value = 0;
   }
 
-  // Calculate RampUp
-  // Based on Readme length
+  // Calculate RampUp Based on Readme length
   async calculateValue(readmeLength: number) {
     const startTime = performance.now();
 
-    this.logger.add(2, "Calculating RampUp for " + this.repoName);
+    // fetch readme length from github in words
+    this.logger.add(1, "Calculating RampUp for " + this.repoName + "...");
+    this.logger.add(2, "Calculating RampUp for " + this.repoName + "...");
+
     const normalizedMetric = this.minMax(readmeLength, 27000, 500);
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric))
     if (normalizedMetric === 2) {
       console.error("Maximum too low for RampUp metric");
       process.exit(1);
     }
-    this.value = normalizedMetric;
+    this.value = normalizedMetric; 
 
-    this.logger.add(1, this.repoName + this.name + "Calculated successfully");
+    this.logger.add(1, this.repoName + " " + this.name + " calculated successfully");
 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
@@ -200,7 +205,9 @@ export class ResponsiveMaintainer extends Metric {
   async calculateValue(daysActive: number, totalCommits: number) {
     const startTime = performance.now();
 
-    this.logger.add(2, "Calculating ResponsiveMaintainer for " + this.repoName);
+    this.logger.add(1, "Calculating ResponsiveMaintainer for " + this.repoName + "...");
+    this.logger.add(2, "Calculating ResponsiveMaintainer for " + this.repoName + "...");
+
     var months = daysActive / 30;
     var normalizedMetric = this.minMax(totalCommits / months, 330, 0); //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
@@ -210,7 +217,7 @@ export class ResponsiveMaintainer extends Metric {
     }
     this.value = normalizedMetric;
 
-    this.logger.add(1, this.repoName + this.name + "Calculated successfully");
+    this.logger.add(1, this.repoName + " " + this.name + " calculated successfully");
 
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
@@ -229,14 +236,16 @@ export class License extends Metric {
   async calculateValue(desiredLicenseName: string, licenseName: string, readme: string) {
     const startTime = performance.now();
 
+    this.logger.add(1, "Checking " + this.repoName + " for " + desiredLicenseName + " license...");
     this.logger.add(2, "Checking " + this.repoName + " for " + desiredLicenseName + " license...");
+
     if (desiredLicenseName === licenseName) { // Perfect match
       this.value = 1;
-      this.logger.add(1, "License found");
-      this.logger.add(2, "License found at license API endpoint");
+      this.logger.add(1, "Correct license found");
+      this.logger.add(2, "Correct license found at license API endpoint");
     } 
     else if(licenseName === readme || licenseName === "Other") {       // 404 error when checking license, readme returned
-      this.logger.add(2, "License not found at API endpoint, checking README...");
+      this.logger.add(2, "Correct license not found at API endpoint, checking README...");
 
       const licenseNameRegexString = "(" + desiredLicenseName + ")";
       const licenseNameRegex = new RegExp(licenseNameRegexString, "gmi"); // i -> case insensitive
@@ -244,17 +253,17 @@ export class License extends Metric {
 
       if (readmeLicenseName != null) {
         this.value = 1;
-        this.logger.add(1, "License found");
-        this.logger.add(2, "License found in README");
+        this.logger.add(1, "Correct license found");
+        this.logger.add(2, "Correct license found in README");
       }
       else {
-        this.logger.add(1, "License not found");
-        this.logger.add(2, "License not found in README");
+        this.logger.add(1, "Correct license not found");
+        this.logger.add(2, "Correct license not found in README");
       }
     }
     else {
-      this.logger.add(1, "License not found");
-      this.logger.add(2, "License not found. Did not scan README for license");
+      this.logger.add(1, "Correct license not found");
+      this.logger.add(2, "Correct license not found. Did not scan README for correct license");
       this.value = 0;
     }
 

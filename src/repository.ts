@@ -1,5 +1,4 @@
 import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License} from './metric.js'
-import { writeOutput } from './output.js'
 import { RepoStats } from './api_access.js'
 import { Logger } from './logger.js'
 
@@ -44,16 +43,18 @@ export class Repository {
   // Call all metric's calculateValue() method to calculate all metrics for a Repository
   // These methods should set the value within themselves
   async calculateAllMetrics() {
+    this.logger.add(1, "Calculating all metrics for " + this.name);
     this.logger.add(2, "Calculating all metrics for " + this.name);
-    await this.repoStats.getRepoData();
-    await this.repoStats.getData();
+    await this.repoStats.getRepoCreatedUpdated();
+    await this.repoStats.getRepoStats();
     await this.rampUp.calculateValue(this.repoStats.readmeLength);
     await this.correctness.calculateValue(this.repoStats.totalOpenIssues, this.repoStats.totalIssues);
     await this.busFactor.calculateValue();
     await this.responsiveMaintainer.calculateValue(this.repoStats.totalCommits, this.repoStats.daysActive);
     await this.license.calculateValue(this.desiredLicense, this.repoStats.licenseName, this.repoStats.readme);
-    await this.netScore.calculateValue(this.rampUp, this.correctness, this.busFactor, this.responsiveMaintainer, this.license);
-    this.logger.add(2, "All metrics calculated for " + this.name);
+    await this.netScore.calculateValue(this.rampUp, /* correctness */ this.busFactor, this.responsiveMaintainer, this.license);
+    this.logger.add(1, "All metrics calculated for " + this.name + '\n');
+    this.logger.add(2, "All metrics calculated for " + this.name + '\n');
   }
 
   // This could be cleaned up but it works for now

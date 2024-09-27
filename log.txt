@@ -1,13 +1,1 @@
-Parsing URL_FILE...
-Searching for NPM URLs in URL_FILE
-2 NPM URLs found
-NPM URLs: https://www.npmjs.com/package/express,https://www.npmjs.com/package/browserify
-Searching for GitHub URLs from URL_FILE...
-3 GitHub URLs found
-GitHub URLs: https://github.com/cloudinary/cloudinary_npm,https://github.com/nullivex/nodist,https://github.com/lodash/lodash
-Successfully searched for GitHub URLs in URL_FILE
-URL_FILE successfully parsed
-Calculating all metrics for express
-Took 1.903981149 seconds to get all open issues from express
-Remaining API requests: 57
-API rate limit resets at Wed Sep 25 2024 14:26:56 GMT-0400 (Eastern Daylight Time)
+

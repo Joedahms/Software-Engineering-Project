@@ -1,6 +1,5 @@
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'; // interface, class
 import { Repository } from './repository.js'  // class
-import { writeOutput } from './output.js'     // function
 import { RepoStats } from './api_access.js'
 import { Logger } from './logger.js'
 
@@ -22,13 +21,17 @@ export class Main {
     repositoryUrlData = await this.urlFileParser.npmRepos();
     repositoryUrlData = repositoryUrlData.concat(this.urlFileParser.githubRepos());
 
-    this.logger.add(2, "URL_FILE successfully parsed");
+    this.logger.add(2, "URL_FILE successfully parsed\n");
     return Promise.resolve(repositoryUrlData); 
   }
 }
 
+// Record when program starts
+const startTime = performance.now();
+
 // New main object
 var main = new Main();
+main.logger.add(2, "Start time: " + startTime + " milliseconds");
 
 // Get repo owners and names
 var urlData: RepositoryUrlData[] = [];
@@ -56,8 +59,14 @@ for (repositoryIndex = 0; repositoryIndex < repositories.length; repositoryIndex
   output = output.concat(repositories[repositoryIndex].jsonMetrics());
 }
 
-//writeOutput(output);  // Cant figure out how to get the terminal caret to go away
 console.log(output);
+
+// Record when program ends
+const endTime = performance.now();
+main.logger.add(2, "End time " + endTime + " milliseconds");
+const runtime = (endTime - startTime)/1000; //in seconds
+main.logger.add(1, `Total program run time: ${runtime} seconds`);
+main.logger.add(2, `Total program run time: ${runtime} seconds`);
 
 // Exit 
 process.exit(0);
