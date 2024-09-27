@@ -1,8 +1,8 @@
 import * as filesystem from 'node:fs'   // Accessing the file at path URL_FILE
 import * as cheerio from 'cheerio'      // DOM reading
 
-import { Logger } from './logger.js'      // Logger interface
-import { writeOutput } from './output.js' // writeOutput function
+import { Logger } from './logger'      // Logger interface
+import { writeOutput } from './output' // writeOutput function
 
 // Two most important pieces about a repo at this point are the owner and name
 export interface RepositoryUrlData {
@@ -106,15 +106,11 @@ export class UrlFileParser {
 
           const $ = cheerio.load(npmUrlText); // Load HTML into cheerio object
 
-          const githubUrlDiv = $.extract({    // Extract the div containing the GitHub URL 
-            class: ['._702d723c'],
-          });
-
-          githubUrlArray.push(githubUrlDiv.class[0]); // Add the GitHub URL to the array
-        }
-        catch (error) {
+          const githubUrlDiv = $('div._702d723c').text();
+          githubUrlArray.push(githubUrlDiv);
+        } catch (error) {
           writeOutput(error.message);
-          throw(error);
+          throw error;
         }
       }
       repoArray = this.#ownerAndNameFromUrl(npmUrlArray, githubUrlArray);
