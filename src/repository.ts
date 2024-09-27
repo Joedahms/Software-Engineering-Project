@@ -48,7 +48,7 @@ export class Repository {
     await this.repoStats.getRepoCreatedUpdated();
     await this.repoStats.getRepoStats();
     await this.rampUp.calculateValue(this.repoStats.readmeLength);
-    await this.correctness.calculateValue();
+    await this.correctness.calculateValue(this.repoStats.totalOpenIssues, this.repoStats.totalIssues);
     await this.busFactor.calculateValue();
     await this.responsiveMaintainer.calculateValue(this.repoStats.totalCommits, this.repoStats.daysActive);
     await this.license.calculateValue(this.desiredLicense, this.repoStats.licenseName, this.repoStats.readme);

@@ -18,8 +18,10 @@ export class RepoStats {
   logger: Logger;
   owner: string;
   repo: string;
+
   totalOpenIssues: number;
   totalClosedIssues: number;
+  totalIssues: number;
   issueRatio: string;
   totalMergedPullRequests: number;
   totalOpenPullRequests: number;
@@ -37,6 +39,8 @@ export class RepoStats {
   lastCommitDate: Date;
   totalCommits: number;
 
+  remainingRequests: number;
+  rateLimitReset: Date;
 
   constructor(owner: string, repo: string) {
     this.logger = new Logger();
@@ -44,9 +48,9 @@ export class RepoStats {
     this.owner = owner;
     this.repo = repo;
     
-    // Initialize properties with default values
     this.totalOpenIssues = 0;
     this.totalClosedIssues = 0;
+    this.totalIssues = 0;
     this.issueRatio = 'N/A';
     this.totalMergedPullRequests = 0;
     this.totalOpenPullRequests = 0;
@@ -63,9 +67,11 @@ export class RepoStats {
     this.firstCommitDate = new Date();
     this.lastCommitDate = new Date();
     this.totalCommits = 0;
+
+    this.remainingRequests = 0;
+    this.rateLimitReset = new Date();
   }
 
-  // Get the name of the license
   async #getLicenseName(owner: string, name: string): Promise<string> {
     this.logger.add(1, "Checking " + name + " for license...");
     this.logger.add(2, "Checking " + name + " for license...");
@@ -134,6 +140,63 @@ export class RepoStats {
     }
   }
 
+  async getRepoData(){
+    const { data: repoData } = await octokit.repos.get({
+      owner: this.owner,
+      repo: this.repo
+    });
+
+    const created = new Date(repoData.created_at);
+    const updated = new Date(repoData.updated_at);
+    this.daysActive = Math.ceil((updated.getTime() - created.getTime()) / (1000 * 3600 * 24));
+  }
+
+  // Open issues (excluding pull requests)
+  async #getOpenIssues() {
+    const startTimeMilliseconds = performance.now();
+    const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+      owner: this.owner,
+      repo: this.repo,
+      state: 'open',
+      per_page: 100,
+    });
+    this.totalOpenIssues = openIssues.filter((issue: any) => !issue.pull_request).length;
+    const endTimeMilliseconds = performance.now();
+
+    var totalTimeSeconds = (endTimeMilliseconds - startTimeMilliseconds) / 1000;
+    this.logger.add(2, "Took " + totalTimeSeconds + " seconds to get all open issues from " + this.repo);
+  }
+
+  // Total issues (excluding pull requests)
+  async #getTotalIssues() {
+    const startTimeMilliseconds = performance.now();
+    const allIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+      owner: this.owner,
+      repo: this.repo,
+      state: 'all',
+      per_page: 100,
+    });
+    this.totalIssues = allIssues.filter((issue: any) => !issue.pull_request).length;
+    const endTimeMilliseconds = performance.now();
+
+    const totalTimeSeconds = (endTimeMilliseconds - startTimeMilliseconds) / 1000;
+    this.logger.add(2, "Took " + totalTimeSeconds + " seconds to get all open and closed issues from " + this.repo);
+  }
+
+  async checkRateLimit() {
+    try {
+      const { data } = await octokit.rateLimit.get();
+       
+      this.remainingRequests = data.rate.remaining;
+      this.rateLimitReset = new Date(data.rate.reset * 1000);
+      
+      this.logger.add(2, "Remaining API requests: " + this.remainingRequests);
+      this.logger.add(2, "API rate limit resets at " + this.rateLimitReset);
+    } catch (error) {
+      handleError(error);
+    }
+  }
+ 
   async getRepoCreatedUpdated(){
     this.logger.add(1, "Getting when " + this.repo + " created and last updated...");
     this.logger.add(2, "Getting when " + this.repo + " created and last updated...");
@@ -157,6 +220,12 @@ export class RepoStats {
 
   async getRepoStats() {
     try {
+      await this.#getOpenIssues();
+      this.checkRateLimit();
+
+      await this.#getTotalIssues();
+      this.checkRateLimit();
+      
       // Readme content
       const readme = await octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
       this.readme = Buffer.from(readme.data.content, 'base64').toString('utf-8');

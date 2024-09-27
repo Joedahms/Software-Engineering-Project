@@ -79,7 +79,7 @@ export class NetScore extends Metric {
 
   async calculateValue(
   rampUp: RampUp, 
-  /*skipping correctness for now*/
+  correctness: Correctness,
   busFactor: BusFactor,
   responsiveMaintainer: ResponsiveMaintainer,
   license: License) {
@@ -89,16 +89,16 @@ export class NetScore extends Metric {
     this.logger.add(2, "Calculating NetScore for " + this.repoName);
 
     const rampUpWeight = 1;
-    // const correctnessWeight = 1;
+    const correctnessWeight = 1;
     const busFactorWeight = 1;
     const responsiveMaintainerWeight = 1;
 
     const weightedRampUp = rampUpWeight * rampUp.value;
-    // const weightedCorrectness
+    const weightedCorrectness = correctnessWeight * correctness.value;
     const weightedBusFactor = busFactorWeight * busFactor.value;
     const weightedResponsiveMaintainer = responsiveMaintainerWeight * responsiveMaintainer.value;
 
-    const weightedSum = weightedRampUp + /* weightedCorrectness */ + weightedBusFactor + weightedResponsiveMaintainer;    
+    const weightedSum = weightedRampUp + weightedCorrectness + weightedBusFactor + weightedResponsiveMaintainer;    
     const normalizedWeightedSum = this.minMax(weightedSum, 4, 0);
     this.value = license.value * normalizedWeightedSum;
     if (normalizedWeightedSum === 2) {
@@ -158,10 +158,16 @@ export class Correctness extends Metric {
     this.value = 0;
   }
 
-  async calculateValue() {
+  async calculateValue(openIssues: number, totalIssues: number) {
     const startTime = performance.now();
-    // Put calculation code here
-    // this.value = 
+
+    this.logger.add(2, "Calculating Correctness for " + this.repoName);
+  
+    var normalizedMetric = (1-(openIssues/totalIssues)); //arbitrary max and min values picked.
+    this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
+    this.value = normalizedMetric;
+    this.logger.add(1, this.repoName + this.name + "Calculated successfully");
+
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
   }
@@ -203,7 +209,7 @@ export class ResponsiveMaintainer extends Metric {
     this.logger.add(2, "Calculating ResponsiveMaintainer for " + this.repoName + "...");
 
     var months = daysActive / 30;
-    var normalizedMetric = this.minMax(totalCommits / months, 304, 0); //arbitrary max and min values picked.
+    var normalizedMetric = this.minMax(totalCommits / months, 330, 0); //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
     if (normalizedMetric === 2) {
       console.error("Maximum too low for ResponsiveMaintainer metric");
