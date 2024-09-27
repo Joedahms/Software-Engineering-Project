@@ -9,6 +9,7 @@
     "@tsconfig/node20": "^20.1.4",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.5.5",
+    "@types/node-fetch": "^2.6.11",
     "jest": "^29.7.0",
     "jest-mock-extended": "4.0.0-beta1",
     "octomock": "^2.3.0",
@@ -21,6 +22,7 @@
     "cheerio": "^1.0.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "node-fetch": "^3.3.2",
     "octokit": "^4.0.2",
     "perf_hooks": "^0.0.1"
   }

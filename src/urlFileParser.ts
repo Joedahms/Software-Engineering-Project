@@ -2,7 +2,6 @@ import * as filesystem from 'node:fs'   // Accessing the file at path URL_FILE
 import * as cheerio from 'cheerio'      // DOM reading
 
 import { Logger } from './logger.js'      // Logger interface
-import { writeOutput } from './output.js' // writeOutput function
 
 // Two most important pieces about a repo at this point are the owner and name
 export interface RepositoryUrlData {
@@ -113,11 +112,12 @@ export class UrlFileParser {
           githubUrlArray.push(githubUrlDiv.class[0]); // Add the GitHub URL to the array
         }
         catch (error) {
-          writeOutput(error.message);
+          console.log(error.message);
           throw(error);
         }
       }
       repoArray = this.#ownerAndNameFromUrl(npmUrlArray, githubUrlArray);
+      this.logger.add(2, "Successfully searched for NPM URLs in URL_FILE");
       return Promise.resolve(repoArray);
     }
     else {  // No NPM URLs in the URL_FILE
