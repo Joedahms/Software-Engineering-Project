@@ -8,9 +8,9 @@ export class Main {
   readonly GITHUB_TOKEN: any;
   logger: Logger;
 
-  constructor(urlFileParser: UrlFileParser, logger: Logger) {
-    this.urlFileParser = urlFileParser;
-    this.logger = logger;
+  constructor() {
+    this.urlFileParser = new UrlFileParser();
+    this.logger = new Logger();
   }
 
   // Get all the repo's owners and names from the url file
@@ -30,7 +30,7 @@ export class Main {
 const startTime = performance.now();
 
 // New main object
-var main = new Main( new UrlFileParser, new Logger);
+var main = new Main( );
 main.logger.add(2, "Start time: " + startTime + " milliseconds");
 
 // Get repo owners and names
