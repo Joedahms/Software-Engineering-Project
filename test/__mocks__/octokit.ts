@@ -1,21 +1,37 @@
 import { Octokit } from "@octokit/rest";
-import { createMock } from "octomock";
+import { jest } from "@jest/globals";
+import { RequestParameters } from "@octokit/types";
 
-export const createMockOctokit = () => {
-  const octokit = createMock(Octokit);
+// Define type for paginate with iterator
+interface MockedPaginateInterface {
+  <T = any, R = unknown>(endpoint: string, parameters?: any): Promise<T[]>;
+  iterator<T = any, R = unknown>(endpoint: string, parameters?: any): AsyncIterableIterator<T>;
+}
 
-  // Customize mock responses as needed
-  octokit.repos.get.mockResolvedValue({
-    data: {
-      created_at: "2020-01-01T00:00:00Z",
-      updated_at: "2023-01-01T00:00:00Z",
-    },
-    status: 200,
-    headers: {},
-    url: "https://api.github.com/repos/test-owner/test-repo",
-  });
+export const createMockOctokit = (): jest.Mocked<Octokit> => {
+  const octokit = new Octokit() as jest.Mocked<Octokit>;
 
-  // Add more mock implementations as required
+  // Mock the 'repos' namespace methods
+  octokit.repos = {
+    get: jest.fn(),
+    getReadme: jest.fn(),
+    listCommits: jest.fn(),
+    // Add other repos methods as needed
+  } as any;
+
+  // Mock the 'paginate' method with required properties
+  const paginateMock = jest.fn().mockResolvedValue([]);
+  const paginateIteratorMock = jest.fn();
+  (paginateMock as unknown as MockedPaginateInterface).iterator = paginateIteratorMock;
+  octokit.paginate = paginateMock as unknown as typeof octokit.paginate;
+
+  // Mock the 'request' method
+  octokit.request = jest.fn().mockResolvedValue({});
+
+  // Mock the 'rateLimit' namespace method with required properties
+  octokit.rateLimit = {
+    get: jest.fn(),
+  } as any;
 
   return octokit;
 };

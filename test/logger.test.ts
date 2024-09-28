@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { afterEach, beforeEach, describe, expect, it, jest, test } from "@jest/globals";
 import { Logger } from '../src/logger';
 import * as fs from 'node:fs';

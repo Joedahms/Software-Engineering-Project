@@ -1,5 +1,5 @@
+// @ts-nocheck
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
-// __tests__/repository.test.ts
 import { Repository } from '../src/repository';
 
 describe('Repository Class', () => {

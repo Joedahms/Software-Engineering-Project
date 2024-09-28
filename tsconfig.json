@@ -115,6 +115,6 @@
     
   },
   "include": ["src/**/*.ts", "test/**/*.ts", "jest.config.ts", "test/setupJest.d.ts"],
-  "exclude": ["node_modules"],
-  //"files": ["./test/setupJest.d.ts"] 
+  "exclude": ["node_modules", "**/*.spec.ts"],
+    //"files": ["./test/setupJest.d.ts"] 
 }

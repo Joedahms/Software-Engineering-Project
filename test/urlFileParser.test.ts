@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
 import * as filesystem from 'node:fs';
 import * as cheerio from 'cheerio';

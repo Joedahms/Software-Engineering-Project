@@ -5,68 +5,81 @@ import { Logger } from './logger.js'
 
 export class Main {
   readonly urlFileParser: UrlFileParser;
-  readonly GITHUB_TOKEN: any;
+  readonly GITHUB_TOKEN: string | undefined;
   logger: Logger;
 
   constructor() {
     this.urlFileParser = new UrlFileParser();
     this.logger = new Logger();
+    this.GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   }
 
   // Get all the repo's owners and names from the url file
   async parseUrlFile(): Promise<RepositoryUrlData[]> {
     this.logger.add(2, "Parsing URL_FILE...");
-    var repositoryUrlData: RepositoryUrlData[] = [];
+    let repositoryUrlData: RepositoryUrlData[] = [];
 
-    repositoryUrlData = await this.urlFileParser.npmRepos();
-    repositoryUrlData = repositoryUrlData.concat(this.urlFileParser.githubRepos());
+    const npmRepos = await this.urlFileParser.npmRepos();
+    const githubRepos = await this.urlFileParser.githubRepos();
+    repositoryUrlData = repositoryUrlData.concat(npmRepos, githubRepos);
 
     this.logger.add(2, "URL_FILE successfully parsed\n");
-    return Promise.resolve(repositoryUrlData); 
+    return repositoryUrlData;
   }
+
+// Add a method to run the main logic, making it testable
+async run(): Promise<string> {
+  const startTime = performance.now();
+  this.logger.add(2, `Start time: ${startTime} milliseconds`);
+
+  // Get repo owners and names
+  const urlData: RepositoryUrlData[] = await this.parseUrlFile();
+
+  // Array of repository objects
+  const repositories: Repository[] = [];
+
+  // Set the correct url, owner, and name for each repository
+  for (const repoData of urlData) {
+    const newRepository = new Repository(
+      repoData.url,
+      repoData.owner,
+      repoData.name
+    );
+    // Calculate metrics here
+    await newRepository.calculateAllMetrics();
+    repositories.push(newRepository);
+  }
+
+  // Print out metric calculation results in NDJSON
+  let output: string = "";
+  for (const repository of repositories) {
+    output += repository.jsonMetrics();
+  }
+
+  console.log(output);
+
+  // Record when program ends
+  const endTime = performance.now();
+  this.logger.add(2, `End time ${endTime} milliseconds`);
+  const runtime = (endTime - startTime) / 1000; // in seconds
+  this.logger.add(1, `Total program run time: ${runtime} seconds`);
+  this.logger.add(2, `Total program run time: ${runtime} seconds`);
+
+  // Return output for testing purposes
+  return output;
+}
 }
 
-// Record when program starts
-const startTime = performance.now();
-
-// New main object
-var main = new Main( );
-main.logger.add(2, "Start time: " + startTime + " milliseconds");
-
-// Get repo owners and names
-var urlData: RepositoryUrlData[] = [];
-urlData = await main.parseUrlFile();
-
-// Array of repository objects
-var repositories: Repository[] = [];
-
-// Set the correct url, owner, and name for each repository
-var urlDataIndex: number;
-for (urlDataIndex = 0; urlDataIndex < urlData.length; urlDataIndex++) {
-  var newRepository = new Repository( 
-    urlData[urlDataIndex].url, 
-    urlData[urlDataIndex].owner, 
-    urlData[urlDataIndex].name
-  );
-  // Calculate metrics here
-  await newRepository.calculateAllMetrics();
-  repositories.push(newRepository);
+// Only execute if this module is run directly
+if (require.main === module) {
+(async () => {
+  try {
+    const main = new Main();
+    await main.run();
+    process.exit(0);
+  } catch (error) {
+    console.error("An error occurred:", error);
+    process.exit(1);
+  }
+})();
 }
-// Print out metric calculation results in NDJSON
-var repositoryIndex: number;
-var output: string = "";
-for (repositoryIndex = 0; repositoryIndex < repositories.length; repositoryIndex++) {
-  output = output.concat(repositories[repositoryIndex].jsonMetrics());
-}
-
-console.log(output);
-
-// Record when program ends
-const endTime = performance.now();
-main.logger.add(2, "End time " + endTime + " milliseconds");
-const runtime = (endTime - startTime)/1000; //in seconds
-main.logger.add(1, `Total program run time: ${runtime} seconds`);
-main.logger.add(2, `Total program run time: ${runtime} seconds`);
-
-// Exit 
-process.exit(0);
