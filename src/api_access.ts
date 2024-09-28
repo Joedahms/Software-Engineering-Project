@@ -1,16 +1,10 @@
-import { Octokit } from "@octokit/rest";
+import { Octokit } from "@octokit/rest"
+import { OctokitResponse } from "@octokit/types"
 import { Logger } from './logger.js'
+import { performance } from "perf_hooks";
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // for GitHub token: export GITHUB_TOKEN="your_token_here"
-
-const octokit = new Octokit({
-  auth: GITHUB_TOKEN,
-});
-
-// Function to fetch all pages using Octokit pagination
-export async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]> {
-  return octokit.paginate(endpoint, params);
-}
+// Define the shape of the data returned by paginate
+type PaginatedResponse<T> = OctokitResponse<T>;
 
 // Function to fetch repository statistics
 
@@ -42,6 +36,9 @@ export class RepoStats {
   remainingRequests: number;
   rateLimitReset: Date;
 
+  private octokit: Octokit;
+
+
   constructor(owner: string, repo: string) {
     this.logger = new Logger();
 
@@ -70,6 +67,16 @@ export class RepoStats {
 
     this.remainingRequests = 0;
     this.rateLimitReset = new Date();
+
+    // Use the injected Octokit instance or create a new one
+    this.octokit = new Octokit({
+      auth: process.env.GITHUB_TOKEN, // Ensure GITHUB_TOKEN is set in your environment
+    });
+  }
+
+  // Function to fetch all pages using Octokit pagination
+  async fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]> {
+    return this.octokit.paginate(endpoint, params);
   }
 
   async #getLicenseName(owner: string, name: string): Promise<string> {
@@ -77,7 +84,7 @@ export class RepoStats {
     this.logger.add(2, "Checking " + name + " for license...");
 
     try {
-      const license = await octokit.request('GET /repos/{owner}/{repo}/license', {
+      const license: OctokitResponse<any> = await this.octokit.request('GET /repos/{owner}/{repo}/license', {
         owner: owner,
         repo: name,
       });
@@ -108,7 +115,7 @@ export class RepoStats {
     this.logger.add(2, "Getting " + repo + " commit count...");
     try {
       // Fetch the first page with per_page set to 1 to minimize data transferred
-      const response = await octokit.repos.listCommits({
+      const response = await this.octokit.repos.listCommits({
         owner,
         repo,
         per_page: 1,
@@ -141,7 +148,7 @@ export class RepoStats {
   }
 
   async getRepoData(){
-    const { data: repoData } = await octokit.repos.get({
+    const { data: repoData } = await this.octokit.repos.get({
       owner: this.owner,
       repo: this.repo
     });
@@ -154,7 +161,7 @@ export class RepoStats {
   // Open issues (excluding pull requests)
   async #getOpenIssues() {
     const startTimeMilliseconds = performance.now();
-    const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+    const openIssues = await this.fetchAllPages('GET /repos/{owner}/{repo}/issues', {
       owner: this.owner,
       repo: this.repo,
       state: 'open',
@@ -170,7 +177,7 @@ export class RepoStats {
   // Total issues (excluding pull requests)
   async #getTotalIssues() {
     const startTimeMilliseconds = performance.now();
-    const allIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+    const allIssues = await this.fetchAllPages('GET /repos/{owner}/{repo}/issues', {
       owner: this.owner,
       repo: this.repo,
       state: 'all',
@@ -185,7 +192,7 @@ export class RepoStats {
 
   async checkRateLimit() {
     try {
-      const { data } = await octokit.rateLimit.get();
+      const { data } = await this.octokit.rateLimit.get();
        
       this.remainingRequests = data.rate.remaining;
       this.rateLimitReset = new Date(data.rate.reset * 1000);
@@ -201,7 +208,7 @@ export class RepoStats {
     this.logger.add(1, "Getting when " + this.repo + " created and last updated...");
     this.logger.add(2, "Getting when " + this.repo + " created and last updated...");
     try {
-      const { data: repoData } = await octokit.repos.get({
+      const { data: repoData } = await this.octokit.repos.get({
         owner: this.owner,
         repo: this.repo
       });
@@ -221,13 +228,13 @@ export class RepoStats {
   async getRepoStats() {
     try {
       await this.#getOpenIssues();
-      this.checkRateLimit();
+      await this.checkRateLimit();
 
       await this.#getTotalIssues();
-      this.checkRateLimit();
+      await this.checkRateLimit();
       
       // Readme content
-      const readme = await octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
+      const readme = await this.octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
       this.readme = Buffer.from(readme.data.content, 'base64').toString('utf-8');
       
       // Readme length in words

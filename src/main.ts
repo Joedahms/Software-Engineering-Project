@@ -30,7 +30,7 @@ export class Main {
 const startTime = performance.now();
 
 // New main object
-var main = new Main();
+var main = new Main( new UrlFileParser, new Logger);
 main.logger.add(2, "Start time: " + startTime + " milliseconds");
 
 // Get repo owners and names
