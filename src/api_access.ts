@@ -31,6 +31,7 @@ export class RepoStats {
   //totalComments: number;
   //commentFrequency: string;
   totalContributors: number;
+  busFactor: number;
   licenseName: string;
   readme: string;
   readmeLength: number;
@@ -60,6 +61,7 @@ export class RepoStats {
     //this.totalComments = 0;
     //this.commentFrequency = 'N/A';
     this.totalContributors = 0;
+    this.busFactor = 0;
     this.licenseName = "N/A";
     this.readme = "N/A";
     this.readmeLength = 0;
@@ -220,31 +222,55 @@ export class RepoStats {
     const wordCount = readmeContent.split(/\s+/).filter(word => word.length > 0).length;
     this.readmeLength = wordCount;
   }
-
+  
   async getRepoStats() {
     try {
       await this.#getOpenIssues();
       await this.checkRateLimit();
-
+      
       await this.#getTotalIssues();
       await this.checkRateLimit();
-
+      
       await this.#getReadmeContentAndLength();
       await this.checkRateLimit();
-            
+      
       // License name
       this.licenseName = await this.#getLicenseName(this.owner, this.repo);
       await this.checkRateLimit();
-    
+      
       // Total commits
       await this.#getCommitCount(this.owner, this.repo);
+      await this.#getBusFactorCalculation();
       await this.checkRateLimit();
     } 
     catch (error) {
       await this.#handleError(error);
     }
   }  
-
+  
+  async #getBusFactorCalculation(){
+    const contributors = await octokit.request('GET /repos/{owner}/{repo}/contributors', {
+      owner: this.owner,
+      repo: this.repo,
+      per_page: 100
+    });
+    this.totalContributors = contributors.data.length;
+  
+    // Sort contributors by their number of commits in descending order
+    const sortedContributors = contributors.data.sort((a, b) => b.contributions - a.contributions);
+  
+    let cumulativeCommits = 0;
+  
+    // Identify the smallest number of contributors accounting for at least 50% of the total commits
+    for (let i = 0; i < sortedContributors.length; i++) {
+      cumulativeCommits += sortedContributors[i].contributions;
+      this.busFactor++;
+  
+      if (cumulativeCommits >= this.totalCommits * 0.5) {
+        break;
+      }
+    }
+  }
   // Helper function to handle errors, checks rate limit
   async #handleError(error: any) {
     const logger = new Logger();
