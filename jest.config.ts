@@ -3,22 +3,17 @@
  * https://jestjs.io/docs/configuration
  */
 
-module.exports = {
+export default {
   // Automatically clear mock calls, instances, contexts and results before every test
   clearMocks: true,
-
   // Indicates whether the coverage information should be collected while executing the test
   collectCoverage: true,
-
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   collectCoverageFrom: [ '**/src/*.ts' ],
-
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
-
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: "v8",
-
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
     "json",
@@ -27,29 +22,54 @@ module.exports = {
     "clover",
     "json-summary"
   ],
-
+  // Treat TypeScript files as ES modules
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  // A set of global variables that need to be available in all test environments
+  globals: {
+    'ts-jest': {
+      useESM: true,
+    },
+  },
   // An array of file extensions your modules use
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
+  moduleNameMapper: {
+    '^./metric.js$': '<rootDir>/test/__mocks__/metric.js',
+    '^./api_access.js$': '<rootDir>/test/__mocks__/api_access.js',
+    '^./logger.js$': '<rootDir>/test/__mocks__/logger.js',
+    //'^@src/(.*)$': '<rootDir>/src/$1',
+  },
   // A preset that is used as a base for Jest's configuration
-  preset: "ts-jest",
-  
-  // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: [ './setupJest.ts' ],
-
+  preset: 'ts-jest',
+  // A list of paths to directories that Jest should use to search for files in
+  roots: ['<rootDir>/test'],
   // The test environment that will be used for testing
   testEnvironment: 'node',
-  
-  // This option allows use of a custom test runner
-  testRunner: "jest-circus/runner",
-
-  transform: {'^.+\\.ts?$': 'ts-jest'},
-  
+  // This tells Jest to use ts-jest for TS files
+  transform: {
+    '^.+\\.ts$': ['ts-jest', {
+      useESM: true,
+      tsconfig: 'tsconfig.json',
+    }], // For TypeScript files
+    '^.+\\.js$': 'babel-jest', // For JS files using ES module syntax
+  },
+  // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
+  // transformIgnorePatterns: [
+  //   '/node_modules/(?!(@octokit/rest | @octokit/core)/)', // Tell Jest to transform @octokit/rest
+  // ],
+  // The glob patterns Jest uses to detect test files
+  testMatch: ['**/*.test.ts'],
   // The regexp pattern or array of patterns that Jest uses to detect test files
-  testRegex: '/test/.*\\.(test|spec)?\\.(ts|tsx)$',
-
+  //testRegex: ['/test/.*\\.(test|spec)?\\.(ts|tsx)$'],
   // Indicates whether each individual test should be reported during the run
   verbose: true,
+
+
+  // A list of paths to modules that run some code to configure or set up the testing framework before each test
+  //setupFilesAfterEnv: [ '<rootDir>/test/setupJest.ts' ],
+  // This option allows use of a custom test runner
+  //testRunner: "jest-circus/runner",
+
 
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -59,9 +79,6 @@ module.exports = {
 
   // The directory where Jest should store its cached dependency information
   // cacheDirectory: "/private/var/folders/y2/55p3rv3945d36y48yf8glbdh0000gn/T/jest_dx",
-
-  // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  //moduleNameMapper: { "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/mocks/fileMock.js", "\\.(css|less)$": "<rootDir>/mocks/fileMock.js"  },
   
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -74,12 +91,6 @@ module.exports = {
   // A path to a custom dependency extractor
   // dependencyExtractor: undefined,
   
-  //extensionsToTreatAsEsm: ['.ts', '.tsx'],
-  //globals: {
-  //  'ts-jest':{
-  //    usESM: true,
-  //  },
-  //},
   
   // Make calling deprecated APIs throw helpful error messages
   // errorOnDeprecated: false,
@@ -97,9 +108,6 @@ module.exports = {
 
   // A path to a module which exports an async function that is triggered once after all test suites
   // globalTeardown: undefined,
-
-  // A set of global variables that need to be available in all test environments
-  // globals: {},
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
   // maxWorkers: "50%",
@@ -139,11 +147,6 @@ module.exports = {
   // The root directory that Jest should scan for tests and modules within
   // rootDir: undefined,
 
-  // A list of paths to directories that Jest should use to search for files in
-  // roots: [
-  //   "<rootDir>"
-  // ],
-
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
 
@@ -162,12 +165,6 @@ module.exports = {
   // Adds a location field to test results
   // testLocationInResults: false,
 
-  // The glob patterns Jest uses to detect test files
-  // testMatch: [
-  //   "**/__tests__/**/*.[jt]s?(x)",
-  //   "**/?(*.)+(spec|test).[tj]s?(x)"
-  // ],
-
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [
   //   "/node_modules/"
@@ -178,12 +175,6 @@ module.exports = {
 
   // A map from regular expressions to paths to transformers
   // transform: undefined,
-
-  // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  // transformIgnorePatterns: [
-  //   "/node_modules/",
-  //   "\\.pnp\\.[^\\/]+$"
-  // ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
