@@ -1,7 +1,7 @@
-import * as filesystem from 'node:fs'; // Accessing the file at path URL_FILE
-import * as cheerio from 'cheerio'; // DOM reading
-import { Logger } from './logger.js'; // Logger interface
-import { NoOpLogger } from '../test/__mocks__/NoOpLogger.js'; // Import the NoOpLogger
+import * as filesystem from 'node:fs'   // Accessing the file at path URL_FILE
+import * as cheerio from 'cheerio'      // DOM reading
+
+import { Logger } from './logger.js'      // Logger interface
 
 // Two most important pieces about a repo at this point are the owner and name
 export interface RepositoryUrlData {
@@ -13,16 +13,18 @@ export interface RepositoryUrlData {
 export class UrlFileParser {
   logger: Logger;
 
-  // Regular expressions for sorting URLs by source
+  // Regular expressions for sorting urls by source
   readonly npmRegex: RegExp;
   readonly githubRegex: RegExp;
-  readonly ownerAndNameRegex: RegExp; // Regex to isolate the owner and name section of the URL
-  readonly ownerRegex: RegExp; // Match the owner
-  readonly nameRegex: RegExp; // Match the name
+
+  readonly ownerAndNameRegex: RegExp; // Regex to isolate the owner and name section of the url
+  readonly ownerRegex: RegExp;        // Match the owner
+  readonly nameRegex: RegExp;         // Match the name
+
   readonly urlFileContents: string;
 
-  constructor(logger: Logger = new NoOpLogger()) {
-    this.logger = logger;
+  constructor() {
+    this.logger = new Logger();
     this.logger.clear();
     this.npmRegex = new RegExp("^.*npmjs.*$", "gm");      // Matches all lines that are NPM links
     this.githubRegex = new RegExp("^.*github.*$", "gm");  // Matches all lines that are GitHub links
