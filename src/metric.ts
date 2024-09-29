@@ -183,10 +183,25 @@ export class BusFactor extends Metric {
     this.value = 0;
   }
 
-  async calculateValue() {
+  async calculateValue(busFactor: number, totalContributors: number) {
     const startTime = performance.now();
-    // Put calculation code here
-    // this.value = 
+    //bus factor is scored a 1.0 if it takes at least 40% of the team size to reach 50% of the commits. 
+    //Lowest score would be if 1 person has made at least 50% of commits.
+    this.logger.add(2, "Calculating BusFactor for " + this.repoName);
+    if (busFactor >= totalContributors*.4){
+      this.logger.add(2, "Calculated BusFactor is greater than 40% of team size.");
+      this.value = 1;
+    }
+    else if(busFactor < 1){
+      //error. Should never be less than 1 person
+      this.logger.add(2, "Calculated BusFactor is less than 1, ERROR.");
+      this.value = 2;
+    }
+    else{
+      this.value = this.minMax(busFactor,totalContributors * .4, 1);
+    }
+    this.logger.add(2, this.repoName + " " + this.name + ": " + String(this.value));
+    this.logger.add(1, this.repoName + this.name + "Calculated successfully");
     const endTime = performance.now();
     this.latencyValue = endTime - startTime;
   }
