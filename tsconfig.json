@@ -107,7 +107,7 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     
   },
-  "include": [ "src/**/*.ts" ],
+  "include": [ "src/**/*.ts", "test/__mocks__/NoOpLogger.ts" ],
   "exclude": [ "node_modules", "**/*.spec.ts", "test/**/*.ts", "jest.config.ts" ],
     //"files": ["./test/setupJest.d.ts"] 
 }

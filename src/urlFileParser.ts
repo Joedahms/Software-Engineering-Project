@@ -1,7 +1,7 @@
 import * as filesystem from 'node:fs'; // Accessing the file at path URL_FILE
 import * as cheerio from 'cheerio'; // DOM reading
 import { Logger } from './logger.js'; // Logger interface
-import { NoOpLogger } from './NoOpLogger'; // Import the NoOpLogger
+import { NoOpLogger } from '../test/__mocks__/NoOpLogger.js'; // Import the NoOpLogger
 
 // Two most important pieces about a repo at this point are the owner and name
 export interface RepositoryUrlData {

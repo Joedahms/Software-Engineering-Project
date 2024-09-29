@@ -1,85 +1,103 @@
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { UrlFileParser, RepositoryUrlData } from '../src/urlFileParser';
 import * as filesystem from 'node:fs';
 import * as cheerio from 'cheerio';
-import { UrlFileParser } from '../src/urlFileParser';
-import { NoOpLogger } from '../src/NoOpLogger'; // Import the NoOpLogger
+import { Logger } from '../src/logger';
 
-jest.mock('node:fs');
-jest.mock('cheerio');
+jest.mock('node:fs'); // Mock the filesystem module
+jest.mock('cheerio'); // Mock the cheerio module
+jest.mock('./__mocks__/NoOpLogger.js'); // Mock the Logger class
 
 describe('UrlFileParser', () => {
+  let mockLogger: jest.Mocked<Logger>;
   let urlFileParser: UrlFileParser;
 
   beforeEach(() => {
-    process.argv[2] = 'mockFilePath';
+    // Mock the Logger and its methods
+    mockLogger = new Logger() as jest.Mocked<Logger>;
+    mockLogger.clear = jest.fn();
+    mockLogger.add = jest.fn();
 
-    // Mock filesystem readFileSync
-    (filesystem.readFileSync as jest.Mock).mockReturnValue(
-      Buffer.from('https://github.com/owner/repo\nhttps://github.com/owner2/repo2\nhttps://npmjs.com/package1\nhttps://npmjs.com/package2', 'utf8')
-    );
+    // Mock the filesystem readFileSync to return a mock URL file content
+    (filesystem.readFileSync as jest.Mock).mockReturnValue(Buffer.from('https://github.com/test-owner/test-repo\nhttps://npmjs.com/package1\n'));
 
-    // Use the NoOpLogger
-    urlFileParser = new UrlFileParser(new NoOpLogger());
+    // Create an instance of UrlFileParser
+    urlFileParser = new UrlFileParser();
+  });
 
-    // Mock global fetch
+  test('constructor should initialize properties and read file contents', () => {
+    // Check that logger.clear() was called
+    expect(mockLogger.clear).toHaveBeenCalled();
+
+    // Check if the URL_FILE contents are correctly read
+    expect(filesystem.readFileSync).toHaveBeenCalledWith(process.argv[2]);
+    expect(urlFileParser.allUrlFileContents()).toBe('https://github.com/test-owner/test-repo\nhttps://npmjs.com/package1\n');
+  });
+
+  test('allUrlFileContents should return the correct file content', () => {
+    const content = urlFileParser.allUrlFileContents();
+    expect(content).toBe('https://github.com/test-owner/test-repo\nhttps://npmjs.com/package1\n');
+  });
+
+  test('githubRepos should return parsed GitHub URLs and repo data', () => {
+    const mockGithubUrls = [
+      'https://github.com/test-owner/test-repo',
+      'https://github.com/another-owner/another-repo'
+    ];
+
+    // Mock the urlFileContents to contain GitHub URLs
+    (filesystem.readFileSync as jest.Mock).mockReturnValue(Buffer.from(mockGithubUrls.join('\n')));
+    urlFileParser = new UrlFileParser();
+
+    // Run githubRepos
+    const repos = urlFileParser.githubRepos();
+
+    expect(mockLogger.add).toHaveBeenCalledWith(2, 'Searching for GitHub URLs from URL_FILE...');
+    expect(repos).toEqual([
+      { url: 'https://github.com/test-owner/test-repo', owner: 'test-owner', name: 'test-repo' },
+      { url: 'https://github.com/another-owner/another-repo', owner: 'another-owner', name: 'another-repo' }
+    ]);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, '2 GitHub URLs found');
+  });
+
+  test('npmRepos should return parsed GitHub URLs from NPM pages', async () => {
+    const mockNpmUrls = ['https://npmjs.com/package1'];
+    const mockHtml = '<div class="_702d723c"><a href="https://github.com/npm-owner/npm-repo"></a></div>';
+    
+    // Mock urlFileContents to contain NPM URLs
+    (filesystem.readFileSync as jest.Mock).mockReturnValue(Buffer.from(mockNpmUrls.join('\n')));
+    urlFileParser = new UrlFileParser();
+
+    // Mock cheerio to extract GitHub URLs from the NPM pages
+    (cheerio.load as jest.Mock).mockReturnValue({
+      extract: jest.fn(() => ({
+        class: ['https://github.com/npm-owner/npm-repo']
+      }))
+    });
+
+    // Mock fetch to return mock HTML for the NPM pages
     global.fetch = jest.fn(() =>
       Promise.resolve({
-        ok: true,
-        status: 200,
-        text: () => Promise.resolve('<div class="_702d723c">https://github.com/owner/repo</div>'),
+        text: () => Promise.resolve(mockHtml),
       } as Response)
     );
 
-    // Mock cheerio.load
-    (cheerio.load as jest.Mock).mockImplementation(() => {
-      return (selector: string) => {
-        return {
-          text: jest.fn(() => 'https://github.com/owner/repo'),
-        };
-      };
-    });
-  });
+    // Run npmRepos
+    const repos = await urlFileParser.npmRepos();
 
-  it('should initialize with correct values', () => {
-    expect(urlFileParser.npmRegex).toEqual(new RegExp("^.*npmjs.*$", "gm"));
-    expect(urlFileParser.githubRegex).toEqual(new RegExp("^.*github.*$", "gm"));
-    expect(urlFileParser.ownerAndNameRegex).toEqual(new RegExp("(?<=com\\/).*?(?=$)", "gm"));
-    expect(urlFileParser.ownerRegex).toEqual(new RegExp(".*?(?=\\/)", "gm"));
-    expect(urlFileParser.nameRegex).toEqual(new RegExp("(?<=\\/).*?(?=$)", "gm"));
-  });
-
-  it('should return all URL file contents', () => {
-    const urlFileContents = 'https://github.com/owner/repo\nhttps://github.com/owner2/repo2\nhttps://npmjs.com/package1\nhttps://npmjs.com/package2';
-    (filesystem.readFileSync as jest.Mock).mockReturnValue(Buffer.from(urlFileContents, 'utf8'));
-  
-    const result = urlFileParser.allUrlFileContents();
-    expect(result).toBe(urlFileContents);
-  });
-
-  it('should parse GitHub URLs correctly', () => {
-    const urlFileContents = 'https://github.com/owner/repo\nhttps://github.com/owner2/repo2';
-    (filesystem.readFileSync as jest.Mock).mockReturnValue(Buffer.from(urlFileContents, 'utf8'));
-
-    const result = urlFileParser.githubRepos();
-    console.log('Parsed GitHub URLs:', result);
-
-    expect(result).toEqual([
-      { url: 'https://github.com/owner/repo', owner: 'owner', name: 'repo' },
-      { url: 'https://github.com/owner2/repo2', owner: 'owner2', name: 'repo2' },
+    expect(repos).toEqual([
+      { url: 'https://npmjs.com/package1', owner: 'npm-owner', name: 'npm-repo' }
     ]);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, '1 NPM URLs found');
   });
 
-  it('should parse NPM URLs correctly', async () => {
-    jest.setTimeout(10000); // Increase timeout for this test
-    const urlFileContents = 'https://npmjs.com/package1\nhttps://npmjs.com/package2';
-    (filesystem.readFileSync as jest.Mock).mockReturnValue(Buffer.from(urlFileContents, 'utf8'));
+  test('npmRepos should handle no NPM URLs in file', async () => {
+    // Mock urlFileContents with no NPM URLs
+    (filesystem.readFileSync as jest.Mock).mockReturnValue(Buffer.from('https://github.com/test-owner/test-repo'));
+    urlFileParser = new UrlFileParser();
 
-    const result = await urlFileParser.npmRepos();
-    console.log('Parsed NPM URLs:', result);
+    const repos = await urlFileParser.npmRepos();
 
-    expect(result).toEqual([
-      { url: 'https://npmjs.com/package1', owner: 'owner', name: 'repo' },
-      { url: 'https://npmjs.com/package2', owner: 'owner', name: 'repo' },
-    ]);
+    expect(repos).toEqual([]); // Expect empty array when no NPM URLs are found
+    expect(mockLogger.add).toHaveBeenCalledWith(1, 'No NPM URLs in passed file');
   });
 });
