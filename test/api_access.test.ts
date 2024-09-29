@@ -5,7 +5,7 @@ import { Logger } from "../src/logger";
 import { jest } from '@jest/globals';
 
 // Mock Logger
-jest.mock("../src/logger.js");
+jest.mock("../src/logger");
 
 describe('RepoStats', () => {
   let repoStats: RepoStats;
