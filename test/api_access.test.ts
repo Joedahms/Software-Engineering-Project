@@ -1,11 +1,11 @@
 import { Octokit } from "@octokit/rest";
-import { OctokitResponse } from "@octokit/types"
+import { OctokitResponse } from "@octokit/types";
 import { RepoStats } from "../src/api_access";
 import { Logger } from "../src/logger";
 import { jest } from '@jest/globals';
 
 // Mock Logger
-jest.mock("../src/logger");
+jest.mock("../src/logger.js");
 
 describe('RepoStats', () => {
   let repoStats: RepoStats;
@@ -28,7 +28,7 @@ describe('RepoStats', () => {
           paginate: jest.fn(),
           request: jest.fn(),
           rateLimit: {
-          get: jest.fn(),
+            get: jest.fn(),
           },
         })),
       };
@@ -58,7 +58,7 @@ describe('RepoStats', () => {
 
     const mockResponse: OctokitResponse<any, 200> = {
       data: mockRepoData,
-      status: 200,
+      status: 200, // Exact status code
       headers: {},
       url: "https://api.github.com/repos/test-owner/test-repo",
     };
@@ -96,7 +96,7 @@ describe('RepoStats', () => {
 
     const mockRateLimitResponse: OctokitResponse<any, 200> = {
       data: mockRateLimitData,
-      status: 200,
+      status: 200, // Exact status code
       headers: {},
       url: "https://api.github.com/rate_limit",
     };
@@ -163,7 +163,7 @@ describe('RepoStats', () => {
     };
     const mockRateLimitResponse: OctokitResponse<any, 200> = {
       data: mockRateLimitData,
-      status: 200,
+      status: 200, // Exact status code
       headers: {},
       url: "https://api.github.com/rate_limit",
     };
@@ -182,23 +182,22 @@ describe('RepoStats', () => {
 
     // Mock getReadmeContentAndLength
     const readmeContent = Buffer.from("This is a test README").toString('base64');
-    const mockReadmeResponse = {
+    const mockReadmeResponse: OctokitResponse<{ content: string; encoding: string }, 200> = {
       data: {
           content: readmeContent,
           encoding: 'base64',
       },
-      //status: 200,
-      //headers: {},
-      //url: "https://api.github.com/repos/test-owner/test-repo/readme",
+      status: 200,
+      headers: {},
+      url: "https://api.github.com/repos/test-owner/test-repo/readme",
     };
-    // broken code in this line
     octokitInstance.repos.getReadme.mockResolvedValueOnce(mockReadmeResponse as any);
 
     // Mock checkRateLimit again
     octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
 
     // Mock getLicenseName
-    const mockLicenseResponse = {
+    const mockLicenseResponse: OctokitResponse<{ license: { name: string } }, 200> = {
       data: {
           license: {
               name: "MIT License",
@@ -214,15 +213,18 @@ describe('RepoStats', () => {
     octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
 
     // Mock getCommitCount
-    const mockCommitCountResponse = {
-      owner: "test-owner",
-      repo: "test-repo",
-      per_page: 1,
+    const mockCommitCountResponse: OctokitResponse<any, 200> = {
+      data: [], // Adjust according to expected data structure
+      status: 200,
+      headers: {
+        link: '<https://api.github.com/repositories/123456789/commits?per_page=1&page=5979>; rel="last"',
+      },
+      url: "https://api.github.com/repos/test-owner/test-repo/commits",
     };
     octokitInstance.repos.listCommits.mockResolvedValueOnce(mockCommitCountResponse);
 
     // Mock checkRateLimit again
-    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse as any);
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
 
     await repoStats.getRepoStats();
 

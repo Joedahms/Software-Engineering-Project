@@ -9,6 +9,7 @@ type PaginatedResponse<T> = OctokitResponse<T>;
 // Function to fetch repository statistics
 
 export class RepoStats {
+  private octokit: Octokit;
   logger: Logger;
   owner: string;
   repo: string;
@@ -35,8 +36,6 @@ export class RepoStats {
 
   remainingRequests: number;
   rateLimitReset: Date;
-
-  private octokit: Octokit;
 
 
   constructor(owner: string, repo: string) {
@@ -68,7 +67,7 @@ export class RepoStats {
     this.rateLimitReset = new Date();
 
     // Use the injected Octokit instance or create a new one
-    this.octokit = octokitInstance || new Octokit({
+    this.octokit = new Octokit({
       auth: process.env.GITHUB_TOKEN,
     });
   }
