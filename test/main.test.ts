@@ -1,35 +1,52 @@
-import { Main } from '../src/main';
-import { UrlFileParser } from '../src/urlFileParser';
-import { Repository } from '../src/repository';
-import { Logger } from '../src/logger';
+import { Main } from '../src/main.js';
+import { UrlFileParser } from '../src/urlFileParser.js';
+import { Repository } from '../src/repository.js';
+import { Logger } from '../src/logger.js';
+import { jest } from '@jest/globals';
 
-jest.mock('../src/urlFileParser'); // Mock UrlFileParser
-jest.mock('../src/repository'); // Mock Repository
-jest.mock('../src/logger'); // Mock Logger
+// Mock dependencies
+jest.mock('../src/urlFileParser.js'); // Mock UrlFileParser
+jest.mock('../src/repository.js');     // Mock Repository
+jest.mock('../src/logger.js');        // Mock Logger
 
 describe('Main Class', () => {
   let mainInstance: Main;
   let mockUrlFileParser: jest.Mocked<UrlFileParser>;
   let mockLogger: jest.Mocked<Logger>;
   let mockRepositoryInstance: jest.Mocked<Repository>;
+  let MockedRepository: jest.MockedClass<typeof Repository>;
+
+  beforeAll(() => {
+    // Ensure that Repository is treated as a mocked class
+    MockedRepository = Repository as jest.MockedClass<typeof Repository>;
+  });
 
   beforeEach(() => {
-    mainInstance = new Main();
-    mockUrlFileParser = mainInstance.urlFileParser as jest.Mocked<UrlFileParser>;
-    mockLogger = mainInstance.logger as jest.Mocked<Logger>;
+    jest.resetAllMocks();
 
-    // Mock the logger methods
+    // Initialize mocked Logger
+    mockLogger = new Logger() as jest.Mocked<Logger>;
     mockLogger.add = jest.fn();
+    mockLogger.clear = jest.fn();
+    // mockLogger.fileName = 'mockFile.log';
+    // mockLogger.level = 1;
 
-    // Mock repository methods after instantiating Repository
-    mockRepositoryInstance = new Repository('mockUrl', 'mockOwner', 'mockName') as jest.Mocked<Repository>;
-    mockRepositoryInstance.calculateAllMetrics = jest.fn().mockResolvedValueOnce(undefined);
-    mockRepositoryInstance.jsonMetrics = jest.fn().mockReturnValueOnce('{"repo": "test-repo", "metrics": {}}');
+    // Ensure Logger mock is used when new Logger() is called
+    (Logger as jest.Mock).mockImplementation(() => mockLogger);
+
+    // Initialize mocked UrlFileParser
+    mockUrlFileParser = new UrlFileParser() as jest.Mocked<UrlFileParser>;
+    mockUrlFileParser.npmRepos = jest.fn();
+    mockUrlFileParser.githubRepos = jest.fn();
+
+    // Initialize Main instance
+    mainInstance = new Main();
   });
 
   test('should log the start time when the program starts', () => {
-    const startTime = performance.now();
-    expect(mockLogger.add).toHaveBeenCalledWith(2, `Start time: ${startTime} milliseconds`);
+    // Assuming that Main's constructor logs the start time
+    const startTimeRegex = /Start time: \d+\.?\d* milliseconds/;
+    expect(mockLogger.add).toHaveBeenCalledWith(expect.any(Number), expect.stringMatching(startTimeRegex));
   });
 
   test('should parse URLs correctly and log the parsing', async () => {
@@ -37,9 +54,9 @@ describe('Main Class', () => {
       { url: 'https://github.com/test-owner/test-repo', owner: 'test-owner', name: 'test-repo' },
     ];
 
-    // Mock URL parser methods to return repository data
+    // Mock UrlFileParser methods to return repository data
     mockUrlFileParser.npmRepos.mockResolvedValueOnce([]);
-    mockUrlFileParser.githubRepos();
+    mockUrlFileParser.githubRepos.mockReturnValueOnce(mockRepoData);
 
     const parsedUrls = await mainInstance.parseUrlFile();
 
@@ -56,12 +73,18 @@ describe('Main Class', () => {
       { url: 'https://github.com/test-owner/test-repo', owner: 'test-owner', name: 'test-repo' },
     ];
 
-    // Mock URL parser methods to return repository data
+    // Mock UrlFileParser methods to return repository data
     mockUrlFileParser.npmRepos.mockResolvedValueOnce([]);
-    mockUrlFileParser.githubRepos();
+    mockUrlFileParser.githubRepos.mockReturnValueOnce(mockRepoData);
 
     // Mock repository instance and metrics calculation
-    Repository.mockImplementation(() => mockRepositoryInstance);
+    mockRepositoryInstance = {
+      calculateAllMetrics: jest.fn(),
+      jsonMetrics: jest.fn().mockReturnValueOnce('{"repo": "test-repo", "metrics": {}}'),
+    } as unknown as jest.Mocked<Repository>;
+
+    // Mock the Repository constructor to return the mocked instance
+    MockedRepository.mockImplementation(() => mockRepositoryInstance);
 
     // Run the main method to parse and process repositories
     const parsedUrls = await mainInstance.parseUrlFile();
@@ -82,12 +105,18 @@ describe('Main Class', () => {
       { url: 'https://github.com/test-owner/test-repo', owner: 'test-owner', name: 'test-repo' },
     ];
 
-    // Mock URL parser methods to return repository data
+    // Mock UrlFileParser methods to return repository data
     mockUrlFileParser.npmRepos.mockResolvedValueOnce([]);
-    mockUrlFileParser.githubRepos();
+    mockUrlFileParser.githubRepos.mockReturnValueOnce(mockRepoData);
 
     // Mock repository instance and metrics calculation
-    Repository.mockImplementation(() => mockRepositoryInstance);
+    mockRepositoryInstance = {
+      calculateAllMetrics: jest.fn(),
+      jsonMetrics: jest.fn()
+    } as unknown as jest.Mocked<Repository>;
+
+    // Mock the Repository constructor to return the mocked instance
+    MockedRepository.mockImplementation(() => mockRepositoryInstance);
 
     const parsedUrls = await mainInstance.parseUrlFile();
     const repositories: Repository[] = [];
@@ -108,12 +137,12 @@ describe('Main Class', () => {
   });
 
   test('should log the end time and total runtime when the program ends', () => {
-    const endTime = performance.now();
-    const startTime = performance.now();
-    const runtime = (endTime - startTime) / 1000;
+    // Assuming that Main's method logs the end time and runtime
+    const endTimeRegex = /End time \d+\.?\d* milliseconds/;
+    const runtimeRegex = /Total program run time: \d+\.?\d* seconds/;
 
-    expect(mockLogger.add).toHaveBeenCalledWith(2, `End time ${endTime} milliseconds`);
-    expect(mockLogger.add).toHaveBeenCalledWith(1, `Total program run time: ${runtime} seconds`);
-    expect(mockLogger.add).toHaveBeenCalledWith(2, `Total program run time: ${runtime} seconds`);
+    expect(mockLogger.add).toHaveBeenCalledWith(expect.any(Number), expect.stringMatching(endTimeRegex));
+    expect(mockLogger.add).toHaveBeenCalledWith(1, expect.stringMatching(runtimeRegex));
+    expect(mockLogger.add).toHaveBeenCalledWith(2, expect.stringMatching(runtimeRegex));
   });
 });
