@@ -15,20 +15,39 @@ if [ $# == 1 ]; then           # One command line argument
     echo "Current log level is $LOG_LEVEL"
     echo "You chose test"
 
-    # Run the test suite
-    npm test -- --coverage --silent # Run tests quietly with coverage
+    # Run the test suite and capture output
+    TEST_OUTPUT=$(npm test -- --coverage --silent 2>&1)
 
-    if [ $? -eq 0 ]; then
-      # Expected output for the autograder
-      echo "Testing './run test'..."
-      echo "> Test suite output is in the correct format."
-      echo "> Test suite contains 20 or more test cases."
-      echo "> Test suite achieved 80% or greater line coverage."
-      echo "4 / 4 tests passed." # This needs updates based on final amount of tests
-    else
-      echo "Test suite failed!"
+    # Debugging: Print relevant parts of test output
+    echo "$TEST_OUTPUT" | grep "Test Suites:"
+    echo "$TEST_OUTPUT" | grep "Tests:"
+    echo "$TEST_OUTPUT" | grep "All files"
+
+    # Extract total and passed tests using sed and awk
+    TOTAL_TESTS=$(echo "$TEST_OUTPUT" | awk '/Tests:/ {print $2}')
+    PASSED_TESTS=$(echo "$TEST_OUTPUT" | awk '/Tests:/ {print $4}')
+
+    # Extract coverage percentage
+    COVERAGE=$(echo "$TEST_OUTPUT" | sed -n 's/.*All files *| *\([0-9]\+\.[0-9]\+\) *|.*/\1/p')
+
+    # Provide fallback values in case of parsing issues
+    TOTAL_TESTS=${TOTAL_TESTS:-0}
+    PASSED_TESTS=${PASSED_TESTS:-0}
+    COVERAGE=${COVERAGE:-0}
+
+    # Display the results in the desired format
+    echo "Total: $TOTAL_TESTS"
+    echo "Passed: $PASSED_TESTS"
+    echo "Coverage: $COVERAGE%"
+    echo "$PASSED_TESTS/$TOTAL_TESTS test cases passed. $COVERAGE% line coverage achieved."
+
+    # Check if the tests passed
+    if [ "$TOTAL_TESTS" -eq 0 ] || [ "$PASSED_TESTS" -ne "$TOTAL_TESTS" ]; then
+      echo "Test suite failed! Check the logs for details."
       exit 1
     fi
+
+
 
   else                    # URL_FILE
     npx tsc               # Compile TypeScript files to JavaScript
