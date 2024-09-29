@@ -60,7 +60,12 @@ Equation: Min Max normalized README length. Max = 27000. Min = 500.
 - class Correctness(string, string):
 Equation: NEED TO DO
 - class BusFactor(string, string): How well distributed the knowledge about the package's development is.  
-Equation: NEED TO DO
+Equation: It is calculated by grabbing the total contributors, and sorting them in decreasing order by number of  
+commits. Then it goes through and sums the number of commits, starting with the biggest contributor, and stops  
+once 50% of the total commits have been reached. This is the BusFactor. The score is normalized between 40% of  
+the team size (total contributors), and 1. If the BusFactor is greater than 40% of the team size, the score given  
+is one, if the BusFactor is somehow less than one then it is an error,  
+else the value is normalized and returned normally.
 - class ResponsiveMaintainer(string, string): How active the maintainers of the package are.  
 Equation:   
 months = days repo has been active / 30
