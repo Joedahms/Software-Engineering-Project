@@ -1,4 +1,3 @@
-// __mocks__/api_access.js
 export class RepoStats {
     constructor(owner, name) {
       this.owner = owner;

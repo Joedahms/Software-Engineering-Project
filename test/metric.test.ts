@@ -1,9 +1,9 @@
-// @ts-nocheck
-import { Logger } from "../src/logger.js";
-import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License } from "../src/metric.js";
+import { Logger } from "../src/logger";
+import { Url, NetScore, RampUp, Correctness, BusFactor, ResponsiveMaintainer, License, Metric } from "../src/metric";
+import { jest } from '@jest/globals';
 
 // Mock Logger
-jest.mock("../src/logger.js");
+jest.mock("../src/logger");
 
 describe("Metric Classes", () => {
   let mockLogger: jest.Mocked<Logger>;
@@ -14,77 +14,75 @@ describe("Metric Classes", () => {
     (Logger as jest.Mock).mockImplementation(() => mockLogger);
   });
 
-  // Test for the abstract Metric class's minMax method
-  describe("Metric - minMax", () => {
-    // Since Metric is abstract, we'll test using a concrete subclass
-    class TestMetric extends (require('../src/metric.js').Metric) {
-      constructor(repoOwner: string, repoName: string) {
-        super(repoOwner, repoName);
-      }
+  // Since Metric is abstract, create a concrete subclass for testing
+  class TestMetric extends Metric {
+    constructor(repoOwner: string, repoName: string) {
+      super(repoOwner, repoName);
+          
     }
 
+    // Implement any abstract methods if present
+    calculateValue(): void {
+        // Dummy implementation
+    }
+  }
+
+  describe("Metric - minMax", () => {
     test("minMax should normalize values correctly within range", () => {
-      const testMetric = new TestMetric("owner", "repo");
-      
-      // Mock logger
-      testMetric.logger = mockLogger;
+        const testMetric = new TestMetric("owner", "repo");
+        const inputValue = 5;
+        const min = 0;
+        const max = 10;
+        const normalized = testMetric.minMax(inputValue, max, min);
 
-      const inputValue = 5;
-      const min = 0;
-      const max = 10;
-      const normalized = testMetric.minMax(inputValue, max, min);
-
-      expect(normalized).toBe(0.5);
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on 5 max/min = 10/0");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: 0.5");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "min max normalization successful, returning normalized value");
+        expect(normalized).toBe(0.5);
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on 5 max/min = 10/0");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: 0.5");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "min max normalization successful, returning normalized value");
     });
 
     test("minMax should return 0 when normalized value is below 0", () => {
-      const testMetric = new TestMetric("owner", "repo");
-      testMetric.logger = mockLogger;
+        const testMetric = new TestMetric("owner", "repo");
+        const inputValue = -5;
+        const min = 0;
+        const max = 10;
+        const normalized = testMetric.minMax(inputValue, max, min);
 
-      const inputValue = -5;
-      const min = 0;
-      const max = 10;
-      const normalized = testMetric.minMax(inputValue, max, min);
-
-      expect(normalized).toBe(0);
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on -5 max/min = 10/0");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: -0.5");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "Normalized value less than 0, returning 0");
+        expect(normalized).toBe(0);
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on -5 max/min = 10/0");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: -0.5");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "Normalized value less than 0, returning 0");
     });
 
     test("minMax should return 2 when normalized value is above 1", () => {
-      const testMetric = new TestMetric("owner", "repo");
-      testMetric.logger = mockLogger;
+        const testMetric = new TestMetric("owner", "repo");
+        const inputValue = 15;
+        const min = 0;
+        const max = 10;
+        const normalized = testMetric.minMax(inputValue, max, min);
 
-      const inputValue = 15;
-      const min = 0;
-      const max = 10;
-      const normalized = testMetric.minMax(inputValue, max, min);
-
-      expect(normalized).toBe(2);
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on 15 max/min = 10/0");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: 1.5");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "Normalized value greater than 1, returning 2");
+        expect(normalized).toBe(2);
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on 15 max/min = 10/0");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: 1.5");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "Normalized value greater than 1, returning 2");
     });
 
     test("minMax should handle edge cases correctly", () => {
-      const testMetric = new TestMetric("owner", "repo");
-      testMetric.logger = mockLogger;
+        const testMetric = new TestMetric("owner", "repo");
 
-      // Exactly min
-      expect(testMetric.minMax(0, 10, 0)).toBe(0);
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on 0 max/min = 10/0");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: 0");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "Normalized value less than 0, returning 0");
+        // Exactly min
+        const normalizedMin = testMetric.minMax(0, 10, 0);
+        expect(normalizedMin).toBe(0);
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on 0 max/min = 10/0");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: 0");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "Normalized value less than 0, returning 0");
 
-      // Exactly max
-      expect(testMetric.minMax(10, 10, 0)).toBe(1);
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on 10 max/min = 10/0");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: 1");
-      expect(mockLogger.add).toHaveBeenCalledWith(2, "min max normalization successful, returning normalized value");
+        // Exactly max
+        const normalizedMax = testMetric.minMax(10, 10, 0);
+        expect(normalizedMax).toBe(1);
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "Running min max normalization on 10 max/min = 10/0");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "min max result: 1");
+        expect(mockLogger.add).toHaveBeenCalledWith(2, "min max normalization successful, returning normalized value");
     });
   });
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it, expect, jest, test, beforeEach, afterEach } from '@jest/globals';
 import { Repository } from '../src/repository';
 

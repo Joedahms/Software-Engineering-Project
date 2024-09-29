@@ -21,12 +21,12 @@ export const createMockOctokit = (): jest.Mocked<Octokit> => {
 
   // Mock the 'paginate' method with required properties
   const paginateMock = jest.fn().mockResolvedValue([]);
-  const paginateIteratorMock = jest.fn();
+  const paginateIteratorMock = jest.fn<AsyncIterableIterator<any>>();
   (paginateMock as unknown as MockedPaginateInterface).iterator = paginateIteratorMock;
   octokit.paginate = paginateMock as unknown as typeof octokit.paginate;
 
   // Mock the 'request' method
-  octokit.request = jest.fn().mockResolvedValue({});
+  octokit.request = jest.fn().mockResolvedValue({} as any);
 
   // Mock the 'rateLimit' namespace method with required properties
   octokit.rateLimit = {

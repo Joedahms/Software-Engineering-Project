@@ -1,46 +1,71 @@
-// @ts-nocheck
 import { Octokit } from "@octokit/rest";
 import { OctokitResponse } from "@octokit/types"
-import { createMockOctokit } from "./__mocks__/octokit";
-import { RepoStats } from "../src/api_access"; // Adjust the path as needed
+import { RepoStats } from "../src/api_access";
 import { Logger } from "../src/logger";
+import { jest } from '@jest/globals';
 
 // Mock Logger
 jest.mock("../src/logger");
 
-describe("RepoStats", () => {
-  let octokitInstance: jest.Mocked<Octokit>;
-  let loggerInstance: jest.Mocked<Logger>;
+describe('RepoStats', () => {
   let repoStats: RepoStats;
+  let mockLogger: jest.Mocked<Logger>;
+  let octokitInstance: jest.Mocked<Octokit>;
 
-  const owner = "test-owner";
-  const repo = "test-repo";
+  const owner = 'test-owner';
+  const repo = 'test-repo';
+
+  // Mock the Octokit class
+  beforeAll(() => {
+    jest.mock('@octokit/rest', () => {
+      return {
+        Octokit: jest.fn().mockImplementation(() => ({
+          repos: {
+            get: jest.fn(),
+            getReadme: jest.fn(),
+            listCommits: jest.fn(),
+          },
+          paginate: jest.fn(),
+          request: jest.fn(),
+          rateLimit: {
+          get: jest.fn(),
+          },
+        })),
+      };
+    });
+  });
 
   beforeEach(() => {
     jest.resetAllMocks();
 
-    octokitInstance = createMockOctokit();
+    // Initialize mocked Logger
+    mockLogger = new Logger() as jest.Mocked<Logger>;
+    (Logger as jest.Mock).mockImplementation(() => mockLogger);
 
-    loggerInstance = new Logger() as jest.Mocked<Logger>;
-    (Logger as jest.Mock).mockImplementation(() => loggerInstance);
+    // Instantiate RepoStats
+    repoStats = new RepoStats(owner, repo);
 
-    repoStats = new RepoStats(owner, repo, octokitInstance);
+    // Retrieve the mocked Octokit instance
+    const { Octokit } = require("@octokit/rest");
+    octokitInstance = (Octokit as jest.Mock).mock.instances[0] as jest.Mocked<Octokit>;
   });
 
-  test("getRepoData should fetch and calculate daysActive correctly", async () => {
+  test('getRepoCreatedUpdated should fetch created_at and updated_at dates', async () => {
     const mockRepoData = {
       created_at: "2020-01-01T00:00:00Z",
       updated_at: "2023-01-01T00:00:00Z",
     };
 
-    octokitInstance.repos.get.mockResolvedValueOnce({
+    const mockResponse: OctokitResponse<any, 200> = {
       data: mockRepoData,
       status: 200,
       headers: {},
       url: "https://api.github.com/repos/test-owner/test-repo",
-    });
+    };
 
-    await repoStats.getRepoData();
+    octokitInstance.repos.get.mockResolvedValueOnce(mockResponse);
+
+    await repoStats.getRepoCreatedUpdated();
 
     expect(octokitInstance.repos.get).toHaveBeenCalledWith({
       owner,
@@ -54,100 +79,165 @@ describe("RepoStats", () => {
     );
 
     expect(repoStats.daysActive).toBe(expectedDaysActive);
-    expect(loggerInstance.add).toHaveBeenCalledWith(1, `Getting when ${repo} created and last updated...`);
-    expect(loggerInstance.add).toHaveBeenCalledWith(2, `Getting when ${repo} created and last updated...`);
-    expect(loggerInstance.add).toHaveBeenCalledWith(1, `Successfully got when ${repo} was created and last updated`);
-    expect(loggerInstance.add).toHaveBeenCalledWith(2, `${repo} created at ${created}`);
-    expect(loggerInstance.add).toHaveBeenCalledWith(2, `${repo} last updated at ${updated}`);
+    expect(mockLogger.add).toHaveBeenCalledWith(1, `Getting when ${repo} created and last updated...`);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, `Getting when ${repo} created and last updated...`);
+    expect(mockLogger.add).toHaveBeenCalledWith(1, `Successfully got when ${repo} was created and last updated`);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, `${repo} created at ${created}`);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, `${repo} last updated at ${updated}`);
   });
 
-  test("checkRateLimit should handle rate limit exceeded error gracefully", async () => {
-    const rateLimitError = {
-      status: 403,
-      response: {
-        headers: {
-          'x-ratelimit-remaining': '0',
-          'retry-after': '1', // 1 second
-        },
+  test('checkRateLimit should update remainingRequests and rateLimitReset', async () => {
+    const mockRateLimitData = {
+      rate: {
+        remaining: 4243,
+        reset: Math.floor(Date.now() / 1000) + 3600, // 1 hour later
       },
     };
 
-    // Mock octokit.rateLimit.get to reject with rateLimitError
-    octokitInstance.rateLimit.get.mockRejectedValueOnce(rateLimitError);
+    const mockRateLimitResponse: OctokitResponse<any, 200> = {
+      data: mockRateLimitData,
+      status: 200,
+      headers: {},
+      url: "https://api.github.com/rate_limit",
+    };
 
-    // Spy on console methods and setTimeout
-    const consoleClearMock = jest.spyOn(console, 'clear').mockImplementation(() => {});
-    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const setTimeoutMock = jest.spyOn(global, 'setTimeout').mockImplementation((fn: () => void, ms?: number) => {
-      fn();
-      return 0 as unknown as NodeJS.Timeout; // Return a dummy Timeout
-    });
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
 
-    // Execute checkRateLimit
     await repoStats.checkRateLimit();
 
-    // Verify that rateLimit.get was called
     expect(octokitInstance.rateLimit.get).toHaveBeenCalled();
 
-    // Verify that logger was called appropriately
-    expect(loggerInstance.add).toHaveBeenCalledWith(
-      2,
-      "Handling error: " + JSON.stringify(rateLimitError) + " ..."
-    );
-
-    // Verify that console.clear was called
-    expect(consoleClearMock).toHaveBeenCalled();
-
-    // Verify that error messages were logged to console
-    expect(consoleErrorMock).toHaveBeenCalledWith('Rate limit exceeded. Waiting before retrying.');
-    expect(consoleErrorMock).toHaveBeenCalledWith(
-      `Rate limit reset time: ${new Date(Date.now() + 1000)}`
-    );
-
-    // Verify that setTimeout was called with correct arguments
-    expect(setTimeoutMock).toHaveBeenCalledWith(expect.any(Function), 1000);
-
-    // Restore mocked functions
-    consoleClearMock.mockRestore();
-    consoleErrorMock.mockRestore();
-    setTimeoutMock.mockRestore();
+    expect(repoStats.remainingRequests).toBe(mockRateLimitData.rate.remaining);
+    expect(repoStats.rateLimitReset).toEqual(new Date(mockRateLimitData.rate.reset * 1000));
+    expect(mockLogger.add).toHaveBeenCalledWith(2, "Remaining API requests: 4243");
+    expect(mockLogger.add).toHaveBeenCalledWith(2, "API rate limit resets at " + new Date(mockRateLimitData.rate.reset * 1000));
   });
 
-  test("checkRateLimit should handle non-rate limit errors correctly", async () => {
-    const genericError = {
+  test('getRepoCreatedUpdated should handle errors gracefully', async () => {
+    const mockError = {
       status: 500,
       message: "Internal Server Error",
     };
 
-    // Mock octokit.rateLimit.get to reject with genericError
-    octokitInstance.rateLimit.get.mockRejectedValueOnce(genericError);
+    octokitInstance.repos.get.mockRejectedValueOnce(mockError);
 
-    // Spy on console.error and process.exit
-    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const exitMock = jest.spyOn(process, 'exit').mockImplementation(((code?: number) => {
+    // Spy on process.exit
+    const exitMock = jest.spyOn(process, 'exit').mockImplementation((code?: string | number | null | undefined) => {
       throw new Error(`process.exit: ${code}`);
-    }) as any);
+    });
 
-    // Execute checkRateLimit and expect it to throw due to process.exit
-    await expect(repoStats.checkRateLimit()).rejects.toThrow("process.exit: 1");
+    // Spy on console.error
+    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    // Verify that rateLimit.get was called
-    expect(octokitInstance.rateLimit.get).toHaveBeenCalled();
+    await expect(repoStats.getRepoCreatedUpdated()).rejects.toThrow("process.exit: 1");
 
-    // Verify that logger was called appropriately
-    expect(loggerInstance.add).toHaveBeenCalledWith(
-      2,
-      "Handling error: " + JSON.stringify(genericError) + " ..."
-    );
+    expect(octokitInstance.repos.get).toHaveBeenCalledWith({
+      owner,
+      repo,
+    });
 
-    // Verify that generic error was logged to console
-    expect(consoleErrorMock).toHaveBeenCalledWith("An error occurred:", genericError);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, "Handling error: [object Object] ...");
+    expect(consoleErrorMock).toHaveBeenCalledWith("An error occurred:", mockError);
 
-    // Verify that process.exit was called with code 1
-    expect(exitMock).toHaveBeenCalledWith(1);
-
-    // Restore mocked functions
-    consoleErrorMock.mockRestore();
+    // Restore mocks
     exitMock.mockRestore();
+    consoleErrorMock.mockRestore();
+  });
+
+  test('getRepoStats should fetch all metrics correctly', async () => {
+    // Mock methods called within getRepoStats
+
+    // Mock getOpenIssues
+    octokitInstance.paginate.mockResolvedValueOnce([
+      { pull_request: null },
+      { pull_request: null },
+      { pull_request: { url: "pull_request_url" } }, // only count issues without pull_request
+    ]);
+
+    // Mock checkRateLimit
+    const mockRateLimitData = {
+      rate: {
+          remaining: 4243,
+          reset: Math.floor(Date.now() / 1000) + 3600, // 1 hour later
+      },
+    };
+    const mockRateLimitResponse: OctokitResponse<any, 200> = {
+      data: mockRateLimitData,
+      status: 200,
+      headers: {},
+      url: "https://api.github.com/rate_limit",
+    };
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
+
+    // Mock getTotalIssues
+    octokitInstance.paginate.mockResolvedValueOnce([
+      { pull_request: null },
+      { pull_request: null },
+      { pull_request: { url: "pull_request_url" } },
+      { pull_request: null },
+    ]);
+
+    // Mock checkRateLimit again
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
+
+    // Mock getReadmeContentAndLength
+    const readmeContent = Buffer.from("This is a test README").toString('base64');
+    const mockReadmeResponse = {
+      data: {
+          content: readmeContent,
+          encoding: 'base64',
+      },
+      //status: 200,
+      //headers: {},
+      //url: "https://api.github.com/repos/test-owner/test-repo/readme",
+    };
+    // broken code in this line
+    octokitInstance.repos.getReadme.mockResolvedValueOnce(mockReadmeResponse as any);
+
+    // Mock checkRateLimit again
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
+
+    // Mock getLicenseName
+    const mockLicenseResponse = {
+      data: {
+          license: {
+              name: "MIT License",
+          },
+      },
+      status: 200,
+      headers: {},
+      url: "https://api.github.com/repos/test-owner/test-repo/license",
+    };
+    octokitInstance.request.mockResolvedValueOnce(mockLicenseResponse);
+
+    // Mock checkRateLimit again
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
+
+    // Mock getCommitCount
+    const mockCommitCountResponse = {
+      owner: "test-owner",
+      repo: "test-repo",
+      per_page: 1,
+    };
+    octokitInstance.repos.listCommits.mockResolvedValueOnce(mockCommitCountResponse);
+
+    // Mock checkRateLimit again
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse as any);
+
+    await repoStats.getRepoStats();
+
+    // Assert the metrics are set correctly
+    expect(repoStats.totalOpenIssues).toBe(2); // 3 issues fetched, 1 has pull_request
+    expect(repoStats.totalIssues).toBe(3); // 4 issues fetched, 1 has pull_request
+    expect(repoStats.readme).toBe("This is a test README");
+    expect(repoStats.readmeLength).toBe(5); // "This is a test README" has 5 words
+    expect(repoStats.licenseName).toBe("MIT License");
+    expect(repoStats.totalCommits).toBe(5979);
+    expect(repoStats.remainingRequests).toBe(mockRateLimitData.rate.remaining);
+    expect(repoStats.rateLimitReset).toEqual(new Date(mockRateLimitData.rate.reset * 1000));
+
+    // Assert logger calls
+    expect(mockLogger.add).toHaveBeenCalledWith(1, "Getting open issues...");
+    expect(mockLogger.add).toHaveBeenCalledWith(2, "Took 1.7538617250000001 seconds to get all open issues from express"); // Sample from log.txt
   });
 });

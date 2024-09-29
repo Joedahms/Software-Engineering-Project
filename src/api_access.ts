@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/rest"
 import { OctokitResponse } from "@octokit/types"
 import { Logger } from './logger.js'
-import { performance } from "perf_hooks";
+import { performance } from "perf_hooks"
 
 // Define the shape of the data returned by paginate
 type PaginatedResponse<T> = OctokitResponse<T>;
@@ -41,7 +41,6 @@ export class RepoStats {
 
   constructor(owner: string, repo: string) {
     this.logger = new Logger();
-
     this.owner = owner;
     this.repo = repo;
     
@@ -69,8 +68,8 @@ export class RepoStats {
     this.rateLimitReset = new Date();
 
     // Use the injected Octokit instance or create a new one
-    this.octokit = new Octokit({
-      auth: process.env.GITHUB_TOKEN, // Ensure GITHUB_TOKEN is set in your environment
+    this.octokit = octokitInstance || new Octokit({
+      auth: process.env.GITHUB_TOKEN,
     });
   }
 
@@ -219,7 +218,7 @@ export class RepoStats {
 
   async #getReadmeContentAndLength() {
     // Readme content
-    const readme = await octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
+    const readme = await this.octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
     this.readme = Buffer.from(readme.data.content, 'base64').toString('utf-8');
     
     // Readme length in words

@@ -1,4 +1,3 @@
-// __mocks__/metric.js
 export class Url {
     constructor(repoOwner, repoName) {
       this.name = "URL";

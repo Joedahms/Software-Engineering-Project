@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
@@ -31,8 +30,15 @@ export default {
 
   extensionsToTreatAsEsm: ['.ts', '.tsx'], // Treat TypeScript files as ES modules
   
+  // A set of global variables that need to be available in all test environments
+  globals: {
+    'ts-jest': {
+      useESM: true,
+    },
+  },
+  
   // An array of file extensions your modules use
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
@@ -43,7 +49,7 @@ export default {
   },
 
   // A preset that is used as a base for Jest's configuration
-  preset: "ts-jest",
+  //preset: 'ts-jest/presets/default-esm',
   
   // A list of paths to directories that Jest should use to search for files in
   roots: ['<rootDir>/test'],
@@ -55,11 +61,11 @@ export default {
   testEnvironment: 'node',
   
   // This option allows use of a custom test runner
-  testRunner: "jest-circus/runner",
+  //testRunner: "jest-circus/runner",
 
   // This tells Jest to use ts-jest for TS files
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
+    '^.+\\.ts$': ['ts-jest', {
       useESM: true,
     }], // For TypeScript files
     '^.+\\.js$': 'babel-jest', // For JS files using ES module syntax
@@ -67,11 +73,14 @@ export default {
   
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   transformIgnorePatterns: [
-    '/node_modules/(?!(@octokit/rest|@octokit/core)/)', // Tell Jest to transform @octokit/rest
+    '/node_modules/(?!(@octokit/rest | @octokit/core)/)', // Tell Jest to transform @octokit/rest
   ],
   
+  // The glob patterns Jest uses to detect test files
+  // testMatch: ['**/*.test.ts'],
+
   // The regexp pattern or array of patterns that Jest uses to detect test files
-  testRegex: '/test/.*\\.(test|spec)?\\.(ts|tsx)$',
+  testRegex: ['/test/.*\\.(test|spec)?\\.(ts|tsx)$'],
 
   // Indicates whether each individual test should be reported during the run
   verbose: true,
@@ -113,9 +122,6 @@ export default {
 
   // A path to a module which exports an async function that is triggered once after all test suites
   // globalTeardown: undefined,
-
-  // A set of global variables that need to be available in all test environments
-  // globals: {},
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
   // maxWorkers: "50%",
@@ -172,12 +178,6 @@ export default {
   
   // Adds a location field to test results
   // testLocationInResults: false,
-
-  // The glob patterns Jest uses to detect test files
-  // testMatch: [
-  //   "**/__tests__/**/*.[jt]s?(x)",
-  //   "**/?(*.)+(spec|test).[tj]s?(x)"
-  // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [

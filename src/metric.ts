@@ -1,15 +1,13 @@
 import * as dotenv from "dotenv";
 import { performance } from "perf_hooks"
-
 import { Logger } from "./logger.js";
 import { RepositoryUrlData, UrlFileParser } from './urlFileParser.js'
 
 // Shouldn't make any API calls here, do in Repository class
 
 // Abstract metric class
-abstract class Metric {
+export abstract class Metric {
   readonly logger: Logger;
-
   readonly repoName: string;       // Name of the repository the metric belongs to
   readonly repoOwner: string;      // Owner of the repository the metric belongs to
 
@@ -19,10 +17,8 @@ abstract class Metric {
 
   constructor(repoOwner: string, repoName: string) {
     this.logger = new Logger();
-
     this.repoOwner = repoOwner;
     this.repoName = repoName;
-
     this.name = "name not assigned"
     this.value = 0;
     this.latencyValue = 0;
