@@ -279,6 +279,30 @@ export class RepoStats {
     }
   }  
 
+  async #getBusFactorCalculation(){
+    const contributors = await octokit.request('GET /repos/{owner}/{repo}/contributors', {
+      owner: this.owner,
+      repo: this.repo,
+      per_page: 100
+    });
+    this.totalContributors = contributors.data.length;
+
+    // Sort contributors by their number of commits in descending order
+    const sortedContributors = contributors.data.sort((a, b) => b.contributions - a.contributions);
+
+    let cumulativeCommits = 0;
+
+    // Identify the smallest number of contributors accounting for at least 50% of the total commits
+    for (let i = 0; i < sortedContributors.length; i++) {
+      cumulativeCommits += sortedContributors[i].contributions;
+      this.busFactor++;
+
+      if (cumulativeCommits >= this.totalCommits * 0.5) {
+        break;
+      }
+    }
+  }
+
   // Helper function to handle errors, checks rate limit
   async #handleError(error: any) {
     const logger = new Logger();
