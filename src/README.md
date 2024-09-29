@@ -4,12 +4,25 @@
 
 ### api_access
 Contains functionality for getting stats about a repo from the GitHub API
-- function fetchAllPages: ?
+- function fetchAllPages: Utilizes octokit.paginate to paginate the results.
 - class RepoStats: Contains all the useful bits of info about a repo: prs, commits, etc...   
-Also contains methods for getting the info from the API. GetData() is for calling all these   
-methods from one spot. displayStats outputs them to stdout, useful for debugging.
-- function handleError: ?
-- function checkRateLimit: ?
+Also contains methods for getting the info from the API. GetRepoStats() is for calling all these   
+methods from one spot.
+#### Methods of RepoStats
+- getLicenseName(): Checks the repo for the desired license. First checks the GitHub API endpoint.  
+If that is not successful it uses regualr expressions to check the readme of the repo for the license.
+- getCommitCount(): Get the total number of commits. If there is more than one page of results, it gets  
+the results from that last page. If there is only one page, it uses the length of the response.
+- getOpenIssues(): Gets all open issues. Does not include pull requests.
+- getTotalIssues(): Gets total issues. Does not include pull requests.
+- checkRateLimit(): Gets the remaining API requests and the reset time for the GitHub API. These results  
+are entered into the log file.
+- getRepoCreatedUpdated(): Gets the date when the repo was created as well as when it was last updated.
+- getReadmeContentAndLength(): Gets the contents of the readme and its length in words.
+- getRepoStats(): Calls all the methods of the class that involve requesting information about the repo  
+from the API.
+- handleError(): If the rate limit is hit, the program will wait until when it resets to make another  
+request. If there is a real error, it will print it and exit.
 
 ### logger.ts
 Contains the logger class.
