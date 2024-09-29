@@ -171,6 +171,7 @@ export class RepoStats {
       this.hasTestFolder = false;  // Return false if there's an error
     }
   }
+
   // Open issues (excluding pull requests)
   async #getOpenIssues() {
     const startTimeMilliseconds = performance.now();
@@ -251,11 +252,13 @@ export class RepoStats {
   
   async getRepoStats() {
     try {
+      /*
       await this.#getOpenIssues();
       await this.checkRateLimit();
       
       await this.#getTotalIssues();
       await this.checkRateLimit();
+      */
       
       await this.#getReadmeContentAndLength();
       await this.checkRateLimit();

@@ -1,4 +1,4 @@
-Start time: 195.1264 milliseconds
+Start time: 120.715789 milliseconds
 Parsing URL_FILE...
 Searching for NPM URLs in URL_FILE
 2 NPM URLs found
@@ -14,24 +14,22 @@ Calculating all metrics for express
 Getting when express created and last updated...
 express created at Fri Jun 26 2009 14:56:01 GMT-0400 (Eastern Daylight Time)
 express last updated at Sun Sep 29 2024 16:38:12 GMT-0400 (Eastern Daylight Time)
-Took 1.3160093 seconds to get all open issues from express
-Remaining API requests: 57
-API rate limit resets at Sun Sep 29 2024 18:01:05 GMT-0400 (Eastern Daylight Time)
-Took 52.3562016 seconds to get all open and closed issues from express
-Remaining API requests: 2
-API rate limit resets at Sun Sep 29 2024 18:01:05 GMT-0400 (Eastern Daylight Time)
-Remaining API requests: 1
-API rate limit resets at Sun Sep 29 2024 18:01:05 GMT-0400 (Eastern Daylight Time)
+Took 1.84429266 seconds to get all open issues from express
+Remaining API requests: 4442
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Took 71.087257231 seconds to get all open and closed issues from express
+Remaining API requests: 4387
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4386
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
 Checking express for license...
 License found successfully for express
-Remaining API requests: 0
-API rate limit resets at Sun Sep 29 2024 18:01:05 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4385
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
 Getting express commit count...
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
-express commit count error
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
+express has 5979 total commits
+Remaining API requests: 4383
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for express...
 Running min max normalization on 837 max/min = 27000/500
 min max result: 0.012716981132075473
@@ -40,150 +38,191 @@ express RampUp: 0.012716981132075473
 Calculating Correctness for express
 express Correctness: false
 Calculating BusFactor for express
-Calculated BusFactor is greater than 40% of team size.
-express BusFactor: 1
-Calculating ResponsiveMaintainer for express...
-Running min max normalization on 0 max/min = 40/0
+Running min max normalization on 1 max/min = 40/1
 min max result: 0
 min max normalization successful, returning normalized value
-express ResponsiveMaintainer: 0
+express BusFactor: 0
+Calculating ResponsiveMaintainer for express...
+Running min max normalization on 32.17399103139013 max/min = 40/0
+min max result: 0.8043497757847533
+min max normalization successful, returning normalized value
+express ResponsiveMaintainer: 0.8043497757847533
 Checking express for MIT License license...
 Correct license found at license API endpoint
 Calculating NetScore for express
-Running min max normalization on 2.0127169811320753 max/min = 4/0
-min max result: 0.5031792452830188
+Running min max normalization on 1.8170667569168288 max/min = 4/0
+min max result: 0.4542666892292072
 min max normalization successful, returning normalized value
 All metrics calculated for express
 
 Calculating all metrics for browserify
 Getting when browserify created and last updated...
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
+browserify created at Wed Sep 22 2010 12:11:32 GMT-0400 (Eastern Daylight Time)
+browserify last updated at Sun Sep 29 2024 08:47:02 GMT-0400 (Eastern Daylight Time)
+Took 4.558997359000001 seconds to get all open issues from browserify
+Remaining API requests: 4378
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Took 24.43792798800001 seconds to get all open and closed issues from browserify
+Remaining API requests: 4357
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4356
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Checking browserify for license...
+License found successfully for browserify
+Remaining API requests: 4355
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Getting browserify commit count...
+browserify has 2291 total commits
+Remaining API requests: 4353
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for browserify...
-Running min max normalization on 0 max/min = 27000/500
-min max result: -0.018867924528301886
-Normalized value less than 0, returning 0
-browserify RampUp: 0
+Running min max normalization on 3563 max/min = 27000/500
+min max result: 0.11558490566037735
+min max normalization successful, returning normalized value
+browserify RampUp: 0.11558490566037735
 Calculating Correctness for browserify
 browserify Correctness: false
 Calculating BusFactor for browserify
 Calculated BusFactor is greater than 40% of team size.
 browserify BusFactor: 1
 Calculating ResponsiveMaintainer for browserify...
-Running min max normalization on NaN max/min = 40/0
-min max result: NaN
+Running min max normalization on 13.421206795547745 max/min = 40/0
+min max result: 0.3355301698886936
 min max normalization successful, returning normalized value
-browserify ResponsiveMaintainer: NaN
+browserify ResponsiveMaintainer: 0.3355301698886936
 Checking browserify for MIT License license...
-Correct license not found at API endpoint, checking README...
-Correct license not found in README
+Correct license found at license API endpoint
 Calculating NetScore for browserify
-Running min max normalization on NaN max/min = 4/0
-min max result: NaN
+Running min max normalization on 2.4511150755490707 max/min = 4/0
+min max result: 0.6127787688872677
 min max normalization successful, returning normalized value
 All metrics calculated for browserify
 
 Calculating all metrics for cloudinary_npm
 Getting when cloudinary_npm created and last updated...
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
+cloudinary_npm created at Fri Jun 22 2012 04:20:27 GMT-0400 (Eastern Daylight Time)
+cloudinary_npm last updated at Sun Sep 15 2024 08:12:30 GMT-0400 (Eastern Daylight Time)
+Took 0.42817477899999357 seconds to get all open issues from cloudinary_npm
+Remaining API requests: 4351
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Took 10.953617818 seconds to get all open and closed issues from cloudinary_npm
+Remaining API requests: 4344
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4343
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Checking cloudinary_npm for license...
+Error 404 when checking cloudinary_npm for license name, returning README
+Remaining API requests: 4342
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Getting cloudinary_npm commit count...
+cloudinary_npm has 920 total commits
+Remaining API requests: 4340
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for cloudinary_npm...
-Running min max normalization on 0 max/min = 27000/500
-min max result: -0.018867924528301886
+Running min max normalization on 438 max/min = 27000/500
+min max result: -0.002339622641509434
 Normalized value less than 0, returning 0
 cloudinary_npm RampUp: 0
 Calculating Correctness for cloudinary_npm
 cloudinary_npm Correctness: false
 Calculating BusFactor for cloudinary_npm
-Calculated BusFactor is greater than 40% of team size.
-cloudinary_npm BusFactor: 1
-Calculating ResponsiveMaintainer for cloudinary_npm...
-Running min max normalization on NaN max/min = 40/0
-min max result: NaN
+Running min max normalization on 7 max/min = 22/1
+min max result: 0.2857142857142857
 min max normalization successful, returning normalized value
-cloudinary_npm ResponsiveMaintainer: NaN
+cloudinary_npm BusFactor: 0.2857142857142857
+Calculating ResponsiveMaintainer for cloudinary_npm...
+Running min max normalization on 6.175878272544193 max/min = 40/0
+min max result: 0.15439695681360482
+min max normalization successful, returning normalized value
+cloudinary_npm ResponsiveMaintainer: 0.15439695681360482
 Checking cloudinary_npm for MIT License license...
 Correct license not found at API endpoint, checking README...
-Correct license not found in README
+Correct license found in README
 Calculating NetScore for cloudinary_npm
-Running min max normalization on NaN max/min = 4/0
-min max result: NaN
+Running min max normalization on 1.4401112425278904 max/min = 4/0
+min max result: 0.3600278106319726
 min max normalization successful, returning normalized value
 All metrics calculated for cloudinary_npm
 
 Calculating all metrics for nodist
 Getting when nodist created and last updated...
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
+nodist created at Sun Jul 01 2012 09:05:32 GMT-0400 (Eastern Daylight Time)
+nodist last updated at Thu Sep 26 2024 15:39:24 GMT-0400 (Eastern Daylight Time)
+Took 0.7665094609999942 seconds to get all open issues from nodist
+Remaining API requests: 4336
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Took 3.3430355439999984 seconds to get all open and closed issues from nodist
+Remaining API requests: 4332
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4330
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Checking nodist for license...
+License found successfully for nodist
+Remaining API requests: 4328
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Getting nodist commit count...
+nodist has 442 total commits
+Remaining API requests: 4324
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for nodist...
-Running min max normalization on 0 max/min = 27000/500
-min max result: -0.018867924528301886
-Normalized value less than 0, returning 0
-nodist RampUp: 0
+Running min max normalization on 2750 max/min = 27000/500
+min max result: 0.08490566037735849
+min max normalization successful, returning normalized value
+nodist RampUp: 0.08490566037735849
 Calculating Correctness for nodist
 nodist Correctness: false
 Calculating BusFactor for nodist
-Calculated BusFactor is greater than 40% of team size.
-nodist BusFactor: 1
-Calculating ResponsiveMaintainer for nodist...
-Running min max normalization on NaN max/min = 40/0
-min max result: NaN
+Running min max normalization on 1 max/min = 11.600000000000001/1
+min max result: 0
 min max normalization successful, returning normalized value
-nodist ResponsiveMaintainer: NaN
+nodist BusFactor: 0
+Calculating ResponsiveMaintainer for nodist...
+Running min max normalization on 2.9657794676806084 max/min = 40/0
+min max result: 0.0741444866920152
+min max normalization successful, returning normalized value
+nodist ResponsiveMaintainer: 0.0741444866920152
 Checking nodist for MIT License license...
-Correct license not found at API endpoint, checking README...
-Correct license not found in README
+Correct license found at license API endpoint
 Calculating NetScore for nodist
-Running min max normalization on NaN max/min = 4/0
-min max result: NaN
+Running min max normalization on 1.1590501470693737 max/min = 4/0
+min max result: 0.2897625367673434
 min max normalization successful, returning normalized value
 All metrics calculated for nodist
 
 Calculating all metrics for lodash
 Getting when lodash created and last updated...
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
-Handling error: HttpError: API rate limit exceeded for 152.117.79.10. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting ...
-Error handled
+lodash created at Sat Apr 07 2012 00:11:46 GMT-0400 (Eastern Daylight Time)
+lodash last updated at Sun Sep 29 2024 16:24:43 GMT-0400 (Eastern Daylight Time)
+Took 1.337791222 seconds to get all open issues from lodash
+Remaining API requests: 4321
+API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Took 114.551014016 seconds to get all open and closed issues from lodash
+Remaining API requests: 4972
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4971
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
+Checking lodash for license...
+License found successfully for lodash
+Remaining API requests: 4970
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
+Getting lodash commit count...
+lodash has 8016 total commits
+Remaining API requests: 4968
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for lodash...
-Running min max normalization on 0 max/min = 27000/500
-min max result: -0.018867924528301886
+Running min max normalization on 241 max/min = 27000/500
+min max result: -0.009773584905660377
 Normalized value less than 0, returning 0
 lodash RampUp: 0
 Calculating Correctness for lodash
 lodash Correctness: false
 Calculating BusFactor for lodash
-Calculated BusFactor is greater than 40% of team size.
-lodash BusFactor: 1
+Running min max normalization on 1 max/min = 40/1
+min max result: 0
+min max normalization successful, returning normalized value
+lodash BusFactor: 0
 Calculating ResponsiveMaintainer for lodash...
-Running min max normalization on NaN max/min = 40/0
-min max result: NaN
-min max normalization successful, returning normalized value
-lodash ResponsiveMaintainer: NaN
-Checking lodash for MIT License license...
-Correct license not found at API endpoint, checking README...
-Correct license not found in README
-Calculating NetScore for lodash
-Running min max normalization on NaN max/min = 4/0
-min max result: NaN
-min max normalization successful, returning normalized value
-All metrics calculated for lodash
-
-Constructing NDJSON string of metrics for express
-NDJSON string of metrics for constructed successfully for express, returning said string
-Constructing NDJSON string of metrics for browserify
-NDJSON string of metrics for constructed successfully for browserify, returning said string
-Constructing NDJSON string of metrics for cloudinary_npm
-NDJSON string of metrics for constructed successfully for cloudinary_npm, returning said string
-Constructing NDJSON string of metrics for nodist
-NDJSON string of metrics for constructed successfully for nodist, returning said string
-Constructing NDJSON string of metrics for lodash
-NDJSON string of metrics for constructed successfully for lodash, returning said string
-End time 56007.6217 milliseconds
-Total program run time: 55.8124953 seconds
+Running min max normalization on 52.74840973897785 max/min = 40/0
+min max result: 1.3187102434744462
+Normalized value greater than 1, returning 2
+lodash ResponsiveMaintainer: 2
