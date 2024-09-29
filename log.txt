@@ -32,9 +32,9 @@ Remaining API requests: 2
 API rate limit resets at Sun Sep 29 2024 19:01:44 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for express...
 Running min max normalization on 837 max/min = 27000/500
-min max result: 0.012716981132075473
+min max result: 0.01
 min max normalization successful, returning normalized value
-express RampUp: 0.012716981132075473
+express RampUp: 0.01
 Calculating Correctness for express
 express Correctness: 0.9723942208462333
 Calculating ResponsiveMaintainer for express...

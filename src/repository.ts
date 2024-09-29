@@ -48,8 +48,8 @@ export class Repository {
     await this.repoStats.getRepoCreatedUpdated();
     await this.repoStats.getRepoStats();
     await this.rampUp.calculateValue(this.repoStats.readmeLength);
-    await this.correctness.calculateValue(this.repoStats.totalOpenIssues, this.repoStats.totalIssues);
-    await this.busFactor.calculateValue();
+    await this.correctness.calculateValue(this.repoStats.hasTestFolder);
+    await this.busFactor.calculateValue(this.repoStats.busFactor, this.repoStats.totalContributors);
     await this.responsiveMaintainer.calculateValue(this.repoStats.daysActive, this.repoStats.totalCommits);
     await this.license.calculateValue(this.desiredLicense, this.repoStats.licenseName, this.repoStats.readme);
     await this.netScore.calculateValue(this.rampUp, this.correctness, this.busFactor, this.responsiveMaintainer, this.license);
