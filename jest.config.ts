@@ -54,9 +54,9 @@ export default {
     '^.+\\.js$': 'babel-jest', // For JS files using ES module syntax
   },
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  // transformIgnorePatterns: [
-  //   '/node_modules/(?!(@octokit/rest | @octokit/core)/)', // Tell Jest to transform @octokit/rest
-  // ],
+  transformIgnorePatterns: [
+    '/node_modules/(?!(@octokit/rest | @octokit/core)/)', // Tell Jest to transform @octokit/rest
+  ],
   // The glob patterns Jest uses to detect test files
   testMatch: ['**/*.test.ts'],
   // The regexp pattern or array of patterns that Jest uses to detect test files

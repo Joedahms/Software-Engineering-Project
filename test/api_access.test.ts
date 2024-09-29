@@ -1,11 +1,29 @@
 import { Octokit } from "@octokit/rest";
 import { OctokitResponse } from "@octokit/types";
-import { RepoStats } from "../src/api_access";
-import { Logger } from "../src/logger";
+import { RepoStats } from "../src/api_access.js";
+import { Logger } from "../src/logger.js";
 import { jest } from '@jest/globals';
 
 // Mock Logger
-jest.mock("../src/logger");
+jest.mock("../src/logger.js");
+
+// Mock Octokit
+jest.mock("@octokit/rest", () => {
+  return {
+    Octokit: jest.fn().mockImplementation(() => ({
+      repos: {
+        get: jest.fn(),
+        getReadme: jest.fn(),
+        listCommits: jest.fn(),
+      },
+      paginate: jest.fn(),
+      request: jest.fn(),
+      rateLimit: {
+        get: jest.fn(),
+      },
+    })),
+  };
+});
 
 describe('RepoStats', () => {
   let repoStats: RepoStats;
@@ -15,39 +33,28 @@ describe('RepoStats', () => {
   const owner = 'test-owner';
   const repo = 'test-repo';
 
-  // Mock the Octokit class
-  beforeAll(() => {
-    jest.mock('@octokit/rest', () => {
-      return {
-        Octokit: jest.fn().mockImplementation(() => ({
-          repos: {
-            get: jest.fn(),
-            getReadme: jest.fn(),
-            listCommits: jest.fn(),
-          },
-          paginate: jest.fn(),
-          request: jest.fn(),
-          rateLimit: {
-            get: jest.fn(),
-          },
-        })),
-      };
-    });
-  });
-
   beforeEach(() => {
     jest.resetAllMocks();
 
     // Initialize mocked Logger
     mockLogger = new Logger() as jest.Mocked<Logger>;
+    mockLogger.add = jest.fn();
+    mockLogger.clear = jest.fn();
+    // mockLogger.fileName = 'mockFile.log';
+    // mockLogger.level = 1;
+
+    // Ensure Logger mock is used when new Logger() is called
     (Logger as jest.Mock).mockImplementation(() => mockLogger);
 
     // Instantiate RepoStats
     repoStats = new RepoStats(owner, repo);
 
     // Retrieve the mocked Octokit instance
-    const { Octokit } = require("@octokit/rest");
-    octokitInstance = (Octokit as jest.Mock).mock.instances[0] as jest.Mocked<Octokit>;
+    octokitInstance = (Octokit as unknown as jest.Mock).mock.instances[0] as jest.Mocked<Octokit>;
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   test('getRepoCreatedUpdated should fetch created_at and updated_at dates', async () => {
@@ -58,7 +65,7 @@ describe('RepoStats', () => {
 
     const mockResponse: OctokitResponse<any, 200> = {
       data: mockRepoData,
-      status: 200, // Exact status code
+      status: 200,
       headers: {},
       url: "https://api.github.com/repos/test-owner/test-repo",
     };
@@ -90,7 +97,7 @@ describe('RepoStats', () => {
     const mockRateLimitData = {
       rate: {
         remaining: 4243,
-        reset: Math.floor(Date.now() / 1000) + 3600, // 1 hour later
+        reset: Math.floor(Date.now() / 1000) + 3600,
       },
     };
 
@@ -151,14 +158,14 @@ describe('RepoStats', () => {
     octokitInstance.paginate.mockResolvedValueOnce([
       { pull_request: null },
       { pull_request: null },
-      { pull_request: { url: "pull_request_url" } }, // only count issues without pull_request
+      { pull_request: { url: "pull_request_url" } },
     ]);
 
     // Mock checkRateLimit
     const mockRateLimitData = {
       rate: {
           remaining: 4243,
-          reset: Math.floor(Date.now() / 1000) + 3600, // 1 hour later
+          reset: Math.floor(Date.now() / 1000) + 3600, 
       },
     };
     const mockRateLimitResponse: OctokitResponse<any, 200> = {
@@ -229,10 +236,10 @@ describe('RepoStats', () => {
     await repoStats.getRepoStats();
 
     // Assert the metrics are set correctly
-    expect(repoStats.totalOpenIssues).toBe(2); // 3 issues fetched, 1 has pull_request
-    expect(repoStats.totalIssues).toBe(3); // 4 issues fetched, 1 has pull_request
+    expect(repoStats.totalOpenIssues).toBe(2); 
+    expect(repoStats.totalIssues).toBe(3); 
     expect(repoStats.readme).toBe("This is a test README");
-    expect(repoStats.readmeLength).toBe(5); // "This is a test README" has 5 words
+    expect(repoStats.readmeLength).toBe(5); 
     expect(repoStats.licenseName).toBe("MIT License");
     expect(repoStats.totalCommits).toBe(5979);
     expect(repoStats.remainingRequests).toBe(mockRateLimitData.rate.remaining);
@@ -240,6 +247,6 @@ describe('RepoStats', () => {
 
     // Assert logger calls
     expect(mockLogger.add).toHaveBeenCalledWith(1, "Getting open issues...");
-    expect(mockLogger.add).toHaveBeenCalledWith(2, "Took 1.7538617250000001 seconds to get all open issues from express"); // Sample from log.txt
+    expect(mockLogger.add).toHaveBeenCalledWith(2, "Took 1.7538617250000001 seconds to get all open issues from express"); 
   });
 });
