@@ -91,7 +91,7 @@ export class NetScore extends Metric {
     const rampUpWeight = 1;
     const correctnessWeight = 1;
     const busFactorWeight = 1;
-    const responsiveMaintainerWeight = 1;
+    const responsiveMaintainerWeight = 2;
 
     const weightedRampUp = rampUpWeight * rampUp.value;
     const weightedCorrectness = correctnessWeight * correctness.value;

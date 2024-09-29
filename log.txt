@@ -1,4 +1,4 @@
-Start time: 120.715789 milliseconds
+Start time: 132.692125 milliseconds
 Parsing URL_FILE...
 Searching for NPM URLs in URL_FILE
 2 NPM URLs found
@@ -14,22 +14,16 @@ Calculating all metrics for express
 Getting when express created and last updated...
 express created at Fri Jun 26 2009 14:56:01 GMT-0400 (Eastern Daylight Time)
 express last updated at Sun Sep 29 2024 16:38:12 GMT-0400 (Eastern Daylight Time)
-Took 1.84429266 seconds to get all open issues from express
-Remaining API requests: 4442
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
-Took 71.087257231 seconds to get all open and closed issues from express
-Remaining API requests: 4387
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
-Remaining API requests: 4386
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4906
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Checking express for license...
 License found successfully for express
-Remaining API requests: 4385
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4905
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Getting express commit count...
 express has 5979 total commits
-Remaining API requests: 4383
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4903
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for express...
 Running min max normalization on 837 max/min = 27000/500
 min max result: 0.012716981132075473
@@ -43,15 +37,15 @@ min max result: 0
 min max normalization successful, returning normalized value
 express BusFactor: 0
 Calculating ResponsiveMaintainer for express...
-Running min max normalization on 32.17399103139013 max/min = 40/0
-min max result: 0.8043497757847533
+Running min max normalization on 32.17399103139013 max/min = 70/0
+min max result: 0.4596284433055733
 min max normalization successful, returning normalized value
-express ResponsiveMaintainer: 0.8043497757847533
+express ResponsiveMaintainer: 0.4596284433055733
 Checking express for MIT License license...
 Correct license found at license API endpoint
 Calculating NetScore for express
-Running min max normalization on 1.8170667569168288 max/min = 4/0
-min max result: 0.4542666892292072
+Running min max normalization on 1.931973867743222 max/min = 4/0
+min max result: 0.4829934669358055
 min max normalization successful, returning normalized value
 All metrics calculated for express
 
@@ -59,22 +53,16 @@ Calculating all metrics for browserify
 Getting when browserify created and last updated...
 browserify created at Wed Sep 22 2010 12:11:32 GMT-0400 (Eastern Daylight Time)
 browserify last updated at Sun Sep 29 2024 08:47:02 GMT-0400 (Eastern Daylight Time)
-Took 4.558997359000001 seconds to get all open issues from browserify
-Remaining API requests: 4378
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
-Took 24.43792798800001 seconds to get all open and closed issues from browserify
-Remaining API requests: 4357
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
-Remaining API requests: 4356
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4901
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Checking browserify for license...
 License found successfully for browserify
-Remaining API requests: 4355
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4900
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Getting browserify commit count...
 browserify has 2291 total commits
-Remaining API requests: 4353
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4898
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for browserify...
 Running min max normalization on 3563 max/min = 27000/500
 min max result: 0.11558490566037735
@@ -86,15 +74,15 @@ Calculating BusFactor for browserify
 Calculated BusFactor is greater than 40% of team size.
 browserify BusFactor: 1
 Calculating ResponsiveMaintainer for browserify...
-Running min max normalization on 13.421206795547745 max/min = 40/0
-min max result: 0.3355301698886936
+Running min max normalization on 13.421206795547745 max/min = 70/0
+min max result: 0.19173152565068208
 min max normalization successful, returning normalized value
-browserify ResponsiveMaintainer: 0.3355301698886936
+browserify ResponsiveMaintainer: 0.19173152565068208
 Checking browserify for MIT License license...
 Correct license found at license API endpoint
 Calculating NetScore for browserify
-Running min max normalization on 2.4511150755490707 max/min = 4/0
-min max result: 0.6127787688872677
+Running min max normalization on 2.499047956961741 max/min = 4/0
+min max result: 0.6247619892404352
 min max normalization successful, returning normalized value
 All metrics calculated for browserify
 
@@ -102,22 +90,16 @@ Calculating all metrics for cloudinary_npm
 Getting when cloudinary_npm created and last updated...
 cloudinary_npm created at Fri Jun 22 2012 04:20:27 GMT-0400 (Eastern Daylight Time)
 cloudinary_npm last updated at Sun Sep 15 2024 08:12:30 GMT-0400 (Eastern Daylight Time)
-Took 0.42817477899999357 seconds to get all open issues from cloudinary_npm
-Remaining API requests: 4351
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
-Took 10.953617818 seconds to get all open and closed issues from cloudinary_npm
-Remaining API requests: 4344
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
-Remaining API requests: 4343
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4896
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Checking cloudinary_npm for license...
 Error 404 when checking cloudinary_npm for license name, returning README
-Remaining API requests: 4342
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4895
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Getting cloudinary_npm commit count...
 cloudinary_npm has 920 total commits
-Remaining API requests: 4340
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4893
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for cloudinary_npm...
 Running min max normalization on 438 max/min = 27000/500
 min max result: -0.002339622641509434
@@ -131,16 +113,16 @@ min max result: 0.2857142857142857
 min max normalization successful, returning normalized value
 cloudinary_npm BusFactor: 0.2857142857142857
 Calculating ResponsiveMaintainer for cloudinary_npm...
-Running min max normalization on 6.175878272544193 max/min = 40/0
-min max result: 0.15439695681360482
+Running min max normalization on 6.175878272544193 max/min = 70/0
+min max result: 0.08822683246491705
 min max normalization successful, returning normalized value
-cloudinary_npm ResponsiveMaintainer: 0.15439695681360482
+cloudinary_npm ResponsiveMaintainer: 0.08822683246491705
 Checking cloudinary_npm for MIT License license...
 Correct license not found at API endpoint, checking README...
 Correct license found in README
 Calculating NetScore for cloudinary_npm
-Running min max normalization on 1.4401112425278904 max/min = 4/0
-min max result: 0.3600278106319726
+Running min max normalization on 1.4621679506441196 max/min = 4/0
+min max result: 0.3655419876610299
 min max normalization successful, returning normalized value
 All metrics calculated for cloudinary_npm
 
@@ -148,22 +130,16 @@ Calculating all metrics for nodist
 Getting when nodist created and last updated...
 nodist created at Sun Jul 01 2012 09:05:32 GMT-0400 (Eastern Daylight Time)
 nodist last updated at Thu Sep 26 2024 15:39:24 GMT-0400 (Eastern Daylight Time)
-Took 0.7665094609999942 seconds to get all open issues from nodist
-Remaining API requests: 4336
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
-Took 3.3430355439999984 seconds to get all open and closed issues from nodist
-Remaining API requests: 4332
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
-Remaining API requests: 4330
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4889
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Checking nodist for license...
 License found successfully for nodist
-Remaining API requests: 4328
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4887
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Getting nodist commit count...
 nodist has 442 total commits
-Remaining API requests: 4324
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
+Remaining API requests: 4883
+API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for nodist...
 Running min max normalization on 2750 max/min = 27000/500
 min max result: 0.08490566037735849
@@ -177,15 +153,15 @@ min max result: 0
 min max normalization successful, returning normalized value
 nodist BusFactor: 0
 Calculating ResponsiveMaintainer for nodist...
-Running min max normalization on 2.9657794676806084 max/min = 40/0
-min max result: 0.0741444866920152
+Running min max normalization on 2.9657794676806084 max/min = 70/0
+min max result: 0.042368278109722976
 min max normalization successful, returning normalized value
-nodist ResponsiveMaintainer: 0.0741444866920152
+nodist ResponsiveMaintainer: 0.042368278109722976
 Checking nodist for MIT License license...
 Correct license found at license API endpoint
 Calculating NetScore for nodist
-Running min max normalization on 1.1590501470693737 max/min = 4/0
-min max result: 0.2897625367673434
+Running min max normalization on 1.1696422165968046 max/min = 4/0
+min max result: 0.29241055414920114
 min max normalization successful, returning normalized value
 All metrics calculated for nodist
 
@@ -193,21 +169,15 @@ Calculating all metrics for lodash
 Getting when lodash created and last updated...
 lodash created at Sat Apr 07 2012 00:11:46 GMT-0400 (Eastern Daylight Time)
 lodash last updated at Sun Sep 29 2024 16:24:43 GMT-0400 (Eastern Daylight Time)
-Took 1.337791222 seconds to get all open issues from lodash
-Remaining API requests: 4321
-API rate limit resets at Sun Sep 29 2024 17:07:50 GMT-0400 (Eastern Daylight Time)
-Took 114.551014016 seconds to get all open and closed issues from lodash
-Remaining API requests: 4972
-API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
-Remaining API requests: 4971
+Remaining API requests: 4881
 API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Checking lodash for license...
 License found successfully for lodash
-Remaining API requests: 4970
+Remaining API requests: 4880
 API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Getting lodash commit count...
 lodash has 8016 total commits
-Remaining API requests: 4968
+Remaining API requests: 4878
 API rate limit resets at Sun Sep 29 2024 18:07:52 GMT-0400 (Eastern Daylight Time)
 Calculating RampUp for lodash...
 Running min max normalization on 241 max/min = 27000/500
@@ -222,7 +192,28 @@ min max result: 0
 min max normalization successful, returning normalized value
 lodash BusFactor: 0
 Calculating ResponsiveMaintainer for lodash...
-Running min max normalization on 52.74840973897785 max/min = 40/0
-min max result: 1.3187102434744462
-Normalized value greater than 1, returning 2
-lodash ResponsiveMaintainer: 2
+Running min max normalization on 52.74840973897785 max/min = 70/0
+min max result: 0.7535487105568264
+min max normalization successful, returning normalized value
+lodash ResponsiveMaintainer: 0.7535487105568264
+Checking lodash for MIT License license...
+Correct license not found at API endpoint, checking README...
+Correct license found in README
+Calculating NetScore for lodash
+Running min max normalization on 2.5070974211136527 max/min = 4/0
+min max result: 0.6267743552784132
+min max normalization successful, returning normalized value
+All metrics calculated for lodash
+
+Constructing NDJSON string of metrics for express
+NDJSON string of metrics for constructed successfully for express, returning said string
+Constructing NDJSON string of metrics for browserify
+NDJSON string of metrics for constructed successfully for browserify, returning said string
+Constructing NDJSON string of metrics for cloudinary_npm
+NDJSON string of metrics for constructed successfully for cloudinary_npm, returning said string
+Constructing NDJSON string of metrics for nodist
+NDJSON string of metrics for constructed successfully for nodist, returning said string
+Constructing NDJSON string of metrics for lodash
+NDJSON string of metrics for constructed successfully for lodash, returning said string
+End time 7035.932026 milliseconds
+Total program run time: 6.903239901000001 seconds
