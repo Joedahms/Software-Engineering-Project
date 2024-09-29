@@ -1,5 +1,3 @@
-# SRC
-
 ## This folder contains all the source code we have written
 
 ### api_access.ts
@@ -103,7 +101,3 @@ so that the URL can be added to the returned RepositoryUrlData interface.
 - npmRepos(): Extracts the repo URL, owner, and name from the NPM links in the URL_FILE. Utilizes webscraping  
 to find the GitHub URL within the NPM page. Once the GitHub URL has been found, the owner and name are extracted from it.
 - githubRepos(): Extracts the repo URL, owner, and name from the GitHub links in the URL_FILE.
-
-
-
-

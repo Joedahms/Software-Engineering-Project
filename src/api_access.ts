@@ -1,20 +1,15 @@
-import { Octokit } from "@octokit/rest";
+import { Octokit } from "@octokit/rest"
+import { OctokitResponse } from "@octokit/types"
 import { Logger } from './logger.js'
+import { performance } from "perf_hooks"
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // for GitHub token: export GITHUB_TOKEN="your_token_here"
-
-const octokit = new Octokit({
-  auth: GITHUB_TOKEN,
-});
-
-// Function to fetch all pages using Octokit pagination
-export async function fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]> {
-  return octokit.paginate(endpoint, params);
-}
+// Define the shape of the data returned by paginate
+type PaginatedResponse<T> = OctokitResponse<T>;
 
 // Function to fetch repository statistics
 
 export class RepoStats {
+  private octokit: Octokit;
   logger: Logger;
   owner: string;
   repo: string;
@@ -32,7 +27,6 @@ export class RepoStats {
   //totalComments: number;
   //commentFrequency: string;
   totalContributors: number;
-  busFactor: number;
   licenseName: string;
   readme: string;
   readmeLength: number;
@@ -44,9 +38,9 @@ export class RepoStats {
   remainingRequests: number;
   rateLimitReset: Date;
 
+
   constructor(owner: string, repo: string) {
     this.logger = new Logger();
-
     this.owner = owner;
     this.repo = repo;
 
@@ -63,7 +57,6 @@ export class RepoStats {
     //this.totalComments = 0;
     //this.commentFrequency = 'N/A';
     this.totalContributors = 0;
-    this.busFactor = 0;
     this.licenseName = "N/A";
     this.readme = "N/A";
     this.readmeLength = 0;
@@ -74,6 +67,16 @@ export class RepoStats {
 
     this.remainingRequests = 0;
     this.rateLimitReset = new Date();
+
+    // Use the injected Octokit instance or create a new one
+    this.octokit = new Octokit({
+      auth: process.env.GITHUB_TOKEN,
+    });
+  }
+
+  // Function to fetch all pages using Octokit pagination
+  async fetchAllPages<T>(endpoint: string, params: any = {}): Promise<T[]> {
+    return this.octokit.paginate(endpoint, params);
   }
 
   async #getLicenseName(owner: string, name: string): Promise<string> {
@@ -81,7 +84,7 @@ export class RepoStats {
     this.logger.add(2, "Checking " + name + " for license...");
 
     try {
-      const license = await octokit.request('GET /repos/{owner}/{repo}/license', {
+      const license: OctokitResponse<any> = await this.octokit.request('GET /repos/{owner}/{repo}/license', {
         owner: owner,
         repo: name,
       });
@@ -113,7 +116,7 @@ export class RepoStats {
     
     try {
       // Fetch the first page with per_page set to 1 to minimize data transferred
-      const response = await octokit.repos.listCommits({
+      const response = await this.octokit.repos.listCommits({
         owner,
         repo,
         per_page: 1,
@@ -175,7 +178,7 @@ export class RepoStats {
   // Open issues (excluding pull requests)
   async #getOpenIssues() {
     const startTimeMilliseconds = performance.now();
-    const openIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+    const openIssues = await this.fetchAllPages('GET /repos/{owner}/{repo}/issues', {
       owner: this.owner,
       repo: this.repo,
       state: 'open',
@@ -191,7 +194,7 @@ export class RepoStats {
   // Total issues (excluding pull requests)
   async #getTotalIssues() {
     const startTimeMilliseconds = performance.now();
-    const allIssues = await fetchAllPages('GET /repos/{owner}/{repo}/issues', {
+    const allIssues = await this.fetchAllPages('GET /repos/{owner}/{repo}/issues', {
       owner: this.owner,
       repo: this.repo,
       state: 'all',
@@ -206,7 +209,7 @@ export class RepoStats {
 
   async checkRateLimit() {
     try {
-      const { data } = await octokit.rateLimit.get();
+      const { data } = await this.octokit.rateLimit.get();
        
       this.remainingRequests = data.rate.remaining;
       this.rateLimitReset = new Date(data.rate.reset * 1000);
@@ -222,7 +225,7 @@ export class RepoStats {
     this.logger.add(1, "Getting when " + this.repo + " created and last updated...");
     this.logger.add(2, "Getting when " + this.repo + " created and last updated...");
     try {
-      const { data: repoData } = await octokit.repos.get({
+      const { data: repoData } = await this.octokit.repos.get({
         owner: this.owner,
         repo: this.repo
       });
@@ -241,7 +244,7 @@ export class RepoStats {
 
   async #getReadmeContentAndLength() {
     // Readme content
-    const readme = await octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
+    const readme = await this.octokit.repos.getReadme({ owner: this.owner, repo: this.repo });
     this.readme = Buffer.from(readme.data.content, 'base64').toString('utf-8');
     
     // Readme length in words
@@ -249,34 +252,33 @@ export class RepoStats {
     const wordCount = readmeContent.split(/\s+/).filter(word => word.length > 0).length;
     this.readmeLength = wordCount;
   }
-  
+
   async getRepoStats() {
     try {
       /*
       await this.#getOpenIssues();
       await this.checkRateLimit();
-      
+
       await this.#getTotalIssues();
       await this.checkRateLimit();
       */
       
       await this.#getReadmeContentAndLength();
       await this.checkRateLimit();
-      
+            
       // License name
       this.licenseName = await this.#getLicenseName(this.owner, this.repo);
       await this.checkRateLimit();
-      
+    
       // Total commits
       await this.#getCommitCount(this.owner, this.repo);
-      await this.#getBusFactorCalculation();
       await this.checkRateLimit();
     } 
     catch (error) {
       await this.#handleError(error);
     }
   }  
-  
+
   async #getBusFactorCalculation(){
     const contributors = await octokit.request('GET /repos/{owner}/{repo}/contributors', {
       owner: this.owner,
@@ -284,22 +286,23 @@ export class RepoStats {
       per_page: 100
     });
     this.totalContributors = contributors.data.length;
-  
+
     // Sort contributors by their number of commits in descending order
     const sortedContributors = contributors.data.sort((a, b) => b.contributions - a.contributions);
-  
+
     let cumulativeCommits = 0;
-  
+
     // Identify the smallest number of contributors accounting for at least 50% of the total commits
     for (let i = 0; i < sortedContributors.length; i++) {
       cumulativeCommits += sortedContributors[i].contributions;
       this.busFactor++;
-  
+
       if (cumulativeCommits >= this.totalCommits * 0.5) {
         break;
       }
     }
   }
+
   // Helper function to handle errors, checks rate limit
   async #handleError(error: any) {
     const logger = new Logger();

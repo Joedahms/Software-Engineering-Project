@@ -1,158 +1,252 @@
-import { afterEach, beforeEach, describe, expect, it, jest, test } from "@jest/globals";
-import { fetchAllPages, RepoStats } from '../src/api_access';
-import { Logger } from '../src/logger.js';
-import { Octokit } from '@octokit/rest';
+import { Octokit } from "@octokit/rest";
+import { OctokitResponse } from "@octokit/types";
+import { RepoStats } from "../src/api_access.js";
+import { Logger } from "../src/logger.js";
+import { jest } from '@jest/globals';
 
-jest.mock('@octokit/rest');
-jest.mock('./logger.js', () => {
+// Mock Logger
+jest.mock("../src/logger.js");
+
+// Mock Octokit
+jest.mock("@octokit/rest", () => {
   return {
-    Logger: jest.fn().mockImplementation(() => {
-      return {
-        add: jest.fn(),
-      };
-    }),
+    Octokit: jest.fn().mockImplementation(() => ({
+      repos: {
+        get: jest.fn(),
+        getReadme: jest.fn(),
+        listCommits: jest.fn(),
+      },
+      paginate: jest.fn(),
+      request: jest.fn(),
+      rateLimit: {
+        get: jest.fn(),
+      },
+    })),
   };
 });
 
-describe('createPullRequest', () => {
+describe('RepoStats', () => {
+  let repoStats: RepoStats;
+  let mockLogger: jest.Mocked<Logger>;
+  let octokitInstance: jest.Mocked<Octokit>;
+
+  const owner = 'test-owner';
+  const repo = 'test-repo';
+
   beforeEach(() => {
-    fetchAllPages.mockImplementationOnce(() => ({
-      owner: 'my',
-      name: 'repo',
-      repo: 'my/repo',
-      branch: 'master',
-      url: 'https://github.com/my/repo',
-    }))
+    jest.resetAllMocks();
+
+    // Initialize mocked Logger
+    mockLogger = new Logger() as jest.Mocked<Logger>;
+    mockLogger.add = jest.fn();
+    mockLogger.clear = jest.fn();
+    // mockLogger.fileName = 'mockFile.log';
+    // mockLogger.level = 1;
+
+    // Ensure Logger mock is used when new Logger() is called
+    (Logger as jest.Mock).mockImplementation(() => mockLogger);
+
+    // Instantiate RepoStats
+    repoStats = new RepoStats(owner, repo);
+
+    // Retrieve the mocked Octokit instance
+    octokitInstance = (Octokit as unknown as jest.Mock).mock.instances[0] as jest.Mocked<Octokit>;
   });
 
-  describe("API functions", () => {
-    it("Calls getContents once", async () => {
-      const result = await RepoStats
-      expect(Octokit.mockFunctions.repos.getContents).toHaveBeenCalledTimes(1);
-      })
-    })
-  
-  describe('RepoStats class', () => {
-    it('should fetch license name correctly', async () => {
-      // Mocking the response for license request
-      mockOctokit.request('GET /repos/{owner}/{repo}/license', {
-        owner,
-        repo,
-      }).reply(200, {
-        license: { name: 'MIT License' },
-      });
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
-      const repoStats = new RepoStats(owner, repo);
-      const licenseName = await repoStats.#getLicenseName(owner, repo); // Use private method testing approach if needed
+  test('getRepoCreatedUpdated should fetch created_at and updated_at dates', async () => {
+    const mockRepoData = {
+      created_at: "2020-01-01T00:00:00Z",
+      updated_at: "2023-01-01T00:00:00Z",
+    };
 
-      expect(licenseName).toBe('MIT License');
+    const mockResponse: OctokitResponse<any, 200> = {
+      data: mockRepoData,
+      status: 200,
+      headers: {},
+      url: "https://api.github.com/repos/test-owner/test-repo",
+    };
+
+    octokitInstance.repos.get.mockResolvedValueOnce(mockResponse);
+
+    await repoStats.getRepoCreatedUpdated();
+
+    expect(octokitInstance.repos.get).toHaveBeenCalledWith({
+      owner,
+      repo,
     });
 
-    it('should return "N/A" for license if no license found (404 error)', async () => {
-      // Mocking a 404 error for license request
-      mockOctokit.request('GET /repos/{owner}/{repo}/license', {
-        owner,
-        repo,
-      }).reply(404);
+    const created = new Date(mockRepoData.created_at);
+    const updated = new Date(mockRepoData.updated_at);
+    const expectedDaysActive = Math.ceil(
+      (updated.getTime() - created.getTime()) / (1000 * 3600 * 24)
+    );
 
-      const repoStats = new RepoStats(owner, repo);
-      const licenseName = await repoStats.#getLicenseName(owner, repo);
+    expect(repoStats.daysActive).toBe(expectedDaysActive);
+    expect(mockLogger.add).toHaveBeenCalledWith(1, `Getting when ${repo} created and last updated...`);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, `Getting when ${repo} created and last updated...`);
+    expect(mockLogger.add).toHaveBeenCalledWith(1, `Successfully got when ${repo} was created and last updated`);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, `${repo} created at ${created}`);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, `${repo} last updated at ${updated}`);
+  });
 
-      expect(licenseName).toBe('N/A');
+  test('checkRateLimit should update remainingRequests and rateLimitReset', async () => {
+    const mockRateLimitData = {
+      rate: {
+        remaining: 4243,
+        reset: Math.floor(Date.now() / 1000) + 3600,
+      },
+    };
+
+    const mockRateLimitResponse: OctokitResponse<any, 200> = {
+      data: mockRateLimitData,
+      status: 200, // Exact status code
+      headers: {},
+      url: "https://api.github.com/rate_limit",
+    };
+
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
+
+    await repoStats.checkRateLimit();
+
+    expect(octokitInstance.rateLimit.get).toHaveBeenCalled();
+
+    expect(repoStats.remainingRequests).toBe(mockRateLimitData.rate.remaining);
+    expect(repoStats.rateLimitReset).toEqual(new Date(mockRateLimitData.rate.reset * 1000));
+    expect(mockLogger.add).toHaveBeenCalledWith(2, "Remaining API requests: 4243");
+    expect(mockLogger.add).toHaveBeenCalledWith(2, "API rate limit resets at " + new Date(mockRateLimitData.rate.reset * 1000));
+  });
+
+  test('getRepoCreatedUpdated should handle errors gracefully', async () => {
+    const mockError = {
+      status: 500,
+      message: "Internal Server Error",
+    };
+
+    octokitInstance.repos.get.mockRejectedValueOnce(mockError);
+
+    // Spy on process.exit
+    const exitMock = jest.spyOn(process, 'exit').mockImplementation((code?: string | number | null | undefined) => {
+      throw new Error(`process.exit: ${code}`);
     });
 
-    it('should fetch the total commit count', async () => {
-      // Mocking the response for commit count
-      mockOctokit.repos.listCommits({
-        owner,
-        repo,
-        per_page: 1,
-      }).reply(200, [{ sha: 'abc123' }], {
-        link: '<https://api.github.com/repos/octocat/Hello-World/commits?page=2>; rel="last"',
-      });
+    // Spy on console.error
+    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      const repoStats = new RepoStats(owner, repo);
-      const commitCount = await repoStats.#getCommitCount(owner, repo);
+    await expect(repoStats.getRepoCreatedUpdated()).rejects.toThrow("process.exit: 1");
 
-      expect(commitCount).toBe(2); // Based on mock link header
+    expect(octokitInstance.repos.get).toHaveBeenCalledWith({
+      owner,
+      repo,
     });
 
-    it('should return 0 commit count if there is an error', async () => {
-      // Mocking a failed commit count response
-      mockOctokit.repos.listCommits({
-        owner,
-        repo,
-        per_page: 1,
-      }).reply(500);
+    expect(mockLogger.add).toHaveBeenCalledWith(2, "Handling error: [object Object] ...");
+    expect(consoleErrorMock).toHaveBeenCalledWith("An error occurred:", mockError);
 
-      const repoStats = new RepoStats(owner, repo);
-      const commitCount = await repoStats.#getCommitCount(owner, repo);
+    // Restore mocks
+    exitMock.mockRestore();
+    consoleErrorMock.mockRestore();
+  });
 
-      expect(commitCount).toBe(0);
-    });
+  test('getRepoStats should fetch all metrics correctly', async () => {
+    // Mock methods called within getRepoStats
 
-    it('should fetch and decode the README correctly', async () => {
-      // Mocking the response for README
-      mockOctokit.repos.getReadme({
-        owner,
-        repo,
-      }).reply(200, {
-        content: Buffer.from('This is the README file.').toString('base64'),
-      });
+    // Mock getOpenIssues
+    octokitInstance.paginate.mockResolvedValueOnce([
+      { pull_request: null },
+      { pull_request: null },
+      { pull_request: { url: "pull_request_url" } },
+    ]);
 
-      const repoStats = new RepoStats(owner, repo);
-      await repoStats.getData();
+    // Mock checkRateLimit
+    const mockRateLimitData = {
+      rate: {
+          remaining: 4243,
+          reset: Math.floor(Date.now() / 1000) + 3600, 
+      },
+    };
+    const mockRateLimitResponse: OctokitResponse<any, 200> = {
+      data: mockRateLimitData,
+      status: 200, // Exact status code
+      headers: {},
+      url: "https://api.github.com/rate_limit",
+    };
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
 
-      expect(repoStats.readme).toBe('This is the README file.');
-      expect(repoStats.readmeLength).toBe(23); // Length of 'This is the README file.'
-    });
+    // Mock getTotalIssues
+    octokitInstance.paginate.mockResolvedValueOnce([
+      { pull_request: null },
+      { pull_request: null },
+      { pull_request: { url: "pull_request_url" } },
+      { pull_request: null },
+    ]);
 
-    it('should handle rate limit exceeded error', async () => {
-      const rateLimitExceededError = {
-        status: 403,
-        response: {
-          headers: {
-            'x-ratelimit-remaining': '0',
-            'retry-after': '60',
+    // Mock checkRateLimit again
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
+
+    // Mock getReadmeContentAndLength
+    const readmeContent = Buffer.from("This is a test README").toString('base64');
+    const mockReadmeResponse: OctokitResponse<{ content: string; encoding: string }, 200> = {
+      data: {
+          content: readmeContent,
+          encoding: 'base64',
+      },
+      status: 200,
+      headers: {},
+      url: "https://api.github.com/repos/test-owner/test-repo/readme",
+    };
+    octokitInstance.repos.getReadme.mockResolvedValueOnce(mockReadmeResponse as any);
+
+    // Mock checkRateLimit again
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
+
+    // Mock getLicenseName
+    const mockLicenseResponse: OctokitResponse<{ license: { name: string } }, 200> = {
+      data: {
+          license: {
+              name: "MIT License",
           },
-        },
-      };
+      },
+      status: 200,
+      headers: {},
+      url: "https://api.github.com/repos/test-owner/test-repo/license",
+    };
+    octokitInstance.request.mockResolvedValueOnce(mockLicenseResponse);
 
-      const spyHandleError = jest.spyOn(global.console, 'error').mockImplementation(() => {});
-      const repoStats = new RepoStats(owner, repo);
+    // Mock checkRateLimit again
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
 
-      // Simulate rate limit exceeded error
-      repoStats.handleError(rateLimitExceededError);
+    // Mock getCommitCount
+    const mockCommitCountResponse: OctokitResponse<any, 200> = {
+      data: [], // Adjust according to expected data structure
+      status: 200,
+      headers: {
+        link: '<https://api.github.com/repositories/123456789/commits?per_page=1&page=5979>; rel="last"',
+      },
+      url: "https://api.github.com/repos/test-owner/test-repo/commits",
+    };
+    octokitInstance.repos.listCommits.mockResolvedValueOnce(mockCommitCountResponse);
 
-      expect(spyHandleError).toHaveBeenCalledWith('Rate limit exceeded. Waiting before retrying.');
-    });
+    // Mock checkRateLimit again
+    octokitInstance.rateLimit.get.mockResolvedValueOnce(mockRateLimitResponse);
 
-    it('should fetch and display repo data correctly', async () => {
-      // Mock the response for repo data (days active)
-      mockOctokit.repos.get({
-        owner,
-        repo,
-      }).reply(200, {
-        created_at: '2020-01-01T00:00:00Z',
-        updated_at: '2020-01-11T00:00:00Z',
-      });
+    await repoStats.getRepoStats();
 
-      const repoStats = new RepoStats(owner, repo);
-      await repoStats.getRepoData();
+    // Assert the metrics are set correctly
+    expect(repoStats.totalOpenIssues).toBe(2); 
+    expect(repoStats.totalIssues).toBe(3); 
+    expect(repoStats.readme).toBe("This is a test README");
+    expect(repoStats.readmeLength).toBe(5); 
+    expect(repoStats.licenseName).toBe("MIT License");
+    expect(repoStats.totalCommits).toBe(5979);
+    expect(repoStats.remainingRequests).toBe(mockRateLimitData.rate.remaining);
+    expect(repoStats.rateLimitReset).toEqual(new Date(mockRateLimitData.rate.reset * 1000));
 
-      expect(repoStats.daysActive).toBe(10); // 10 days active based on mock data
-    });
-
-    it('should check the rate limit correctly', async () => {
-      // Mock the response for rate limit
-      mockOctokit.rateLimit.get().reply(200, {
-        rate: { remaining: 5000, reset: Math.floor(Date.now() / 1000) + 3600 },
-      });
-
-      const consoleSpy = jest.spyOn(global.console, 'log');
-      await checkRateLimit();
-
-      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Remaining requests: 5000'));
-    });
+    // Assert logger calls
+    expect(mockLogger.add).toHaveBeenCalledWith(1, "Getting open issues...");
+    expect(mockLogger.add).toHaveBeenCalledWith(2, "Took 1.7538617250000001 seconds to get all open issues from express"); 
   });
 });
