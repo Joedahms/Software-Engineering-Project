@@ -35,6 +35,7 @@ abstract class Metric {
     this.logger.add(2, "Running min max normalization on " + inputValue + " max/min = " + max + "/" + min);
     var normalizedInputValue;
     normalizedInputValue = (inputValue - min) / (max - min);
+    normalizedInputValue = Math.round(normalizedInputValue * 100) / 100;
     this.logger.add(2, "min max result: " + String(normalizedInputValue));
     if (normalizedInputValue < 0) {       // Less than or equal to minimum
       this.logger.add(2, "Normalized value less than 0, returning 0");
@@ -109,7 +110,7 @@ export class NetScore extends Metric {
     this.logger.add(1, this.repoName + " " + this.name + " calculated successfully");
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -144,7 +145,7 @@ export class RampUp extends Metric {
     this.logger.add(1, this.repoName + " " + this.name + " calculated successfully");
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -173,7 +174,7 @@ export class Correctness extends Metric {
     this.logger.add(1, this.repoName + this.name + "Calculated successfully");
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -207,7 +208,7 @@ export class BusFactor extends Metric {
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(this.value));
     this.logger.add(1, this.repoName + this.name + "Calculated successfully");
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -239,7 +240,7 @@ export class ResponsiveMaintainer extends Metric {
     this.logger.add(1, this.repoName + " " + this.name + " calculated successfully");
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -287,6 +288,7 @@ export class License extends Metric {
     }
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
+
   }
 }
