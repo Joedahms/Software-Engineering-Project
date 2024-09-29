@@ -23,11 +23,11 @@ are entered into the log file.
 from the API.
 - handleError(): If the rate limit is hit, the program will wait until when it resets to make another  
 request. If there is a real error, it will print it and exit.
-
+***
 ### logger.ts
 Contains the logger class.
 - class Logger(): Used to clear and add to the log file.
-
+***
 ### main.ts
 Where the magic happens. This the entry point into the program. It is called in the run script.  
 when the user enters "./run URL_FILE". The first thing that happens here is the url file that   
@@ -36,8 +36,7 @@ calculates its metrics. Within this calculateAllMetrics() call, info needed from
 is grabbed. Once all metrics have been calculated, the output is formatted as NDJSON and is send   
 to stdout.
 - class Main: ?
-
-
+***
 ### metric.ts
 Contains the classes for each metric along with some functions that access the GitHub API. These  
 functions could be moved elsewhere.
@@ -62,11 +61,11 @@ Essentially a normalized value of commits / month
 - class License: Whether or not the package complies with the LGPL v2.1 License.  
 Calculated based on: whether or not the license can be fetched with the API or   
 found in the README.
-
+***
 ### output.ts
 Contains one function.
 - function writeOutput(string): write a string to standard out (may not need this??).
-
+***
 ### repository.ts
 Contains the Repository class.
 - class Repository: Each URL in a URL_FILE will correspond to one Repository object. Each repository  
@@ -74,7 +73,7 @@ has an instance of each metric.
 - calculateAllMetrics(): Method in Repository that grabs necessary info with the GitHub API   
 and calculates all the metrics.
 - jsonMetrics(): Method on Repository that returns the metrics of the repo in NDJSON.
-
+***
 ### urlFileParser.ts
 Contains functionality pertaining to parsing through the URLs passed though either     
 a URL_FILE command line argument or the test suite.
