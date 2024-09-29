@@ -35,6 +35,7 @@ abstract class Metric {
     this.logger.add(2, "Running min max normalization on " + inputValue + " max/min = " + max + "/" + min);
     var normalizedInputValue;
     normalizedInputValue = (inputValue - min) / (max - min);
+    normalizedInputValue = Math.round(normalizedInputValue * 100) / 100;
     this.logger.add(2, "min max result: " + String(normalizedInputValue));
     if (normalizedInputValue < 0) {       // Less than or equal to minimum
       this.logger.add(2, "Normalized value less than 0, returning 0");
@@ -91,7 +92,7 @@ export class NetScore extends Metric {
     const rampUpWeight = 1;
     const correctnessWeight = 1;
     const busFactorWeight = 1;
-    const responsiveMaintainerWeight = 1;
+    const responsiveMaintainerWeight = 2;
 
     const weightedRampUp = rampUpWeight * rampUp.value;
     const weightedCorrectness = correctnessWeight * correctness.value;
@@ -109,7 +110,7 @@ export class NetScore extends Metric {
     this.logger.add(1, this.repoName + " " + this.name + " calculated successfully");
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -144,7 +145,7 @@ export class RampUp extends Metric {
     this.logger.add(1, this.repoName + " " + this.name + " calculated successfully");
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -158,18 +159,22 @@ export class Correctness extends Metric {
     this.value = 0;
   }
 
-  async calculateValue(openIssues: number, totalIssues: number) {
+  async calculateValue(hasTestFolder: boolean) {
     const startTime = performance.now();
 
     this.logger.add(2, "Calculating Correctness for " + this.repoName);
   
-    var normalizedMetric = (1-(openIssues/totalIssues)); //arbitrary max and min values picked.
+    var normalizedMetric = hasTestFolder; //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
-    this.value = normalizedMetric;
+    if(normalizedMetric = false){
+      this.value = 0;
+    }else if(normalizedMetric = true){
+      this.value = 1;
+    }
     this.logger.add(1, this.repoName + this.name + "Calculated successfully");
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -203,7 +208,7 @@ export class BusFactor extends Metric {
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(this.value));
     this.logger.add(1, this.repoName + this.name + "Calculated successfully");
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -224,7 +229,7 @@ export class ResponsiveMaintainer extends Metric {
     this.logger.add(2, "Calculating ResponsiveMaintainer for " + this.repoName + "...");
 
     var months = daysActive / 30;
-    var normalizedMetric = this.minMax(totalCommits / months, 40, 0); //arbitrary max and min values picked.
+    var normalizedMetric = this.minMax(totalCommits / months, 70, 0); //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
     if (normalizedMetric === 2) {
       console.error("Maximum too low for ResponsiveMaintainer metric");
@@ -235,7 +240,7 @@ export class ResponsiveMaintainer extends Metric {
     this.logger.add(1, this.repoName + " " + this.name + " calculated successfully");
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
   }
 }
 
@@ -283,6 +288,7 @@ export class License extends Metric {
     }
 
     const endTime = performance.now();
-    this.latencyValue = endTime - startTime;
+    this.latencyValue = Math.round((endTime - startTime) * 100) / 100;
+
   }
 }

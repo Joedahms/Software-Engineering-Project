@@ -19,6 +19,7 @@ export class RepoStats {
   owner: string;
   repo: string;
 
+  hasTestFolder: boolean;
   totalOpenIssues: number;
   totalClosedIssues: number;
   totalIssues: number;
@@ -48,7 +49,8 @@ export class RepoStats {
 
     this.owner = owner;
     this.repo = repo;
-    
+
+    this.hasTestFolder = false;
     this.totalOpenIssues = 0;
     this.totalClosedIssues = 0;
     this.totalIssues = 0;
@@ -145,6 +147,31 @@ export class RepoStats {
     }
   }
 
+  async checkTestFolder(octokit: Octokit, owner: string, repo: string) {
+    try {
+      const response = await octokit.repos.getContent({
+        owner,
+        repo,
+        path: '',  // Root directory
+      });
+  
+      // Manually loop through contents to check if 'test' folder exists
+      if (Array.isArray(response.data)) {
+        for (const item of response.data) {
+          if (item.type === 'dir' && item.name.toLowerCase() === 'test') {
+            //return Promise.resolve(true);
+            this.hasTestFolder = true;
+          }
+        }
+      }
+  
+      this.hasTestFolder = false;  // Return false if 'test' folder not found
+    } catch (error) {
+      console.error(`Error while checking for 'test' folder in ${owner}/${repo}: ${error.message}`);
+      this.hasTestFolder = false;  // Return false if there's an error
+    }
+  }
+
   // Open issues (excluding pull requests)
   async #getOpenIssues() {
     const startTimeMilliseconds = performance.now();
@@ -225,11 +252,13 @@ export class RepoStats {
   
   async getRepoStats() {
     try {
+      /*
       await this.#getOpenIssues();
       await this.checkRateLimit();
       
       await this.#getTotalIssues();
       await this.checkRateLimit();
+      */
       
       await this.#getReadmeContentAndLength();
       await this.checkRateLimit();
