@@ -84,7 +84,7 @@
     /* Type Checking */
     "strict": true,                                      /* Enable all strict type-checking options. */
     //"strictPropertyInitialization": true,              /* Check for class properties that are declared but not set in the constructor. */
-    //"useUnknownInCatchVariables": false,               /* Default catch clause variables as 'unknown' instead of 'any'. */
+    "useUnknownInCatchVariables": false,               /* Default catch clause variables as 'unknown' instead of 'any'. */
     // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
     // "strictNullChecks": true,                         /* When type checking, take into account 'null' and 'undefined'. */
     // "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */

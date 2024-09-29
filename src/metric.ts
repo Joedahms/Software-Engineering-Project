@@ -158,14 +158,18 @@ export class Correctness extends Metric {
     this.value = 0;
   }
 
-  async calculateValue(openIssues: number, totalIssues: number) {
+  async calculateValue(hasTestFolder: boolean) {
     const startTime = performance.now();
 
     this.logger.add(2, "Calculating Correctness for " + this.repoName);
   
-    var normalizedMetric = (1-(openIssues/totalIssues)); //arbitrary max and min values picked.
+    var normalizedMetric = hasTestFolder; //arbitrary max and min values picked.
     this.logger.add(2, this.repoName + " " + this.name + ": " + String(normalizedMetric));
-    this.value = normalizedMetric;
+    if(normalizedMetric = false){
+      this.value = 0;
+    }else if(normalizedMetric = true){
+      this.value = 1;
+    }
     this.logger.add(1, this.repoName + this.name + "Calculated successfully");
 
     const endTime = performance.now();
