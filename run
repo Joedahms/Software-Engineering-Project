@@ -10,26 +10,27 @@ if [ $# == 1 ]; then           # One command line argument
     npm install typescript # Ensures npx tsc works
     npm install            # Install packages in userland
     echo "Installed required packages"
-
   elif [ $1 == "test" ]; then # Test
-    echo "Current log level is $LOG_LEVEL"
-    echo "You chose test"
+    # Run the test suite and capture output
+    TEST_OUTPUT=$(npm test -- --coverage --silent 2>&1)
 
-    # Run the test suite
-    npm test -- --coverage --silent # Run tests quietly with coverage
+    # Extract total and passed tests using awk
+    TOTAL_TESTS=$(echo "$TEST_OUTPUT" | awk '/Tests:/ {print $2}')
+    PASSED_TESTS=$(echo "$TEST_OUTPUT" | awk '/Tests:/ {print $4}')
 
-    if [ $? -eq 0 ]; then
-      # Expected output for the autograder
-      echo "Testing './run test'..."
-      echo "> Test suite output is in the correct format."
-      echo "> Test suite contains 20 or more test cases."
-      echo "> Test suite achieved 80% or greater line coverage."
-      echo "4 / 4 tests passed." # This needs updates based on final amount of tests
-    else
-      echo "Test suite failed!"
-      exit 1
-    fi
+    # Extract coverage percentage and remove decimal
+    COVERAGE=$(echo "$TEST_OUTPUT" | sed -n 's/.*All files *| *\([0-9]\+\.[0-9]\+\) *|.*/\1/p' | cut -d'.' -f1)
 
+    # Provide fallback values in case of parsing issues
+    TOTAL_TESTS=${TOTAL_TESTS:-0}
+    PASSED_TESTS=${PASSED_TESTS:-0}
+    COVERAGE=${COVERAGE:-0}
+
+    # Display the results in the desired format
+    echo "Total: $TOTAL_TESTS"
+    echo "Passed: $PASSED_TESTS"
+    echo "Coverage: $COVERAGE%"
+    echo "$PASSED_TESTS/$TOTAL_TESTS test cases passed. $COVERAGE% line coverage achieved."
   else                    # URL_FILE
     npx tsc               # Compile TypeScript files to JavaScript
     if [ $? -ne 0 ]; then # If compilation fails, exit
@@ -43,4 +44,3 @@ if [ $# == 1 ]; then           # One command line argument
 else # Not one command line argument
   echo "Invalid number of command line arguments"
 fi
-
