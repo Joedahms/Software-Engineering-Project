@@ -20,7 +20,7 @@ This must be done before running test or URL_FILE!!
 
 ### ./run test
 Runs the test suite
-Need to add to this once more progress is made on test suite
+Will calculate the line coverage and the amount of tests ran and passed.
 
 ### ./run URL_FILE
 This command runs the main functionality of the program. It will calculate metrics for each URL  
